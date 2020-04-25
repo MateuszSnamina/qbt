@@ -7,6 +7,7 @@
 #include <memory>
 #include <type_traits>
 #include <vector>
+#include <optional>
 
 // The code here is a simple solution copied from:
 // https://stackoverflow.com/questions/8193102/initializer-list-and-move-semantics

@@ -1,16 +1,17 @@
 #ifndef BOSON_ALGEBRA_BOSON_ALGEBRA_HPP
 #define BOSON_ALGEBRA_BOSON_ALGEBRA_HPP
 
+#include <array>
 #include <boson_algebra/util_make.hpp>
 #include <cassert>
 #include <functional>
 #include <iostream>  //DEBUG
+#include <list>
 #include <map>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <vector>
-
-#define UNUSED(x) (void)(x)
 
 namespace boson_algebra {
 
@@ -31,54 +32,78 @@ class StrRepr {
 
 class Expression;
 
-using SafeTransformFunctionT = std::function<std::unique_ptr<Expression>(const Expression&)>;
-//using UnsafeTransformFunctionT = std::function<std::unique_ptr<Expression>(Expression&&)>;
+class ExpressionHandler final : public StrRepr {
+    using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
+    using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const Expression&)>;
 
-class ExpressionHandler {
    public:
-    ExpressionHandler(std::unique_ptr<Expression>);
+    // move semantic:
     ExpressionHandler(ExpressionHandler&&);
-    // void operator=(ExpressionHandler&&); //TODO - implementation.
+    void operator=(ExpressionHandler&&);
+    // copy semantic:
     ExpressionHandler(const ExpressionHandler&) = delete;
     void operator=(const ExpressionHandler&) = delete;
+    // creation model:
+    template <class ExpressionClass, class... Args>
+    static ExpressionHandler make(Args&&... expression_class_ctor_args);
+    // accessors:
     Expression& target();
     const Expression& target() const;
-    std::unique_ptr<Expression> substitute(std::unique_ptr<Expression>);
-    friend void swap(ExpressionHandler& expr_1, ExpressionHandler& expr_2);
+    // string representation:
+    std::string str() const override;
+    std::string repr() const override;
+    // other methods:
     ExpressionHandler clone() const;
     bool equals(const ExpressionHandler&) const;
     void safe_dfs_transform(const SafeTransformFunctionT&);
     //void unsafe_dfs_transform(const UnsafeTransformFunctionT&);
 
    private:
+    ExpressionHandler(std::unique_ptr<Expression>);
+    std::unique_ptr<Expression> substitute(std::unique_ptr<Expression>);
+    friend void swap(ExpressionHandler& expr_1, ExpressionHandler& expr_2);
+
+   private:
     std::unique_ptr<Expression> _expr;
 };
 
 using ExpressionHandlerVector = std::vector<ExpressionHandler>;
+using ExpressionHandlerList = std::list<ExpressionHandler>;
+template <std::size_t N>
+using ExpressionHandlerArray = std::array<ExpressionHandler, N>;
 template <class KeyT>
 using ExpressionHandlerMap = std::map<KeyT, ExpressionHandler>;
+using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
+using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const Expression&)>;
+//using UnsafeTransformFunctionT = std::function<std::unique_ptr<Expression>(Expression&&)>;
 
 class Expression : public StrRepr {
    public:
     virtual unsigned n_subexpressions() const = 0;
     virtual ExpressionHandler& subexpression(unsigned n_subexpression) = 0;
     virtual const ExpressionHandler& subexpression(unsigned n_subexpression) const = 0;
-    virtual std::unique_ptr<Expression> clone() const = 0;
+    virtual ExpressionHandler clone() const = 0;
     virtual bool equals(const Expression&) const = 0;
     virtual ~Expression() = default;
 };
 
 // **********************************************************
 
-//TODO move to bottom:
-// inline void post_dfs_transform(const DfsTransformFunctionT&) {
-// }
+inline ExpressionHandler::ExpressionHandler(ExpressionHandler&& expr_hdl) : _expr(std::move(expr_hdl._expr)) {
+}
+
+inline void ExpressionHandler::operator=(ExpressionHandler&& other) {
+    swap(_expr, other._expr);
+}
 
 inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr) : _expr(std::move(expr)) {
     assert(_expr);
 }
 
-inline ExpressionHandler::ExpressionHandler(ExpressionHandler&& expr_hdl) : _expr(std::move(expr_hdl._expr)) {
+template <class ExpressionClass, class... Args>
+ExpressionHandler ExpressionHandler::make(Args&&... expression_class_ctor_args) {
+    static_assert(std::is_base_of_v<Expression, ExpressionClass>);
+    return ExpressionHandler(std::unique_ptr<ExpressionClass>(new ExpressionClass(std::forward<Args>(expression_class_ctor_args)...)));
 }
 
 inline Expression& ExpressionHandler::target() {
@@ -89,15 +114,12 @@ inline const Expression& ExpressionHandler::target() const {
     return *_expr;
 }
 
-inline std::unique_ptr<Expression>
-ExpressionHandler::substitute(std::unique_ptr<Expression> expr) {
-    assert(expr);
-    std::swap(_expr, expr);
-    return expr;
+inline std::string ExpressionHandler::str() const {
+    return target().str();
 }
 
-inline void swap(ExpressionHandler& expr_1, ExpressionHandler& expr_2) {
-    std::swap(expr_1._expr, expr_2._expr);
+inline std::string ExpressionHandler::repr() const {
+    return target().repr();
 }
 
 inline ExpressionHandler ExpressionHandler::clone() const {
@@ -112,12 +134,20 @@ inline void ExpressionHandler::safe_dfs_transform(const SafeTransformFunctionT& 
     for (unsigned n_subexpression = 0; n_subexpression < target().n_subexpressions(); n_subexpression++) {
         target().subexpression(n_subexpression).safe_dfs_transform(fun);
     }
-    // if(auto transformation_result = fun(target())) {
-    //     UNUSED(substitute(std::move(transformation_result)));
-    // }
     while (auto transformation_result = fun(target())) {
-        UNUSED(substitute(std::move(transformation_result)));
+        swap(*this, *transformation_result);
     }
+}
+
+inline std::unique_ptr<Expression>
+ExpressionHandler::substitute(std::unique_ptr<Expression> expr) {
+    assert(expr);
+    std::swap(_expr, expr);
+    return expr;
+}
+
+inline void swap(ExpressionHandler& expr_1, ExpressionHandler& expr_2) {
+    std::swap(expr_1._expr, expr_2._expr);
 }
 
 // **********************************************************
@@ -153,11 +183,13 @@ inline LeafExpression::~LeafExpression() {
 
 class BridgeExpression : public Expression {
    public:
-    BridgeExpression(ExpressionHandler&&);
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
     ~BridgeExpression() = 0;
+
+   protected:
+    BridgeExpression(ExpressionHandler&&);
 
    private:
     ExpressionHandler _expr_hdl;
@@ -189,15 +221,15 @@ inline BridgeExpression::~BridgeExpression() {
 
 class VectorNumerousExpression : public Expression {
    public:
-    VectorNumerousExpression(ExpressionHandlerVector&& expr_hdls);
-    template <class... Args>
-    VectorNumerousExpression(Args&&... expr_hdls);
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
     ~VectorNumerousExpression();
 
    protected:
+    VectorNumerousExpression(ExpressionHandlerVector&& expr_hdls);
+    template <class... Args>
+    VectorNumerousExpression(Args&&... expr_hdls);
     ExpressionHandlerVector clone_expr_hdls_vector() const;
 
    private:
@@ -325,8 +357,10 @@ inline std::string CharBoson::repr() const {
 
 class BosonPrimitiveOperators : public LeafExpression {
    public:
-    BosonPrimitiveOperators(std::shared_ptr<Boson> boson);
     std::shared_ptr<Boson> boson() const;
+
+   protected:
+    BosonPrimitiveOperators(std::shared_ptr<Boson> boson);
 
    private:
     std::shared_ptr<Boson> _boson;
@@ -346,24 +380,33 @@ inline std::shared_ptr<Boson> BosonPrimitiveOperators::boson() const {
 
 class BosonCreationOperator final : public BosonPrimitiveOperators {
    public:
-    BosonCreationOperator(std::shared_ptr<Boson> boson);
-    std::unique_ptr<BosonCreationOperator> casted_clone() const;
-    std::unique_ptr<Expression> clone() const override;
+    static ExpressionHandler make(std::shared_ptr<Boson> boson);
+    ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
+
+   private:
+    BosonCreationOperator(std::shared_ptr<Boson> boson);
+    std::unique_ptr<BosonCreationOperator> casted_clone() const;
+    template <class ExpressionClass, class... Args>
+    friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
 inline BosonCreationOperator::BosonCreationOperator(std::shared_ptr<Boson> boson)
     : BosonPrimitiveOperators(boson) {
 }
 
-inline std::unique_ptr<BosonCreationOperator> BosonCreationOperator::casted_clone() const {
-    return std::make_unique<BosonCreationOperator>(boson());
+inline ExpressionHandler BosonCreationOperator::make(std::shared_ptr<Boson> boson) {
+    return ExpressionHandler::make<BosonCreationOperator>(boson);
 }
 
-inline std::unique_ptr<Expression> BosonCreationOperator::clone() const {
-    return casted_clone();
+inline std::unique_ptr<BosonCreationOperator> BosonCreationOperator::casted_clone() const {
+    return std::unique_ptr<BosonCreationOperator>(new BosonCreationOperator(boson()));
+}
+
+inline ExpressionHandler BosonCreationOperator::clone() const {
+    return ExpressionHandler::make<BosonCreationOperator>(boson());
 }
 
 inline bool BosonCreationOperator::equals(const Expression& other) const {
@@ -385,24 +428,33 @@ inline std::string BosonCreationOperator::repr() const {
 
 class BosonAnihilationOperator final : public BosonPrimitiveOperators {
    public:
-    BosonAnihilationOperator(std::shared_ptr<Boson> boson);
-    std::unique_ptr<BosonAnihilationOperator> casted_clone() const;
-    std::unique_ptr<Expression> clone() const override;
+    static ExpressionHandler make(std::shared_ptr<Boson> boson);
+    ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
+
+   private:
+    BosonAnihilationOperator(std::shared_ptr<Boson> boson);
+    std::unique_ptr<BosonAnihilationOperator> casted_clone() const;
+    template <class ExpressionClass, class... Args>
+    friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
 inline BosonAnihilationOperator::BosonAnihilationOperator(std::shared_ptr<Boson> boson)
     : BosonPrimitiveOperators(boson) {
 }
 
-inline std::unique_ptr<BosonAnihilationOperator> BosonAnihilationOperator::casted_clone() const {
-    return std::make_unique<BosonAnihilationOperator>(boson());
+inline ExpressionHandler BosonAnihilationOperator::make(std::shared_ptr<Boson> boson) {
+    return ExpressionHandler::make<BosonAnihilationOperator>(boson);
 }
 
-inline std::unique_ptr<Expression> BosonAnihilationOperator::clone() const {
-    return casted_clone();
+inline std::unique_ptr<BosonAnihilationOperator> BosonAnihilationOperator::casted_clone() const {
+    return std::unique_ptr<BosonAnihilationOperator>(new BosonAnihilationOperator(boson()));
+}
+
+inline ExpressionHandler BosonAnihilationOperator::clone() const {
+    return ExpressionHandler::make<BosonAnihilationOperator>(boson());
 }
 
 inline bool BosonAnihilationOperator::equals(const Expression& other) const {
@@ -424,24 +476,33 @@ inline std::string BosonAnihilationOperator::repr() const {
 
 class BosonNumberOperator final : public BosonPrimitiveOperators {
    public:
-    BosonNumberOperator(std::shared_ptr<Boson> boson);
-    std::unique_ptr<BosonNumberOperator> casted_clone() const;
-    std::unique_ptr<Expression> clone() const override;
+    static ExpressionHandler make(std::shared_ptr<Boson> boson);
+    ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
+
+   private:
+    BosonNumberOperator(std::shared_ptr<Boson> boson);
+    std::unique_ptr<BosonNumberOperator> casted_clone() const;
+    template <class ExpressionClass, class... Args>
+    friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
 inline BosonNumberOperator::BosonNumberOperator(std::shared_ptr<Boson> boson)
     : BosonPrimitiveOperators(boson) {
 }
 
-inline std::unique_ptr<BosonNumberOperator> BosonNumberOperator::casted_clone() const {
-    return std::make_unique<BosonNumberOperator>(boson());
+inline ExpressionHandler BosonNumberOperator::make(std::shared_ptr<Boson> boson) {
+    return ExpressionHandler::make<BosonNumberOperator>(boson);
 }
 
-inline std::unique_ptr<Expression> BosonNumberOperator::clone() const {
-    return casted_clone();
+inline std::unique_ptr<BosonNumberOperator> BosonNumberOperator::casted_clone() const {
+    return std::unique_ptr<BosonNumberOperator>(new BosonNumberOperator(boson()));
+}
+
+inline ExpressionHandler BosonNumberOperator::clone() const {
+    return ExpressionHandler::make<BosonNumberOperator>(boson());
 }
 
 inline bool BosonNumberOperator::equals(const Expression& other) const {
@@ -469,13 +530,18 @@ inline std::string BosonNumberOperator::repr() const {
 
 class IntegerFactoredExpression final : public BridgeExpression {
    public:
-    IntegerFactoredExpression(long factor, ExpressionHandler&& expr_hdl);
-    std::unique_ptr<IntegerFactoredExpression> casted_clone() const;
-    std::unique_ptr<Expression> clone() const override;
+    static ExpressionHandler make(long factor, ExpressionHandler&& expr_hdl);
+    ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
     long factor() const;
+
+   private:
+    IntegerFactoredExpression(long factor, ExpressionHandler&& expr_hdl);
+    std::unique_ptr<IntegerFactoredExpression> casted_clone() const;
+    template <class ExpressionClass, class... Args>
+    friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 
    private:
     long _factor;
@@ -485,12 +551,16 @@ inline IntegerFactoredExpression::IntegerFactoredExpression(long factor, Express
     : BridgeExpression(std::move(expr_hdl)), _factor(factor) {
 }
 
-inline std::unique_ptr<IntegerFactoredExpression> IntegerFactoredExpression::casted_clone() const {
-    return std::make_unique<IntegerFactoredExpression>(_factor, subexpression(0).clone());
+inline ExpressionHandler IntegerFactoredExpression::make(long factor, ExpressionHandler&& expr_hdl) {
+    return ExpressionHandler::make<IntegerFactoredExpression>(factor, std::move(expr_hdl));
 }
 
-inline std::unique_ptr<Expression> IntegerFactoredExpression::clone() const {
-    return casted_clone();
+inline std::unique_ptr<IntegerFactoredExpression> IntegerFactoredExpression::casted_clone() const {
+    return std::unique_ptr<IntegerFactoredExpression>(new IntegerFactoredExpression(_factor, subexpression(0).clone()));
+}
+
+inline ExpressionHandler IntegerFactoredExpression::clone() const {
+    return ExpressionHandler::make<IntegerFactoredExpression>(_factor, subexpression(0).clone());
 }
 
 inline bool IntegerFactoredExpression::equals(const Expression& other) const {
@@ -525,14 +595,21 @@ inline long IntegerFactoredExpression::factor() const {
 
 class ProductExpression final : public VectorNumerousExpression {
    public:
-    ProductExpression(std::vector<ExpressionHandler>&& expr_hdls);
     template <class... Args>
     ProductExpression(Args&&... expr_hdls);
-    std::unique_ptr<ProductExpression> casted_clone() const;
-    std::unique_ptr<Expression> clone() const override;
+    static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);
+    template <class... Args>
+    static ExpressionHandler make(Args&&... expr_hdls);
+    ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
+
+   private:
+    ProductExpression(std::vector<ExpressionHandler>&& expr_hdls);
+    std::unique_ptr<ProductExpression> casted_clone() const;
+    template <class ExpressionClass, class... Args>
+    friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
 inline ProductExpression::ProductExpression(std::vector<ExpressionHandler>&& expr_hdls)
@@ -544,13 +621,23 @@ inline ProductExpression::ProductExpression(Args&&... expr_hdls)
     : VectorNumerousExpression(std::move(expr_hdls)...) {
 }
 
-inline std::unique_ptr<ProductExpression> ProductExpression::casted_clone() const {
-    auto v = clone_expr_hdls_vector();
-    return std::make_unique<ProductExpression>(v);
+inline ExpressionHandler ProductExpression::make(std::vector<ExpressionHandler>&& expr_hdls) {
+    return ExpressionHandler::make<ProductExpression>(std::move(expr_hdls));
 }
 
-inline std::unique_ptr<Expression> ProductExpression::clone() const {
-    return casted_clone();
+template <class... Args>
+ExpressionHandler ProductExpression::make(Args&&... expr_hdls) {
+    return ExpressionHandler::make<ProductExpression>(std::move(expr_hdls)...);
+}
+
+inline std::unique_ptr<ProductExpression> ProductExpression::casted_clone() const {
+    auto v = clone_expr_hdls_vector();
+    return std::unique_ptr<ProductExpression>(new ProductExpression(std::move(v)));
+}
+
+inline ExpressionHandler ProductExpression::clone() const {
+    auto v = clone_expr_hdls_vector();
+    return ExpressionHandler::make<ProductExpression>(std::move(v));
 }
 
 inline bool ProductExpression::equals(const Expression& other) const {
