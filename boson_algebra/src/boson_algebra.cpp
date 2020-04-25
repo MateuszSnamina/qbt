@@ -3,5 +3,5 @@
 #include <cassert>
 
 namespace boson_algebra {
-
-}  // namespace lin_alg
+ unsigned long IdClass::_pool_id = 0;
+}  // namespace boson_algebra
