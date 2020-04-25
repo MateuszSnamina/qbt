@@ -1,3 +1,6 @@
+#ifndef  BOSON_ALGEBRA_UTIL_MAKE_HPP
+#define  BOSON_ALGEBRA_UTIL_MAKE_HPP
+
 #include <algorithm>
 #include <array>
 #include <iterator>
@@ -45,7 +48,7 @@ struct maker<std::array<T, N>> {
 
 // delegation function which selects the correct maker
 template <class Array, class... Ts>
-auto make(Ts&&... ts) {
+inline auto make(Ts&&... ts) {
     auto m = maker<Array>();
     return m(std::forward<Ts>(ts)...);
 }
@@ -59,3 +62,5 @@ auto make(Ts&&... ts) {
 
 }  // namespace util
 }  // namespace boson_algebra
+
+#endif
