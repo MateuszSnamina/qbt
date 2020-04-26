@@ -41,16 +41,16 @@ class ExpressionHandler final : public StrRepr {
     ExpressionHandler(const ExpressionHandler&) = delete;
     ExpressionHandler& operator=(const ExpressionHandler&) = delete;
     // creation model:
-    template <class ExpressionClass, class... Args>
+    template <class ExpressionDerrivedClass, class... Args>
     static ExpressionHandler make(Args&&... expression_class_ctor_args);
     // accessors:
     Expression& target();
     const Expression& target() const;
-    template <class ExpressionClass>
-    ExpressionClass& casted_target();
-    template <class ExpressionClass>
-    const ExpressionClass& casted_target() const;
-    template <class ExpressionClass>
+    template <class ExpressionDerrivedClass>
+    ExpressionDerrivedClass& casted_target();
+    template <class ExpressionDerrivedClass>
+    const ExpressionDerrivedClass& casted_target() const;
+    template <class ExpressionDerrivedClass>
     const bool is_of_type() const;
     // string representation:
     std::string str() const override;
@@ -119,10 +119,10 @@ inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr) : 
     assert(_expr);
 }
 
-template <class ExpressionClass, class... Args>
+template <class ExpressionDerrivedClass, class... Args>
 ExpressionHandler ExpressionHandler::make(Args&&... expression_class_ctor_args) {
-    static_assert(std::is_base_of_v<Expression, ExpressionClass>);
-    return ExpressionHandler(std::unique_ptr<ExpressionClass>(new ExpressionClass(std::forward<Args>(expression_class_ctor_args)...)));
+    static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
+    return ExpressionHandler(std::unique_ptr<ExpressionDerrivedClass>(new ExpressionDerrivedClass(std::forward<Args>(expression_class_ctor_args)...)));
 }
 
 inline Expression& ExpressionHandler::target() {
@@ -149,24 +149,24 @@ inline bool ExpressionHandler::equals(const ExpressionHandler& other) const {
     return target().equals(other.target());
 }
 
-template <class ExpressionClass>
-ExpressionClass& ExpressionHandler::casted_target() {
-    static_assert(std::is_base_of_v<Expression, ExpressionClass>);
-    assert(is_of_type<ExpressionClass>());
-    return dynamic_cast<ExpressionClass&>(target());
+template <class ExpressionDerrivedClass>
+ExpressionDerrivedClass& ExpressionHandler::casted_target() {
+    static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
+    assert(is_of_type<ExpressionDerrivedClass>());
+    return dynamic_cast<ExpressionDerrivedClass&>(target());
 }
 
-template <class ExpressionClass>
-const ExpressionClass& ExpressionHandler::casted_target() const {
-    static_assert(std::is_base_of_v<Expression, ExpressionClass>);
-    assert(is_of_type<ExpressionClass>());
-    return dynamic_cast<const ExpressionClass&>(target());
+template <class ExpressionDerrivedClass>
+const ExpressionDerrivedClass& ExpressionHandler::casted_target() const {
+    static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
+    assert(is_of_type<ExpressionDerrivedClass>());
+    return dynamic_cast<const ExpressionDerrivedClass&>(target());
 }
 
-template <class ExpressionClass>
+template <class ExpressionDerrivedClass>
 const bool ExpressionHandler::is_of_type() const {
-    static_assert(std::is_base_of_v<Expression, ExpressionClass>);
-    return bool(dynamic_cast<const ExpressionClass*>(&target()));
+    static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
+    return bool(dynamic_cast<const ExpressionDerrivedClass*>(&target()));
 }
 
 inline void ExpressionHandler::safe_dfs_transform(const SafeTransformFunctionT& fun) {
