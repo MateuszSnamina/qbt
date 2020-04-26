@@ -38,11 +38,11 @@ class ExpressionHandler final : public StrRepr {
 
    public:
     // move semantic:
-    ExpressionHandler(ExpressionHandler&&);
-    void operator=(ExpressionHandler&&);
+    ExpressionHandler(ExpressionHandler&&) = default;
+    ExpressionHandler& operator=(ExpressionHandler&&) = default;
     // copy semantic:
     ExpressionHandler(const ExpressionHandler&) = delete;
-    void operator=(const ExpressionHandler&) = delete;
+    ExpressionHandler& operator=(const ExpressionHandler&) = delete;
     // creation model:
     template <class ExpressionClass, class... Args>
     static ExpressionHandler make(Args&&... expression_class_ctor_args);
@@ -79,22 +79,27 @@ using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const Exp
 
 class Expression : public StrRepr {
    public:
+    // copy semantic:
+    Expression(const Expression&) = delete;
+    Expression& operator=(const Expression&) = delete;
+    // move semantic:
+    Expression(Expression&&) = default;
+    Expression& operator=(Expression&&) = default;
+    // tree structure accessos:
     virtual unsigned n_subexpressions() const = 0;
     virtual ExpressionHandler& subexpression(unsigned n_subexpression) = 0;
     virtual const ExpressionHandler& subexpression(unsigned n_subexpression) const = 0;
+    // tree structure operations:
     virtual ExpressionHandler clone() const = 0;
     virtual bool equals(const Expression&) const = 0;
+    // dctor:
     virtual ~Expression() = default;
+
+   protected:
+    Expression() = default;
 };
 
 // **********************************************************
-
-inline ExpressionHandler::ExpressionHandler(ExpressionHandler&& expr_hdl) : _expr(std::move(expr_hdl._expr)) {
-}
-
-inline void ExpressionHandler::operator=(ExpressionHandler&& other) {
-    swap(_expr, other._expr);
-}
 
 inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr) : _expr(std::move(expr)) {
     assert(_expr);
@@ -156,10 +161,22 @@ inline void swap(ExpressionHandler& expr_1, ExpressionHandler& expr_2) {
 
 class LeafExpression : public Expression {
    public:
+    // copy semantic:
+    LeafExpression(const LeafExpression&) = delete;
+    LeafExpression& operator=(const LeafExpression&) = delete;
+    // tree structure accessos:
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
+    // dtor:
     ~LeafExpression() = 0;
+
+   protected:
+    // ctor:
+    LeafExpression() = default;
+    // move semantic:
+    LeafExpression(LeafExpression&&) = default;
+    boson_algebra::LeafExpression& operator=(LeafExpression&&) = default;
 };
 
 inline unsigned LeafExpression::n_subexpressions() const {
@@ -183,19 +200,29 @@ inline LeafExpression::~LeafExpression() {
 
 class BridgeExpression : public Expression {
    public:
+    // copy semantic:
+    BridgeExpression(const BridgeExpression&) = delete;
+    BridgeExpression& operator=(const BridgeExpression&) = delete;
+    // tree structure accessos:
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
+    // dctor:
     ~BridgeExpression() = 0;
 
    protected:
+    // ctor:
     BridgeExpression(ExpressionHandler&&);
+    // move semantic:
+    BridgeExpression(BridgeExpression&&) = default;
+    BridgeExpression& operator=(BridgeExpression&&) = default;
 
    private:
     ExpressionHandler _expr_hdl;
 };
 
-inline BridgeExpression::BridgeExpression(ExpressionHandler&& expr_hdl) : _expr_hdl(std::move(expr_hdl)) {
+inline BridgeExpression::BridgeExpression(ExpressionHandler&& expr_hdl)
+    : _expr_hdl(std::move(expr_hdl)) {
 }
 
 inline unsigned BridgeExpression::n_subexpressions() const {
@@ -221,15 +248,25 @@ inline BridgeExpression::~BridgeExpression() {
 
 class VectorNumerousExpression : public Expression {
    public:
+    // copy semantic:
+    VectorNumerousExpression(const VectorNumerousExpression&) = delete;
+    VectorNumerousExpression& operator=(const VectorNumerousExpression&) = delete;
+    // tree structure accessos:
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
+    // dctor:
     ~VectorNumerousExpression();
 
    protected:
+    // ctor:
     VectorNumerousExpression(ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
     VectorNumerousExpression(Args&&... expr_hdls);
+    // move semantic:
+    VectorNumerousExpression(VectorNumerousExpression&&) = default;
+    VectorNumerousExpression& operator=(VectorNumerousExpression&&) = default;
+    // helper function:
     ExpressionHandlerVector clone_expr_hdls_vector() const;
 
    private:
@@ -241,7 +278,8 @@ inline VectorNumerousExpression::VectorNumerousExpression(ExpressionHandlerVecto
 }
 
 template <class... Args>
-VectorNumerousExpression::VectorNumerousExpression(Args&&... expr_hdls) : _expr_hdls(util::make<ExpressionHandlerVector>(std::move(expr_hdls)...)) {
+VectorNumerousExpression::VectorNumerousExpression(Args&&... expr_hdls)
+    : _expr_hdls(util::make<ExpressionHandlerVector>(std::move(expr_hdls)...)) {
 }
 
 inline unsigned VectorNumerousExpression::n_subexpressions() const {
@@ -360,7 +398,11 @@ class BosonPrimitiveOperators : public LeafExpression {
     std::shared_ptr<Boson> boson() const;
 
    protected:
+    // ctor:
     BosonPrimitiveOperators(std::shared_ptr<Boson> boson);
+    // move semantic:
+    BosonPrimitiveOperators(BosonPrimitiveOperators&&) = default;
+    BosonPrimitiveOperators& operator=(BosonPrimitiveOperators&&) = default;
 
    private:
     std::shared_ptr<Boson> _boson;
