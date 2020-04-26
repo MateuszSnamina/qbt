@@ -1,4 +1,7 @@
-#include <boost/range/adaptor/transformed.hpp>
+#include <boost/range/adaptor/indexed.hpp>
+//#include <boost/range/adaptor/transformed.hpp>
+#include <boost/iterator/distance.hpp>  //TODO remove
+#include <boost/range/algorithm.hpp>
 #include <boson_algebra/boson_algebra.hpp>
 #include <boson_algebra/util_make.hpp>
 #include <iostream>
@@ -115,13 +118,45 @@ int main() {
         ExpressionHandler cr_a = BosonCreationOperator::make(a);
         ExpressionHandler cr_b = BosonCreationOperator::make(b);
         ExpressionHandler cr_c = BosonCreationOperator::make(c);
-        const ExpressionHandler product = ProductExpression::make(std::move(cr_a), std::move(cr_b), std::move(cr_c));
+        ExpressionHandler product = ProductExpression::make(std::move(cr_a), std::move(cr_b), std::move(cr_c));
         std::cout << "Structured Expressions str:  " << product.str() << std::endl;
         std::cout << "Structured Expressions repr: " << product.repr() << std::endl;
-
-        // Experimental:
-        for (const auto& xxx : dynamic_cast<const ProductExpression&>(product.target()).range()) {
+    }
+    {
+        //  Product expression may be defined using a constructor with ExpressionHandlerVector:
+        ExpressionHandler cr_a = BosonCreationOperator::make(a);
+        ExpressionHandler cr_b = BosonCreationOperator::make(b);
+        ExpressionHandler cr_c = BosonCreationOperator::make(c);
+        ExpressionHandlerVector v = util::make<ExpressionHandlerVector>(std::move(cr_a), std::move(cr_b), std::move(cr_c));
+        const ExpressionHandler product = ProductExpression::make(std::move(v));
+        std::cout << "Structured Expressions str:  " << product.str() << std::endl;
+        std::cout << "Structured Expressions repr: " << product.repr() << std::endl;
+    }
+    {
+        // Product may be traversed using range (not const variant)
+        ExpressionHandler cr_a = BosonCreationOperator::make(a);
+        ExpressionHandler cr_b = BosonCreationOperator::make(b);
+        ExpressionHandler cr_c = BosonCreationOperator::make(c);
+        ExpressionHandler mut_product = ProductExpression::make(std::move(cr_a), std::move(cr_b), std::move(cr_c));
+        for (const auto& xxx : mut_product.target().range()) {
             std::cout << "===>: " << xxx.repr() << std::endl;
+        }
+        for (auto&& xxx : mut_product.target().range()) {
+            ExpressionHandler stealed{std::move(xxx)};
+        }
+    }
+    {
+        // Product may be traversed using range (const variant):
+        ExpressionHandler cr_a = BosonCreationOperator::make(a);
+        ExpressionHandler cr_b = BosonCreationOperator::make(b);
+        ExpressionHandler cr_c = BosonCreationOperator::make(c);
+        const ExpressionHandler const_product = ProductExpression::make(std::move(cr_a), std::move(cr_b), std::move(cr_c));
+        for (const auto& xxx : const_product.target().range()) {
+            std::cout << "===>: " << xxx.repr() << std::endl;
+        }
+        for (auto&& xxx : const_product.target().range()) {
+            (void)xxx;
+            // ExpressionHandler stealed{std::move(xxx)}; // compile error.
         }
     }
     {
@@ -167,8 +202,8 @@ int main() {
     // ***  Dfs transform                                     ***
     // **********************************************************
     {
-        const auto fun = [](const Expression& expr) -> ExpressionHandlerOptional {
-            std::cout << "Dfs: " << expr.str() << std::endl;
+        const auto fun = [](const ExpressionHandler& expr_hdl) -> ExpressionHandlerOptional {
+            std::cout << "Dfs: " << expr_hdl.str() << std::endl;
             return std::nullopt;
         };
         ExpressionHandler expr1 = expression_1(a, b, c, d);
@@ -182,12 +217,11 @@ int main() {
     {
         // Transfomration goal: Expand boson number operator when possible.
         // Transfomration example: 2*n(boson)=>2*(cr(boson)*an(boson))
-        const auto fun = [](const Expression& expr) -> ExpressionHandlerOptional {
-            const auto casted_other_ptr = dynamic_cast<const BosonNumberOperator*>(&expr);
-            if (!casted_other_ptr) {
+        const auto fun = [](const ExpressionHandler& expr_hdl) -> ExpressionHandlerOptional {
+            if (!expr_hdl.is_of_type<BosonNumberOperator>()) {
                 return std::nullopt;
             }
-            const auto& casted_other = *casted_other_ptr;
+            const auto& casted_other = expr_hdl.casted_target<BosonNumberOperator>();
             const auto boson = casted_other.boson();
             ExpressionHandler cr = BosonCreationOperator::make(boson);
             ExpressionHandler an = BosonAnihilationOperator::make(boson);
@@ -205,39 +239,32 @@ int main() {
     {
         // Transfomration goal: Perform simplification due to product associativity.
         // Transfomration example: a*b*(c*d)*e => a*b*c*d*e
-        const auto fun = [](const Expression& expression) -> ExpressionHandlerOptional {
-            const auto casted_expression_ptr = dynamic_cast<const ProductExpression*>(&expression);
-            if (!casted_expression_ptr) {
+        const auto fun = [](const ExpressionHandler& expression_hdl) -> ExpressionHandlerOptional {
+            if (!expression_hdl.is_of_type<ProductExpression>()) {
                 return std::nullopt;
             }
-            const ProductExpression& casted_expression = *casted_expression_ptr;
-            std::optional<unsigned> n_subexpression_being_product_optional;
-            for (unsigned n_subexpression = 0; n_subexpression < casted_expression.n_subexpressions(); n_subexpression++) {
-                const Expression& subexpression = casted_expression.subexpression(n_subexpression).target();
-                const auto casted_subexpression_ptr = dynamic_cast<const ProductExpression*>(&subexpression);
-                if (casted_subexpression_ptr) {
-                    n_subexpression_being_product_optional = n_subexpression;
-                    break;
-                }
-            }
-            if (!n_subexpression_being_product_optional) {
+            const auto& range = expression_hdl.target().crange();
+            const auto& range_begin = boost::begin(range);
+            const auto& range_end = boost::end(range);
+            const auto subproduct_hdl_iter = boost::find_if(range, [](const ExpressionHandler& expression_hdl) {
+                return expression_hdl.is_of_type<ProductExpression>();
+            });
+            if (subproduct_hdl_iter == range_end) {
                 return std::nullopt;
             }
-            unsigned n_subexpression_being_product = *n_subexpression_being_product_optional;
-            const Expression& subexpression = casted_expression.subexpression(n_subexpression_being_product).target();
-            const auto casted_subexpression_ptr = dynamic_cast<const ProductExpression*>(&subexpression);
-            const ProductExpression& casted_subexpression = *casted_subexpression_ptr;
+            const auto& subproduct_expr_hdl = *subproduct_hdl_iter;
+            ConstExpressionHandlerRandomAccessRange range1{range_begin, subproduct_hdl_iter};
+            ConstExpressionHandlerRandomAccessRange range2 = subproduct_expr_hdl.target().crange();
+            ConstExpressionHandlerRandomAccessRange range3{subproduct_hdl_iter + 1, range_end};
             ExpressionHandlerVector v;
-            for (unsigned n_subexpression = 0; n_subexpression < n_subexpression_being_product; n_subexpression++) {
-                v.emplace_back(std::move(casted_expression.subexpression(n_subexpression).clone()));
+            for (const auto& subexpression_hdl : range1) {
+                v.emplace_back(std::move(subexpression_hdl.clone()));
             }
-
-            for (unsigned n_subexpression = 0; n_subexpression < casted_subexpression.n_subexpressions(); n_subexpression++) {
-                v.emplace_back(std::move(casted_subexpression.subexpression(n_subexpression).clone()));
+            for (const auto& subexpression_hdl : range2) {
+                v.emplace_back(std::move(subexpression_hdl.clone()));
             }
-
-            for (unsigned n_subexpression = n_subexpression_being_product + 1; n_subexpression < casted_expression.n_subexpressions(); n_subexpression++) {
-                v.emplace_back(std::move(casted_expression.subexpression(n_subexpression).clone()));
+            for (const auto& subexpression_hdl : range3) {
+                v.emplace_back(std::move(subexpression_hdl.clone()));
             }
             ExpressionHandler product = ProductExpression::make(std::move(v));
             return std::move(product);
@@ -249,5 +276,99 @@ int main() {
         std::cout << "End Dfs." << std::endl;
         std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
+    }
+}
+
+void range_over_vector_of_nocopyable() {
+    class Mov {
+       public:
+        Mov(int i)
+            : p(std::make_unique<int>(i)),
+              invalid(false) {
+            std::cout << "NormalCtr" << std::endl;
+        }
+        Mov(const Mov&) = delete;
+        Mov& operator=(const Mov&) = delete;
+
+        Mov(Mov&& x)
+            : p(std::move(x.p)),
+              invalid(false) {
+            std::cout << "MovCtr" << *p << std::endl;
+            x.invalid = true;
+        }
+
+        Mov& operator=(Mov&& x) {
+            std::cout << "MovAss" << *x.p << std::endl;
+            p = std::move(x.p);
+            x.invalid = true;
+            return *this;
+        }
+
+        std::string str() const {
+            if (invalid) {
+                return "invalid";
+            }
+            return std::to_string(*p);
+        }
+        std::unique_ptr<int> p;
+        bool invalid;
+    };
+
+    using MovRandomAccessRange = boost::any_range<Mov, boost::random_access_traversal_tag>;
+    using ConstMovRandomAccessRange = boost::any_range<const Mov, boost::random_access_traversal_tag>;
+
+    class WithV {
+       public:
+        std::vector<Mov> v;
+        MovRandomAccessRange range() {
+            return v;
+        }
+        ConstMovRandomAccessRange crange() {
+            return v;
+        }
+    };
+
+    std::cout << "----" << std::endl;
+
+    WithV with_v;
+    with_v.v.push_back(Mov(0));
+    with_v.v.push_back(Mov(1));
+    with_v.v.push_back(Mov(2));
+    with_v.v.push_back(Mov(3));
+    with_v.v.push_back(Mov(4));
+    with_v.v.push_back(Mov(5));
+    with_v.v.push_back(Mov(6));
+    with_v.v.push_back(Mov(7));
+
+    std::cout << "----" << std::endl;
+
+    for (const auto& x : with_v.crange() | boost::adaptors::indexed()) {
+        std::cout << "with_v.crange[" << x.index() << "]: " << x.value().str() << std::endl;
+    }
+
+    std::cout << "contentv[2]:" << with_v.v[2].str() << std::endl;
+    Mov{std::move(with_v.v[2])};
+    std::cout << "contentv[2]:" << with_v.v[2].str() << std::endl;
+
+    for (const auto& x : with_v.crange() | boost::adaptors::indexed()) {
+        std::cout << "with_v.crange[" << x.index() << "]: " << x.value().str() << std::endl;
+    }
+
+    for (const auto& x : with_v.range() | boost::adaptors::indexed()) {
+        std::cout << "with_v.range[" << x.index() << "]: " << x.value().str() << std::endl;
+    }
+    std::cout << "Drain the vector!" << std::endl;
+    for (auto&& x : with_v.range()) {
+        if (!x.invalid) {
+            Mov{std::move(x)};
+        }
+    }
+
+    for (const auto& x : with_v.crange() | boost::adaptors::indexed()) {
+        std::cout << "with_v.crange[" << x.index() << "]: " << x.value().str() << std::endl;
+    }
+
+    for (const auto& x : with_v.range() | boost::adaptors::indexed()) {
+        std::cout << "with_v.range[" << x.index() << "]: " << x.value().str() << std::endl;
     }
 }

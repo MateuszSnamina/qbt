@@ -37,7 +37,7 @@ class Expression;
 
 class ExpressionHandler final : public StrRepr {
     using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
-    using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const Expression&)>;
+    using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
 
    public:
     // move semantic:
@@ -52,6 +52,12 @@ class ExpressionHandler final : public StrRepr {
     // accessors:
     Expression& target();
     const Expression& target() const;
+    template <class ExpressionClass>
+    ExpressionClass& casted_target();
+    template <class ExpressionClass>
+    const ExpressionClass& casted_target() const;
+    template <class ExpressionClass>
+    const bool is_of_type() const;
     // string representation:
     std::string str() const override;
     std::string repr() const override;
@@ -77,12 +83,16 @@ using ExpressionHandlerArray = std::array<ExpressionHandler, N>;
 template <class KeyT>
 using ExpressionHandlerMap = std::map<KeyT, ExpressionHandler>;
 using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
-using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const Expression&)>;
+using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
 //using UnsafeTransformFunctionT = std::function<std::unique_ptr<Expression>(Expression&&)>;
-using ExpressionHandlerSinglePassRange = boost::any_range<const ExpressionHandler, boost::single_pass_traversal_tag>;
-using ExpressionHandlerForwardRange = boost::any_range<const ExpressionHandler, boost::forward_traversal_tag>;
-using ExpressionHandlerBidirectionalRange = boost::any_range<const ExpressionHandler, boost::bidirectional_traversal_tag>;
-using ExpressionHandlerRandomAccessRange = boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag>;
+using ExpressionHandlerSinglePassRange = boost::any_range<ExpressionHandler, boost::single_pass_traversal_tag>;
+using ExpressionHandlerForwardRange = boost::any_range<ExpressionHandler, boost::forward_traversal_tag>;
+using ExpressionHandlerBidirectionalRange = boost::any_range<ExpressionHandler, boost::bidirectional_traversal_tag>;
+using ExpressionHandlerRandomAccessRange = boost::any_range<ExpressionHandler, boost::random_access_traversal_tag>;
+using ConstExpressionHandlerSinglePassRange = boost::any_range<const ExpressionHandler, boost::single_pass_traversal_tag>;
+using ConstExpressionHandlerForwardRange = boost::any_range<const ExpressionHandler, boost::forward_traversal_tag>;
+using ConstExpressionHandlerBidirectionalRange = boost::any_range<const ExpressionHandler, boost::bidirectional_traversal_tag>;
+using ConstExpressionHandlerRandomAccessRange = boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag>;
 
 class Expression : public StrRepr {
    public:
@@ -96,6 +106,9 @@ class Expression : public StrRepr {
     virtual unsigned n_subexpressions() const = 0;
     virtual ExpressionHandler& subexpression(unsigned n_subexpression) = 0;
     virtual const ExpressionHandler& subexpression(unsigned n_subexpression) const = 0;
+    virtual ExpressionHandlerRandomAccessRange range() = 0;
+    virtual ConstExpressionHandlerRandomAccessRange range() const = 0;
+    virtual ConstExpressionHandlerRandomAccessRange crange() const = 0;
     // tree structure operations:
     virtual ExpressionHandler clone() const = 0;
     virtual bool equals(const Expression&) const = 0;
@@ -142,11 +155,31 @@ inline bool ExpressionHandler::equals(const ExpressionHandler& other) const {
     return target().equals(other.target());
 }
 
+template <class ExpressionClass>
+ExpressionClass& ExpressionHandler::casted_target() {
+    static_assert(std::is_base_of_v<Expression, ExpressionClass>);
+    assert(is_of_type<ExpressionClass>());
+    return dynamic_cast<ExpressionClass&>(target());
+}
+
+template <class ExpressionClass>
+const ExpressionClass& ExpressionHandler::casted_target() const {
+    static_assert(std::is_base_of_v<Expression, ExpressionClass>);
+    assert(is_of_type<ExpressionClass>());
+    return dynamic_cast<const ExpressionClass&>(target());
+}
+
+template <class ExpressionClass>
+const bool ExpressionHandler::is_of_type() const {
+    static_assert(std::is_base_of_v<Expression, ExpressionClass>);
+    return bool(dynamic_cast<const ExpressionClass*>(&target()));
+}
+
 inline void ExpressionHandler::safe_dfs_transform(const SafeTransformFunctionT& fun) {
     for (unsigned n_subexpression = 0; n_subexpression < target().n_subexpressions(); n_subexpression++) {
         target().subexpression(n_subexpression).safe_dfs_transform(fun);
     }
-    while (auto transformation_result = fun(target())) {
+    while (auto transformation_result = fun(*this)) {
         swap(*this, *transformation_result);
     }
 }
@@ -175,6 +208,9 @@ class LeafExpression : public Expression {
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
+    ExpressionHandlerRandomAccessRange range() override;
+    ConstExpressionHandlerRandomAccessRange range() const override;
+    ConstExpressionHandlerRandomAccessRange crange() const override;
     // dtor:
     ~LeafExpression() = 0;
 
@@ -184,6 +220,9 @@ class LeafExpression : public Expression {
     // move semantic:
     LeafExpression(LeafExpression&&) = default;
     boson_algebra::LeafExpression& operator=(LeafExpression&&) = default;
+
+   private:
+    std::array<ExpressionHandler, 0> _expr_hdls;
 };
 
 inline unsigned LeafExpression::n_subexpressions() const {
@@ -196,6 +235,18 @@ inline ExpressionHandler& LeafExpression::subexpression(unsigned n_subexpression
 
 inline const ExpressionHandler& LeafExpression::subexpression(unsigned n_subexpression) const {
     assert(false);
+}
+
+inline ExpressionHandlerRandomAccessRange LeafExpression::range() {
+    return _expr_hdls;
+}
+
+inline ConstExpressionHandlerRandomAccessRange LeafExpression::range() const {
+    return _expr_hdls;
+}
+
+inline ConstExpressionHandlerRandomAccessRange LeafExpression::crange() const {
+    return _expr_hdls;
 }
 
 inline LeafExpression::~LeafExpression() {
@@ -214,6 +265,9 @@ class BridgeExpression : public Expression {
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
+    ExpressionHandlerRandomAccessRange range() override;
+    ConstExpressionHandlerRandomAccessRange range() const override;
+    ConstExpressionHandlerRandomAccessRange crange() const override;
     // dctor:
     ~BridgeExpression() = 0;
 
@@ -225,11 +279,13 @@ class BridgeExpression : public Expression {
     BridgeExpression& operator=(BridgeExpression&&) = default;
 
    private:
-    ExpressionHandler _expr_hdl;
+    std::array<ExpressionHandler, 1> _expr_hdls;
+    ExpressionHandler& _expr_hdl;
 };
 
 inline BridgeExpression::BridgeExpression(ExpressionHandler&& expr_hdl)
-    : _expr_hdl(std::move(expr_hdl)) {
+    : _expr_hdls{std::move(expr_hdl)},
+      _expr_hdl(_expr_hdls[0]) {
 }
 
 inline unsigned BridgeExpression::n_subexpressions() const {
@@ -244,6 +300,18 @@ inline ExpressionHandler& BridgeExpression::subexpression(unsigned n_subexpressi
 inline const ExpressionHandler& BridgeExpression::subexpression(unsigned n_subexpression) const {
     assert(n_subexpression == 0);
     return _expr_hdl;
+}
+
+inline ExpressionHandlerRandomAccessRange BridgeExpression::range() {
+    return _expr_hdls;
+}
+
+inline ConstExpressionHandlerRandomAccessRange BridgeExpression::range() const {
+    return _expr_hdls;
+}
+
+inline ConstExpressionHandlerRandomAccessRange BridgeExpression::crange() const {
+    return _expr_hdls;
 }
 
 inline BridgeExpression::~BridgeExpression() {
@@ -262,7 +330,9 @@ class VectorNumerousExpression : public Expression {
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
-    ExpressionHandlerRandomAccessRange range() const; // Experimental API add-on.
+    ExpressionHandlerRandomAccessRange range() override;
+    ConstExpressionHandlerRandomAccessRange range() const override;
+    ConstExpressionHandlerRandomAccessRange crange() const override;
     // dctor:
     ~VectorNumerousExpression();
 
@@ -304,9 +374,16 @@ inline const ExpressionHandler& VectorNumerousExpression::subexpression(unsigned
     return _expr_hdls[n_subexpression];
 }
 
-inline ExpressionHandlerRandomAccessRange VectorNumerousExpression::range() const {
-    boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag> range(_expr_hdls);
-    return range;
+inline ExpressionHandlerRandomAccessRange VectorNumerousExpression::range() {
+    return _expr_hdls;
+}
+
+inline ConstExpressionHandlerRandomAccessRange VectorNumerousExpression::range() const {
+    return _expr_hdls;
+}
+
+inline ConstExpressionHandlerRandomAccessRange VectorNumerousExpression::crange() const {
+    return _expr_hdls;
 }
 
 inline VectorNumerousExpression::~VectorNumerousExpression() {
