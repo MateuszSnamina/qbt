@@ -1,6 +1,4 @@
-#include <boson_algebra/boson_algebra.hpp>
-
-#include <cassert>
+#include <boson_algebra/util_id.hpp>
 
 namespace boson_algebra {
  unsigned long IdClass::_pool_id = 0;

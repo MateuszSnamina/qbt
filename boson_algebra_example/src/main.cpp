@@ -1,9 +1,8 @@
-#include <boost/range/adaptor/indexed.hpp>
-//#include <boost/range/adaptor/transformed.hpp>
-#include <boost/iterator/distance.hpp>  //TODO remove
-#include <boost/range/algorithm.hpp>
-#include <boson_algebra/boson_algebra.hpp>
+//SELF:
+#include <boson_algebra/transform_simplify_product.hpp>
+#include <boson_algebra/expression_all.hpp>
 #include <boson_algebra/util_make.hpp>
+// STD:
 #include <iostream>
 
 using namespace boson_algebra;
@@ -96,7 +95,7 @@ int main() {
     const std::shared_ptr<Boson> d = std::make_shared<CharBoson>('d');
     std::cout << "boson str:  " << c->str() << std::endl;
     std::cout << "boson repr: " << c->repr() << std::endl;
-    std::cout << "boson id:   " << c->get_id() << std::endl;
+    std::cout << "boson id:   " << c->id() << std::endl;
 
     // **********************************************************
     // ***  Declare some Boson Primitive Operators            ***
@@ -239,136 +238,12 @@ int main() {
     {
         // Transfomration goal: Perform simplification due to product associativity.
         // Transfomration example: a*b*(c*d)*e => a*b*c*d*e
-        const auto fun = [](const ExpressionHandler& expression_hdl) -> ExpressionHandlerOptional {
-            if (!expression_hdl.is_of_type<ProductExpression>()) {
-                return std::nullopt;
-            }
-            const auto& range = expression_hdl.target().crange();
-            const auto& range_begin = boost::begin(range);
-            const auto& range_end = boost::end(range);
-            const auto subproduct_hdl_iter = boost::find_if(range, [](const ExpressionHandler& expression_hdl) {
-                return expression_hdl.is_of_type<ProductExpression>();
-            });
-            if (subproduct_hdl_iter == range_end) {
-                return std::nullopt;
-            }
-            const auto& subproduct_expr_hdl = *subproduct_hdl_iter;
-            ConstExpressionHandlerRandomAccessRange range1{range_begin, subproduct_hdl_iter};
-            ConstExpressionHandlerRandomAccessRange range2 = subproduct_expr_hdl.target().crange();
-            ConstExpressionHandlerRandomAccessRange range3{subproduct_hdl_iter + 1, range_end};
-            ExpressionHandlerVector v;
-            for (const auto& subexpression_hdl : range1) {
-                v.emplace_back(std::move(subexpression_hdl.clone()));
-            }
-            for (const auto& subexpression_hdl : range2) {
-                v.emplace_back(std::move(subexpression_hdl.clone()));
-            }
-            for (const auto& subexpression_hdl : range3) {
-                v.emplace_back(std::move(subexpression_hdl.clone()));
-            }
-            ExpressionHandler product = ProductExpression::make(std::move(v));
-            return std::move(product);
-        };
         ExpressionHandler expr1 = expression_1(a, b, c, d);
         ExpressionHandler expr1_clone = expr1.clone();
         std::cout << "Start Dfs." << std::endl;
-        expr1.safe_dfs_transform(fun);
+        expr1.safe_dfs_transform(transform_simplify_product);
         std::cout << "End Dfs." << std::endl;
         std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
-    }
-}
-
-void range_over_vector_of_nocopyable() {
-    class Mov {
-       public:
-        Mov(int i)
-            : p(std::make_unique<int>(i)),
-              invalid(false) {
-            std::cout << "NormalCtr" << std::endl;
-        }
-        Mov(const Mov&) = delete;
-        Mov& operator=(const Mov&) = delete;
-
-        Mov(Mov&& x)
-            : p(std::move(x.p)),
-              invalid(false) {
-            std::cout << "MovCtr" << *p << std::endl;
-            x.invalid = true;
-        }
-
-        Mov& operator=(Mov&& x) {
-            std::cout << "MovAss" << *x.p << std::endl;
-            p = std::move(x.p);
-            x.invalid = true;
-            return *this;
-        }
-
-        std::string str() const {
-            if (invalid) {
-                return "invalid";
-            }
-            return std::to_string(*p);
-        }
-        std::unique_ptr<int> p;
-        bool invalid;
-    };
-
-    using MovRandomAccessRange = boost::any_range<Mov, boost::random_access_traversal_tag>;
-    using ConstMovRandomAccessRange = boost::any_range<const Mov, boost::random_access_traversal_tag>;
-
-    class WithV {
-       public:
-        std::vector<Mov> v;
-        MovRandomAccessRange range() {
-            return v;
-        }
-        ConstMovRandomAccessRange crange() {
-            return v;
-        }
-    };
-
-    std::cout << "----" << std::endl;
-
-    WithV with_v;
-    with_v.v.push_back(Mov(0));
-    with_v.v.push_back(Mov(1));
-    with_v.v.push_back(Mov(2));
-    with_v.v.push_back(Mov(3));
-    with_v.v.push_back(Mov(4));
-    with_v.v.push_back(Mov(5));
-    with_v.v.push_back(Mov(6));
-    with_v.v.push_back(Mov(7));
-
-    std::cout << "----" << std::endl;
-
-    for (const auto& x : with_v.crange() | boost::adaptors::indexed()) {
-        std::cout << "with_v.crange[" << x.index() << "]: " << x.value().str() << std::endl;
-    }
-
-    std::cout << "contentv[2]:" << with_v.v[2].str() << std::endl;
-    Mov{std::move(with_v.v[2])};
-    std::cout << "contentv[2]:" << with_v.v[2].str() << std::endl;
-
-    for (const auto& x : with_v.crange() | boost::adaptors::indexed()) {
-        std::cout << "with_v.crange[" << x.index() << "]: " << x.value().str() << std::endl;
-    }
-
-    for (const auto& x : with_v.range() | boost::adaptors::indexed()) {
-        std::cout << "with_v.range[" << x.index() << "]: " << x.value().str() << std::endl;
-    }
-    std::cout << "Drain the vector!" << std::endl;
-    for (auto&& x : with_v.range()) {
-        if (!x.invalid) {
-            Mov{std::move(x)};
-        }
-    }
-
-    for (const auto& x : with_v.crange() | boost::adaptors::indexed()) {
-        std::cout << "with_v.crange[" << x.index() << "]: " << x.value().str() << std::endl;
-    }
-
-    for (const auto& x : with_v.range() | boost::adaptors::indexed()) {
-        std::cout << "with_v.range[" << x.index() << "]: " << x.value().str() << std::endl;
     }
 }

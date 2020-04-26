@@ -1,4 +1,4 @@
-#include <boson_algebra/boson_algebra.hpp>
+#include <boson_algebra/expression_all.hpp>
 
 #include <gtest/gtest.h>
 
