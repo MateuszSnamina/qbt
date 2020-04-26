@@ -1,3 +1,4 @@
+#include <boost/range/adaptor/transformed.hpp>
 #include <boson_algebra/boson_algebra.hpp>
 #include <boson_algebra/util_make.hpp>
 #include <iostream>
@@ -117,6 +118,11 @@ int main() {
         const ExpressionHandler product = ProductExpression::make(std::move(cr_a), std::move(cr_b), std::move(cr_c));
         std::cout << "Structured Expressions str:  " << product.str() << std::endl;
         std::cout << "Structured Expressions repr: " << product.repr() << std::endl;
+
+        // Experimental:
+        for (const auto& xxx : dynamic_cast<const ProductExpression&>(product.target()).range()) {
+            std::cout << "===>: " << xxx.repr() << std::endl;
+        }
     }
     {
         //  Product expression may be defined using a constructor with ExpressionHandlerVector:

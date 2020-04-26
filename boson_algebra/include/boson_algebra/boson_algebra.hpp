@@ -2,6 +2,7 @@
 #define BOSON_ALGEBRA_BOSON_ALGEBRA_HPP
 
 #include <array>
+#include <boost/range/any_range.hpp>
 #include <boson_algebra/util_make.hpp>
 #include <cassert>
 #include <functional>
@@ -12,6 +13,8 @@
 #include <string>
 #include <type_traits>
 #include <vector>
+
+#define UNUSED(x) (void)x;
 
 namespace boson_algebra {
 
@@ -76,6 +79,10 @@ using ExpressionHandlerMap = std::map<KeyT, ExpressionHandler>;
 using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
 using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const Expression&)>;
 //using UnsafeTransformFunctionT = std::function<std::unique_ptr<Expression>(Expression&&)>;
+using ExpressionHandlerSinglePassRange = boost::any_range<const ExpressionHandler, boost::single_pass_traversal_tag>;
+using ExpressionHandlerForwardRange = boost::any_range<const ExpressionHandler, boost::forward_traversal_tag>;
+using ExpressionHandlerBidirectionalRange = boost::any_range<const ExpressionHandler, boost::bidirectional_traversal_tag>;
+using ExpressionHandlerRandomAccessRange = boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag>;
 
 class Expression : public StrRepr {
    public:
@@ -255,6 +262,7 @@ class VectorNumerousExpression : public Expression {
     unsigned n_subexpressions() const override;
     ExpressionHandler& subexpression(unsigned n_subexpression) override;
     const ExpressionHandler& subexpression(unsigned n_subexpression) const override;
+    ExpressionHandlerRandomAccessRange range() const; // Experimental API add-on.
     // dctor:
     ~VectorNumerousExpression();
 
@@ -294,6 +302,11 @@ inline ExpressionHandler& VectorNumerousExpression::subexpression(unsigned n_sub
 inline const ExpressionHandler& VectorNumerousExpression::subexpression(unsigned n_subexpression) const {
     assert(n_subexpression < _expr_hdls.size());
     return _expr_hdls[n_subexpression];
+}
+
+inline ExpressionHandlerRandomAccessRange VectorNumerousExpression::range() const {
+    boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag> range(_expr_hdls);
+    return range;
 }
 
 inline VectorNumerousExpression::~VectorNumerousExpression() {
