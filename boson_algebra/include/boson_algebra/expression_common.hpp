@@ -157,6 +157,9 @@ class VectorNumerousExpression : public Expression {
     VectorNumerousExpression& operator=(VectorNumerousExpression&&) = default;
     // helper function:
     ExpressionHandlerVector clone_expr_hdls_vector() const;
+    bool equals_helper_function(const VectorNumerousExpression& other) const;
+    std::string str_helper_function(const std::string& string_when_empty, const std::string& string_for_operand) const;
+    std::string repr_helper_function(const std::string& string_for_function_name) const;
 
    private:
     ExpressionHandlerVector _expr_hdls;
@@ -206,6 +209,51 @@ inline ExpressionHandlerVector VectorNumerousExpression::clone_expr_hdls_vector(
         v.emplace_back(subexpression(n_subexpression).clone());
     }
     return v;
+}
+
+inline bool VectorNumerousExpression::equals_helper_function(const VectorNumerousExpression& other) const {
+    if (n_subexpressions() != other.n_subexpressions()) {
+        return false;
+    }
+    for (unsigned n_subexpression = 0; n_subexpression < n_subexpressions(); n_subexpression++) {
+        if (!subexpression(n_subexpression).equals(other.subexpression(n_subexpression))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+inline std::string VectorNumerousExpression::str_helper_function(
+    // TODO better style.
+    const std::string& string_when_empty,
+    const std::string& string_for_operand) const {
+    if (n_subexpressions() == 0) {
+        return string_when_empty;
+    }
+    std::string result;
+    result += "❪";
+    result += subexpression(0).target().str();
+    for (unsigned n_subexpression = 1; n_subexpression < n_subexpressions(); n_subexpression++) {
+        result += string_for_operand;
+        result += subexpression(n_subexpression).target().str();
+    }
+    result += "❫";
+    return result;
+}
+
+inline std::string VectorNumerousExpression::repr_helper_function(const std::string& string_for_function_name) const {
+    // TODO better style.
+    std::string result;
+    result += string_for_function_name;
+    if (n_subexpressions() > 0) {
+        result += subexpression(0).target().repr();
+    }
+    for (unsigned n_subexpression = 1; n_subexpression < n_subexpressions(); n_subexpression++) {
+        result += ",";
+        result += subexpression(n_subexpression).target().repr();
+    }
+    result += ")";
+    return result;
 }
 
 }  // namespace boson_algebra

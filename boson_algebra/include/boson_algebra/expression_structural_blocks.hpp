@@ -136,55 +136,87 @@ inline bool ProductExpression::equals(const Expression& other) const {
         return false;
     }
     const auto& casted_other = *casted_other_ptr;
-    if (n_subexpressions() != casted_other.n_subexpressions()) {
-        return false;
-    }
-    for (unsigned n_subexpression = 0; n_subexpression < n_subexpressions(); n_subexpression++) {
-        if (!subexpression(n_subexpression).equals(other.subexpression(n_subexpression))) {
-            return false;
-        }
-    }
-    return true;
+    return equals_helper_function(casted_other);
 }
 
 inline std::string ProductExpression::str() const {
-    if (n_subexpressions() == 0) {
-        return "𝕀";
-    }
-    std::string result;
-    result += "❪";
-    result += subexpression(0).target().str();
-    for (unsigned n_subexpression = 1; n_subexpression < n_subexpressions(); n_subexpression++) {
-        result += "◦";
-        result += subexpression(n_subexpression).target().str();
-    }
-    result += "❫";
-    return result;
+    return str_helper_function("𝕀", "◦");
 }
 
 inline std::string ProductExpression::repr() const {
-    std::string result;
-    result += "Product(";
-    if (n_subexpressions() > 0) {
-        result += subexpression(0).target().repr();
-    }
-    for (unsigned n_subexpression = 1; n_subexpression < n_subexpressions(); n_subexpression++) {
-        result += ",";
-        result += subexpression(n_subexpression).target().repr();
-    }
-    result += ")";
-    return result;
+    return repr_helper_function("Product");
 }
 
 }  // namespace boson_algebra
 
 // **********************************************************
-// ***  IntegerLinearCombinationExpression                ***
+// ***  SumExpression                                     ***
 // **********************************************************
 
 namespace boson_algebra {
+class SumExpression final : public VectorNumerousExpression {
+   public:
+    template <class... Args>
+    SumExpression(Args&&... expr_hdls);
+    static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);
+    template <class... Args>
+    static ExpressionHandler make(Args&&... expr_hdls);
+    ExpressionHandler clone() const override;
+    bool equals(const Expression&) const override;
+    std::string str() const override;
+    std::string repr() const override;
 
-// TODO
+   private:
+    SumExpression(std::vector<ExpressionHandler>&& expr_hdls);
+    std::unique_ptr<SumExpression> casted_clone() const;
+    template <class ExpressionClass, class... Args>
+    friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
+};
+
+inline SumExpression::SumExpression(std::vector<ExpressionHandler>&& expr_hdls)
+    : VectorNumerousExpression(std::move(expr_hdls)) {
+}
+
+template <class... Args>
+inline SumExpression::SumExpression(Args&&... expr_hdls)
+    : VectorNumerousExpression(std::move(expr_hdls)...) {
+}
+
+inline ExpressionHandler SumExpression::make(std::vector<ExpressionHandler>&& expr_hdls) {
+    return ExpressionHandler::make<SumExpression>(std::move(expr_hdls));
+}
+
+template <class... Args>
+ExpressionHandler SumExpression::make(Args&&... expr_hdls) {
+    return ExpressionHandler::make<SumExpression>(std::move(expr_hdls)...);
+}
+
+inline std::unique_ptr<SumExpression> SumExpression::casted_clone() const {
+    auto v = clone_expr_hdls_vector();
+    return std::unique_ptr<SumExpression>(new SumExpression(std::move(v)));
+}
+
+inline ExpressionHandler SumExpression::clone() const {
+    auto v = clone_expr_hdls_vector();
+    return ExpressionHandler::make<SumExpression>(std::move(v));
+}
+
+inline bool SumExpression::equals(const Expression& other) const {
+    const auto casted_other_ptr = dynamic_cast<const SumExpression*>(&other);
+    if (!casted_other_ptr) {
+        return false;
+    }
+    const auto& casted_other = *casted_other_ptr;
+    return equals_helper_function(casted_other);
+}
+
+inline std::string SumExpression::str() const {
+    return str_helper_function("𝟘", "+");
+}
+
+inline std::string SumExpression::repr() const {
+    return repr_helper_function("Sum");
+}
 
 }  // namespace boson_algebra
 
