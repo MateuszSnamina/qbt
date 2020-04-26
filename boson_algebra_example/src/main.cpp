@@ -174,8 +174,9 @@ int main() {
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
     }
     {
+        // Transfomration goal: Expand boson number operator when possible.
+        // Transfomration example: 2*n(boson)=>2*(cr(boson)*an(boson))
         const auto fun = [](const Expression& expr) -> ExpressionHandlerOptional {
-            std::cout << "Dfs: " << expr.str() << std::endl;
             const auto casted_other_ptr = dynamic_cast<const BosonNumberOperator*>(&expr);
             if (!casted_other_ptr) {
                 return std::nullopt;
@@ -185,6 +186,54 @@ int main() {
             ExpressionHandler cr = BosonCreationOperator::make(boson);
             ExpressionHandler an = BosonAnihilationOperator::make(boson);
             ExpressionHandler product = ProductExpression::make(std::move(cr), std::move(an));
+            return std::move(product);
+        };
+        ExpressionHandler expr1 = expression_1(a, b, c, d);
+        ExpressionHandler expr1_clone = expr1.clone();
+        std::cout << "Start Dfs." << std::endl;
+        expr1.safe_dfs_transform(fun);
+        std::cout << "End Dfs." << std::endl;
+        std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
+        std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
+    }
+    {
+        // Transfomration goal: Perform simplification due to product associativity.
+        // Transfomration example: a*b*(c*d)*e => a*b*c*d*e
+        const auto fun = [](const Expression& expression) -> ExpressionHandlerOptional {
+            const auto casted_expression_ptr = dynamic_cast<const ProductExpression*>(&expression);
+            if (!casted_expression_ptr) {
+                return std::nullopt;
+            }
+            const ProductExpression& casted_expression = *casted_expression_ptr;
+            std::optional<unsigned> n_subexpression_being_product_optional;
+            for (unsigned n_subexpression = 0; n_subexpression < casted_expression.n_subexpressions(); n_subexpression++) {
+                const Expression& subexpression = casted_expression.subexpression(n_subexpression).target();
+                const auto casted_subexpression_ptr = dynamic_cast<const ProductExpression*>(&subexpression);
+                if (casted_subexpression_ptr) {
+                    n_subexpression_being_product_optional = n_subexpression;
+                    break;
+                }
+            }
+            if (!n_subexpression_being_product_optional) {
+                return std::nullopt;
+            }
+            unsigned n_subexpression_being_product = *n_subexpression_being_product_optional;
+            const Expression& subexpression = casted_expression.subexpression(n_subexpression_being_product).target();
+            const auto casted_subexpression_ptr = dynamic_cast<const ProductExpression*>(&subexpression);
+            const ProductExpression& casted_subexpression = *casted_subexpression_ptr;
+            ExpressionHandlerVector v;
+            for (unsigned n_subexpression = 0; n_subexpression < n_subexpression_being_product; n_subexpression++) {
+                v.emplace_back(std::move(casted_expression.subexpression(n_subexpression).clone()));
+            }
+
+            for (unsigned n_subexpression = 0; n_subexpression < casted_subexpression.n_subexpressions(); n_subexpression++) {
+                v.emplace_back(std::move(casted_subexpression.subexpression(n_subexpression).clone()));
+            }
+
+            for (unsigned n_subexpression = n_subexpression_being_product + 1; n_subexpression < casted_expression.n_subexpressions(); n_subexpression++) {
+                v.emplace_back(std::move(casted_expression.subexpression(n_subexpression).clone()));
+            }
+            ExpressionHandler product = ProductExpression::make(std::move(v));
             return std::move(product);
         };
         ExpressionHandler expr1 = expression_1(a, b, c, d);
