@@ -17,6 +17,9 @@ class Boson : public IdClass, public StrRepr {
    public:
     virtual bool equals(const Boson&) const = 0;
     virtual ~Boson() = default;
+
+   protected:
+    Boson() = default;
 };
 
 }  // namespace boson_algebra
@@ -29,16 +32,21 @@ namespace boson_algebra {
 
 class CharBoson final : public Boson {
    public:
-    CharBoson(char);
+    static std::unique_ptr<CharBoson> make(char);
     bool equals(const Boson&) const override;
     std::string str() const override;
     std::string repr() const override;
 
    private:
+    CharBoson(char);
     char _c;
 };
 
 inline CharBoson::CharBoson(char c) : _c(c) {
+}
+
+inline std::unique_ptr<CharBoson> CharBoson::make(char c) {
+    return std::unique_ptr<CharBoson>(new CharBoson(c));
 }
 
 inline bool CharBoson::equals(const Boson& other) const {
@@ -54,6 +62,5 @@ inline std::string CharBoson::repr() const {
 }
 
 }  // namespace boson_algebra
-
 
 #endif

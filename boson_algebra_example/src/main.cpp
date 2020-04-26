@@ -89,10 +89,10 @@ int main() {
     // The instances below will be shared among all the basic
     // Boson Primitive Operators.
 
-    const std::shared_ptr<Boson> a = std::make_shared<CharBoson>('a');
-    const std::shared_ptr<Boson> b = std::make_shared<CharBoson>('b');
-    const std::shared_ptr<Boson> c = std::make_shared<CharBoson>('c');
-    const std::shared_ptr<Boson> d = std::make_shared<CharBoson>('d');
+    const std::shared_ptr<Boson> a = CharBoson::make('a');
+    const std::shared_ptr<Boson> b = CharBoson::make('b');
+    const std::shared_ptr<Boson> c = CharBoson::make('c');
+    const std::shared_ptr<Boson> d = CharBoson::make('d');
     std::cout << "boson str:  " << c->str() << std::endl;
     std::cout << "boson repr: " << c->repr() << std::endl;
     std::cout << "boson id:   " << c->id() << std::endl;

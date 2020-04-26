@@ -3,10 +3,10 @@
 
 #include <boson_algebra/expression_all.hpp>
 
-const std::shared_ptr<boson_algebra::Boson> a = std::make_shared<boson_algebra::CharBoson>('a');
-const std::shared_ptr<boson_algebra::Boson> b = std::make_shared<boson_algebra::CharBoson>('b');
-const std::shared_ptr<boson_algebra::Boson> c = std::make_shared<boson_algebra::CharBoson>('c');
-const std::shared_ptr<boson_algebra::Boson> d = std::make_shared<boson_algebra::CharBoson>('d');
+const std::shared_ptr<boson_algebra::Boson> a = boson_algebra::CharBoson::make('a');
+const std::shared_ptr<boson_algebra::Boson> b = boson_algebra::CharBoson::make('b');
+const std::shared_ptr<boson_algebra::Boson> c = boson_algebra::CharBoson::make('c');
+const std::shared_ptr<boson_algebra::Boson> d = boson_algebra::CharBoson::make('d');
 
 inline boson_algebra::ExpressionHandler cr_a() {
     return boson_algebra::BosonCreationOperator::make(a);
