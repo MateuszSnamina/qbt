@@ -31,8 +31,7 @@ ExpressionHandlerOptional transform_simplify_flatten(const ExpressionHandler& ex
             v.emplace_back(std::move(subexpression_hdl.clone()));
         }
     }
-    ExpressionHandler product = VectorNumerousExpressionDerrivedClass::make(std::move(v));
-    return std::move(product);
+    return VectorNumerousExpressionDerrivedClass::make(std::move(v));
 }
 
 }  // namespace boson_algebra

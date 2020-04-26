@@ -224,8 +224,7 @@ int main() {
             const auto boson = casted_other.boson();
             ExpressionHandler cr = BosonCreationOperator::make(boson);
             ExpressionHandler an = BosonAnihilationOperator::make(boson);
-            ExpressionHandler product = ProductExpression::make(std::move(cr), std::move(an));
-            return std::move(product);
+            return ProductExpression::make(std::move(cr), std::move(an));
         };
         ExpressionHandler expr1 = expression_1(a, b, c, d);
         ExpressionHandler expr1_clone = expr1.clone();
