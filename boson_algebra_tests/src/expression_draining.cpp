@@ -1,14 +1,13 @@
-// SELF:
-#include <boson_algebra_tests/abcd.hpp>
 // TESTED LIBRARY:
-#include <boson_algebra/expression_all.hpp>
+#include <boson_algebra/expression_pragma.hpp>
 // GTEST:
 #include <gtest/gtest.h>
 
 namespace ba = boson_algebra;
+using namespace ba::literals;
 
 TEST(Draining, Test0) {
-    auto expression = ba::ProductExpression::make(cr_b(), cr_a(), an_d());
+    auto expression = ba::ProductExpression::make('b'_cr, 'a'_cr, 'd'_an);
     ASSERT_EQ(expression.str(), "❪♯b◦♯a◦♭d❫");
 
     ASSERT_FALSE(expression.subexpression(0).is_drained());
@@ -41,7 +40,7 @@ TEST(Draining, Test0) {
 }
 
 TEST(Draining, Test1) {
-    auto expression = ba::SumExpression::make(cr_b(), cr_a(), an_d());
+    auto expression = ba::SumExpression::make('b'_cr, 'a'_cr, 'd'_an);
     ASSERT_EQ(expression.str(), "❪♯b+♯a+♭d❫");
 
     ASSERT_FALSE(expression.subexpression(0).is_drained());
