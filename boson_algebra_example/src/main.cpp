@@ -7,6 +7,8 @@
 #include <iostream>
 
 using namespace boson_algebra;
+using namespace boson_algebra::literals;
+using namespace boson_algebra::operators;
 
 ExpressionHandler expression_1(const std::shared_ptr<Boson>& a,
                                const std::shared_ptr<Boson>& b,

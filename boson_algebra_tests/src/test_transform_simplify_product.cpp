@@ -1,15 +1,18 @@
 // SELF:
-#include<boson_algebra_tests/abcd.hpp>
+#include <boson_algebra_tests/example_expressions.hpp>
 // TESTED LIBRARY:
 #include <boson_algebra/expression_all.hpp>
+#include <boson_algebra/expression_pragma.hpp>
 #include <boson_algebra/transform_simplify_product.hpp>
 // GTEST:
 #include <gtest/gtest.h>
 
 namespace ba = boson_algebra;
+using namespace ba::literals;
+using namespace ba::operators;
 
 TEST(TransformSimplifyProduct, OnBosonPrimitiveOperator) {
-    const auto expression = cr_d();
+    const auto expression = 'd'_cr;
     ASSERT_EQ(expression.str(), "♯d");
     //std::cout << expression.str() << std::endl;
     const auto transformed_expression_optional = transform_simplify_product(expression);
@@ -25,7 +28,7 @@ TEST(TransformSimplifyProduct, OnEmptyProduct) {
 }
 
 TEST(TransformSimplifyProduct, OnProductOfBosonPrimitiveOperators) {
-    const auto expression = ba::ProductExpression::make(cr_a(), an_b());
+    const auto expression = ('a'_cr * 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯a◦♭b❫");
     const auto transformed_expression_optional = transform_simplify_product(expression);
@@ -33,7 +36,7 @@ TEST(TransformSimplifyProduct, OnProductOfBosonPrimitiveOperators) {
 }
 
 TEST(TransformSimplifyProduct, MinimalExample1) {
-    const auto expression = ba::ProductExpression::make(an_c(), ba::ProductExpression::make(cr_a(), cr_b()));
+    const auto expression = ('c'_an * ('a'_cr * 'b'_cr));
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♭c◦❪♯a◦♯b❫❫");
     const auto transformed_expression_optional = transform_simplify_product(expression);
@@ -44,7 +47,7 @@ TEST(TransformSimplifyProduct, MinimalExample1) {
 }
 
 TEST(TransformSimplifyProduct, MinimalExample2) {
-    const auto expression = ba::ProductExpression::make(an_c(), ba::ProductExpression::make(cr_a(), cr_b()), ba::ProductExpression::make(an_d(), cr_a()));
+    const auto expression = ba::ProductExpression::make('c'_an, ('a'_cr * 'b'_cr), ('d'_an * 'a'_cr));
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♭c◦❪♯a◦♯b❫◦❪♭d◦♯a❫❫");
     const auto transformed_expression_optional = transform_simplify_product(expression);
