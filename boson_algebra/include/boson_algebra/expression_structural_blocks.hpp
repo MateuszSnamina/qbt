@@ -99,10 +99,12 @@ class ProductExpression final : public VectorNumerousExpression {
     static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);
     template <class... Args>
     static ExpressionHandler make(Args&&... expr_hdls);
+    static ExpressionHandler make_identity();
     ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
+    bool is_identity() const;  // it is identity if it is empy.
 
    private:
     ProductExpression(std::vector<ExpressionHandler>&& expr_hdls);
@@ -127,6 +129,10 @@ inline ExpressionHandler ProductExpression::make(std::vector<ExpressionHandler>&
 template <class... Args>
 ExpressionHandler ProductExpression::make(Args&&... expr_hdls) {
     return ExpressionHandler::make<ProductExpression>(std::move(expr_hdls)...);
+}
+
+inline ExpressionHandler ProductExpression::make_identity() {
+    return make();
 }
 
 inline std::unique_ptr<ProductExpression> ProductExpression::casted_clone() const {
@@ -156,6 +162,10 @@ inline std::string ProductExpression::repr() const {
     return repr_helper_function("Product");
 }
 
+inline bool ProductExpression::is_identity() const {
+    return n_subexpressions() == 0;
+}
+
 }  // namespace boson_algebra
 
 // **********************************************************
@@ -170,11 +180,12 @@ class SumExpression final : public VectorNumerousExpression {
     static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);
     template <class... Args>
     static ExpressionHandler make(Args&&... expr_hdls);
+    static ExpressionHandler make_zero();
     ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
-
+    bool is_zero() const;  // it is zero if it is empy.
    private:
     SumExpression(std::vector<ExpressionHandler>&& expr_hdls);
     std::unique_ptr<SumExpression> casted_clone() const;
@@ -198,6 +209,10 @@ inline ExpressionHandler SumExpression::make(std::vector<ExpressionHandler>&& ex
 template <class... Args>
 ExpressionHandler SumExpression::make(Args&&... expr_hdls) {
     return ExpressionHandler::make<SumExpression>(std::move(expr_hdls)...);
+}
+
+inline ExpressionHandler SumExpression::make_zero() {
+    return make();
 }
 
 inline std::unique_ptr<SumExpression> SumExpression::casted_clone() const {
@@ -225,6 +240,10 @@ inline std::string SumExpression::str() const {
 
 inline std::string SumExpression::repr() const {
     return repr_helper_function("Sum");
+}
+
+inline bool SumExpression::is_zero() const {
+    return n_subexpressions() == 0;
 }
 
 }  // namespace boson_algebra

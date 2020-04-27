@@ -18,6 +18,10 @@ TEST(ExpressionBosonPrimitiveOperator, BosonCreationOperator) {
     ASSERT_EQ(expression.n_subexpressions(), 0);
     ASSERT_EQ(boost::size(expression.range()), 0);
     ASSERT_EQ(boost::size(expression.crange()), 0);
+    const auto boson = expression.casted_target<ba::BosonPrimitiveOperators>().boson();
+    ASSERT_TRUE(boson);
+    ASSERT_EQ(boson->str(), "d");
+    ASSERT_EQ(std::addressof(*boson), std::addressof(*d));
     {
         const auto expression1 = cr_d();
         ASSERT_TRUE(expression.equals(expression1));
@@ -50,6 +54,10 @@ TEST(ExpressionBosonPrimitiveOperator, BosonAnnihilationOperator) {
     ASSERT_EQ(expression.n_subexpressions(), 0);
     ASSERT_EQ(boost::size(expression.range()), 0);
     ASSERT_EQ(boost::size(expression.crange()), 0);
+    const auto boson = expression.casted_target<ba::BosonPrimitiveOperators>().boson();
+    ASSERT_TRUE(boson);
+    ASSERT_EQ(boson->str(), "d");
+    ASSERT_EQ(std::addressof(*boson), std::addressof(*d));
     {
         const auto expression1 = an_d();
         ASSERT_TRUE(expression.equals(expression1));
@@ -82,6 +90,10 @@ TEST(ExpressionBosonPrimitiveOperator, BosonNumberOperator) {
     ASSERT_EQ(expression.n_subexpressions(), 0);
     ASSERT_EQ(boost::size(expression.range()), 0);
     ASSERT_EQ(boost::size(expression.crange()), 0);
+    const auto boson = expression.casted_target<ba::BosonPrimitiveOperators>().boson();
+    ASSERT_TRUE(boson);
+    ASSERT_EQ(boson->str(), "d");
+    ASSERT_EQ(std::addressof(*boson), std::addressof(*d));
     {
         const auto expression1 = n_d();
         ASSERT_TRUE(expression.equals(expression1));

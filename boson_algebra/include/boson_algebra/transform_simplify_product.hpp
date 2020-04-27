@@ -7,7 +7,7 @@ namespace boson_algebra {
 
 /*
  * Transfomration goal: Perform simplification due to product associativity.
- * Transfomration example: a*b*(c*d)*e => a*b*c*d*e
+ * Transfomration example: a◦b◦(c◦d)◦e◦(f◦g) => a◦b◦c◦d◦e◦f◦g
  */
 
 ExpressionHandlerOptional transform_simplify_product(const ExpressionHandler& expression_hdl);
