@@ -30,7 +30,6 @@ namespace boson_algebra {
 class Expression;
 class ExpressionHandler;
 
-
 using ExpressionHandlerVector = std::vector<ExpressionHandler>;
 using ExpressionHandlerList = std::list<ExpressionHandler>;
 template <std::size_t N>
@@ -51,12 +50,14 @@ using ConstExpressionHandlerRandomAccessRange = boost::any_range<const Expressio
 
 class ExpressionHandler final : public StrRepr {
    public:
-    // move semantic:
-    ExpressionHandler(ExpressionHandler&&) = default;
-    ExpressionHandler& operator=(ExpressionHandler&&) = default;
     // copy semantic:
     ExpressionHandler(const ExpressionHandler&) = delete;
     ExpressionHandler& operator=(const ExpressionHandler&) = delete;
+    // move semantic:
+    ExpressionHandler(ExpressionHandler&&) = default;
+    ExpressionHandler& operator=(ExpressionHandler&&) = default;
+    // drained checker (drained = after move => invalid):
+    bool is_drained() const;
     // creation model:
     template <class ExpressionDerrivedClass, class... Args>
     static ExpressionHandler make(Args&&... expression_class_ctor_args);
@@ -82,6 +83,7 @@ class ExpressionHandler final : public StrRepr {
     // other methods:
     ExpressionHandler clone() const;
     bool equals(const ExpressionHandler&) const;
+    // modifier algorithms:
     void safe_dfs_transform(const SafeTransformFunctionT&);
     //void unsafe_dfs_transform(const UnsafeTransformFunctionT&);
 
@@ -92,6 +94,7 @@ class ExpressionHandler final : public StrRepr {
 
    private:
     std::unique_ptr<Expression> _expr;
+    bool _is_drained;
 };
 
 class Expression : public StrRepr {
@@ -121,10 +124,15 @@ class Expression : public StrRepr {
 
 // **********************************************************
 
-inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr) : _expr(std::move(expr)) {
+inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr)
+    : _expr(std::move(expr)),
+      _is_drained(false) {
     assert(_expr);
 }
 
+inline bool ExpressionHandler::is_drained() const {
+    return _is_drained;
+}
 template <class ExpressionDerrivedClass, class... Args>
 ExpressionHandler ExpressionHandler::make(Args&&... expression_class_ctor_args) {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
@@ -132,6 +140,8 @@ ExpressionHandler ExpressionHandler::make(Args&&... expression_class_ctor_args) 
 }
 
 inline Expression& ExpressionHandler::target() {
+    assert(!is_drained());
+    assert(_expr);
     return *_expr;
 }
 
@@ -140,48 +150,60 @@ inline const Expression& ExpressionHandler::target() const {
 }
 
 inline std::string ExpressionHandler::str() const {
+    assert(!is_drained());
     return target().str();
 }
 
 inline std::string ExpressionHandler::repr() const {
+    assert(!is_drained());
     return target().repr();
 }
 
 inline unsigned ExpressionHandler::n_subexpressions() const {
+    assert(!is_drained());
     return target().n_subexpressions();
 }
 
 inline ExpressionHandler& ExpressionHandler::subexpression(unsigned n_subexpression) {
+    assert(!is_drained());
     return target().subexpression(n_subexpression);
 }
 
 inline const ExpressionHandler& ExpressionHandler::subexpression(unsigned n_subexpression) const {
+    assert(!is_drained());
     return target().subexpression(n_subexpression);
 }
 
 inline ExpressionHandlerRandomAccessRange ExpressionHandler::range() {
+    assert(!is_drained());
     return target().range();
 }
 
 inline ConstExpressionHandlerRandomAccessRange ExpressionHandler::range() const {
+    assert(!is_drained());
     return target().range();
 }
 
 inline ConstExpressionHandlerRandomAccessRange ExpressionHandler::crange() const {
+    assert(!is_drained());
     return target().crange();
 }
 
 inline ExpressionHandler ExpressionHandler::clone() const {
+    assert(!is_drained());
     return ExpressionHandler(target().clone());
 }
 
 inline bool ExpressionHandler::equals(const ExpressionHandler& other) const {
+    assert(!other.is_drained());
+    assert(!is_drained());
     return target().equals(other.target());
 }
 
 template <class ExpressionDerrivedClass>
 ExpressionDerrivedClass& ExpressionHandler::casted_target() {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
+    assert(!is_drained());
     assert(is_of_type<ExpressionDerrivedClass>());
     return dynamic_cast<ExpressionDerrivedClass&>(target());
 }
@@ -189,6 +211,7 @@ ExpressionDerrivedClass& ExpressionHandler::casted_target() {
 template <class ExpressionDerrivedClass>
 const ExpressionDerrivedClass& ExpressionHandler::casted_target() const {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
+    assert(!is_drained());
     assert(is_of_type<ExpressionDerrivedClass>());
     return dynamic_cast<const ExpressionDerrivedClass&>(target());
 }
@@ -196,10 +219,12 @@ const ExpressionDerrivedClass& ExpressionHandler::casted_target() const {
 template <class ExpressionDerrivedClass>
 const bool ExpressionHandler::is_of_type() const {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
+    assert(!is_drained());
     return bool(dynamic_cast<const ExpressionDerrivedClass*>(&target()));
 }
 
 inline void ExpressionHandler::safe_dfs_transform(const SafeTransformFunctionT& fun) {
+    assert(!is_drained());
     for (unsigned n_subexpression = 0; n_subexpression < target().n_subexpressions(); n_subexpression++) {
         target().subexpression(n_subexpression).safe_dfs_transform(fun);
     }
@@ -212,11 +237,13 @@ inline std::unique_ptr<Expression>
 ExpressionHandler::substitute(std::unique_ptr<Expression> expr) {
     assert(expr);
     std::swap(_expr, expr);
+    _is_drained = false;
     return expr;
 }
 
 inline void swap(ExpressionHandler& expr_1, ExpressionHandler& expr_2) {
     std::swap(expr_1._expr, expr_2._expr);
+    std::swap(expr_1._is_drained, expr_2._is_drained);
 }
 
 }  // namespace boson_algebra

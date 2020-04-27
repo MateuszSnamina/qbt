@@ -64,7 +64,16 @@ inline bool IntegerFactoredExpression::equals(const Expression& other) const {
 }
 
 inline std::string IntegerFactoredExpression::str() const {
-    return "❪" + std::to_string(_factor) + subexpression(0).target().str() + "❫";
+    auto fancy_to_string = [](auto _) -> std::string {
+        if (_ == +1) {
+            return "+";
+        }
+        if (_ == -1) {
+            return "-";
+        }
+        return std::to_string(_);
+    };
+    return "❪" + fancy_to_string(_factor) + subexpression(0).target().str() + "❫";
 }
 
 inline std::string IntegerFactoredExpression::repr() const {
