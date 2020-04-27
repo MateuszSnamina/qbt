@@ -6,8 +6,6 @@
 #include <boson_algebra/transform_simplify_product.hpp>
 
 namespace ba = boson_algebra;
-using namespace ba::literals;
-using namespace ba::operators;
 
 extern const std::shared_ptr<boson_algebra::Boson> a;
 extern const std::shared_ptr<boson_algebra::Boson> b;
