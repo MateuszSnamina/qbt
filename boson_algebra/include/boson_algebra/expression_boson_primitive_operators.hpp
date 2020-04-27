@@ -98,12 +98,12 @@ inline std::string BosonCreationOperator::repr() const {
 }  // namespace boson_algebra
 
 // **********************************************************
-// ***  BosonAnihilationOperator                          ***
+// ***  BosonAnnihilationOperator                          ***
 // **********************************************************
 
 namespace boson_algebra {
 
-class BosonAnihilationOperator final : public BosonPrimitiveOperators {
+class BosonAnnihilationOperator final : public BosonPrimitiveOperators {
    public:
     static ExpressionHandler make(std::shared_ptr<Boson> boson);
     ExpressionHandler clone() const override;
@@ -112,39 +112,39 @@ class BosonAnihilationOperator final : public BosonPrimitiveOperators {
     std::string repr() const override;
 
    private:
-    BosonAnihilationOperator(std::shared_ptr<Boson> boson);
-    std::unique_ptr<BosonAnihilationOperator> casted_clone() const;
+    BosonAnnihilationOperator(std::shared_ptr<Boson> boson);
+    std::unique_ptr<BosonAnnihilationOperator> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
-inline BosonAnihilationOperator::BosonAnihilationOperator(std::shared_ptr<Boson> boson)
+inline BosonAnnihilationOperator::BosonAnnihilationOperator(std::shared_ptr<Boson> boson)
     : BosonPrimitiveOperators(boson) {
 }
 
-inline ExpressionHandler BosonAnihilationOperator::make(std::shared_ptr<Boson> boson) {
-    return ExpressionHandler::make<BosonAnihilationOperator>(boson);
+inline ExpressionHandler BosonAnnihilationOperator::make(std::shared_ptr<Boson> boson) {
+    return ExpressionHandler::make<BosonAnnihilationOperator>(boson);
 }
 
-inline std::unique_ptr<BosonAnihilationOperator> BosonAnihilationOperator::casted_clone() const {
-    return std::unique_ptr<BosonAnihilationOperator>(new BosonAnihilationOperator(boson()));
+inline std::unique_ptr<BosonAnnihilationOperator> BosonAnnihilationOperator::casted_clone() const {
+    return std::unique_ptr<BosonAnnihilationOperator>(new BosonAnnihilationOperator(boson()));
 }
 
-inline ExpressionHandler BosonAnihilationOperator::clone() const {
-    return ExpressionHandler::make<BosonAnihilationOperator>(boson());
+inline ExpressionHandler BosonAnnihilationOperator::clone() const {
+    return ExpressionHandler::make<BosonAnnihilationOperator>(boson());
 }
 
-inline bool BosonAnihilationOperator::equals(const Expression& other) const {
-    const auto casted_other = dynamic_cast<const BosonAnihilationOperator*>(&other);
+inline bool BosonAnnihilationOperator::equals(const Expression& other) const {
+    const auto casted_other = dynamic_cast<const BosonAnnihilationOperator*>(&other);
     return (casted_other ? boson()->equals(*casted_other->boson()) : false);
 }
 
-inline std::string BosonAnihilationOperator::str() const {
+inline std::string BosonAnnihilationOperator::str() const {
     return "♭" + boson()->str();
 }
 
-inline std::string BosonAnihilationOperator::repr() const {
-    return "BosonAnihilationOperator(" + boson()->repr() + ")";
+inline std::string BosonAnnihilationOperator::repr() const {
+    return "BosonAnnihilationOperator(" + boson()->repr() + ")";
 }
 
 }  // namespace boson_algebra

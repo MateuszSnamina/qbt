@@ -12,7 +12,7 @@ ExpressionHandler expression_1(const std::shared_ptr<Boson>& a,
                                const std::shared_ptr<Boson>& c,
                                const std::shared_ptr<Boson>& d) {
     ExpressionHandler cr_a = BosonCreationOperator::make(a);
-    ExpressionHandler an_b = BosonAnihilationOperator::make(b);
+    ExpressionHandler an_b = BosonAnnihilationOperator::make(b);
     ExpressionHandler cr_c = BosonCreationOperator::make(c);
     ExpressionHandler n_d = BosonNumberOperator::make(d);
     ExpressionHandler double_cr_c = IntegerFactoredExpression::make(2, std::move(cr_c));
@@ -27,7 +27,7 @@ ExpressionHandler expression_2(const std::shared_ptr<Boson>& a,
                                const std::shared_ptr<Boson>& c,
                                const std::shared_ptr<Boson>& d) {
     ExpressionHandler cr_a = BosonCreationOperator::make(a);
-    ExpressionHandler an_b = BosonAnihilationOperator::make(b);
+    ExpressionHandler an_b = BosonAnnihilationOperator::make(b);
     ExpressionHandler cr_c = BosonCreationOperator::make(c);
     ExpressionHandler n_d = BosonNumberOperator::make(d);
     ExpressionHandler double_cr_c = IntegerFactoredExpression::make(3, std::move(cr_c));
@@ -41,8 +41,8 @@ ExpressionHandler expression_3(const std::shared_ptr<Boson>& a,
                                const std::shared_ptr<Boson>& b,
                                const std::shared_ptr<Boson>& c,
                                const std::shared_ptr<Boson>& d) {
-    ExpressionHandler an_a = BosonAnihilationOperator::make(a);
-    ExpressionHandler an_b = BosonAnihilationOperator::make(b);
+    ExpressionHandler an_a = BosonAnnihilationOperator::make(a);
+    ExpressionHandler an_b = BosonAnnihilationOperator::make(b);
     ExpressionHandler cr_c = BosonCreationOperator::make(c);
     ExpressionHandler n_d = BosonNumberOperator::make(d);
     ExpressionHandler double_cr_c = IntegerFactoredExpression::make(3, std::move(cr_c));
@@ -56,8 +56,8 @@ ExpressionHandler expression_4(const std::shared_ptr<Boson>& a,
                                const std::shared_ptr<Boson>& b,
                                const std::shared_ptr<Boson>& c,
                                const std::shared_ptr<Boson>& d) {
-    ExpressionHandler an_b = BosonAnihilationOperator::make(b);
-    ExpressionHandler an_b_re = BosonAnihilationOperator::make(b);
+    ExpressionHandler an_b = BosonAnnihilationOperator::make(b);
+    ExpressionHandler an_b_re = BosonAnnihilationOperator::make(b);
     ExpressionHandler cr_c = BosonCreationOperator::make(c);
     ExpressionHandler n_d = BosonNumberOperator::make(d);
     ExpressionHandler double_cr_c = IntegerFactoredExpression::make(2, std::move(cr_c));
@@ -72,7 +72,7 @@ ExpressionHandler expression_5(const std::shared_ptr<Boson>& a,
                                const std::shared_ptr<Boson>& c,
                                const std::shared_ptr<Boson>& d) {
     ExpressionHandler cr_a = BosonCreationOperator::make(a);
-    ExpressionHandler an_b = BosonAnihilationOperator::make(b);
+    ExpressionHandler an_b = BosonAnnihilationOperator::make(b);
     ExpressionHandler cr_c = BosonCreationOperator::make(c);
     ExpressionHandler n_d = BosonNumberOperator::make(d);
     ExpressionHandler product1 = ProductExpression::make(std::move(cr_a), std::move(an_b));
@@ -223,7 +223,7 @@ int main() {
             const auto& casted_other = expr_hdl.casted_target<BosonNumberOperator>();
             const auto boson = casted_other.boson();
             ExpressionHandler cr = BosonCreationOperator::make(boson);
-            ExpressionHandler an = BosonAnihilationOperator::make(boson);
+            ExpressionHandler an = BosonAnnihilationOperator::make(boson);
             return ProductExpression::make(std::move(cr), std::move(an));
         };
         ExpressionHandler expr1 = expression_1(a, b, c, d);

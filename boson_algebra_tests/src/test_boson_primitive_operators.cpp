@@ -14,7 +14,7 @@ TEST(BosonPrimitiveOperator, BosonCreationOperator) {
     const auto expression = cr_d();
     ASSERT_EQ(expression.str(), "♯d");
     ASSERT_EQ(expression.is_of_type<ba::BosonCreationOperator>(), true);
-    ASSERT_EQ(expression.is_of_type<ba::BosonAnihilationOperator>(), false);
+    ASSERT_EQ(expression.is_of_type<ba::BosonAnnihilationOperator>(), false);
     ASSERT_EQ(expression.is_of_type<ba::BosonNumberOperator>(), false);
     ASSERT_EQ(expression.target().n_subexpressions(), 0);     // TODO  remove target when wpoosible
     ASSERT_EQ(boost::size(expression.target().range()), 0);   // TODO  remove target when wpoosible
@@ -33,4 +33,4 @@ TEST(BosonPrimitiveOperator, BosonCreationOperator) {
     ASSERT_FALSE(std::addressof(cr_d().target()) == std::addressof(expression3.target()));
 }
 
-//BosonAnihilationOperator
+//BosonAnnihilationOperator

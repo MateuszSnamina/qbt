@@ -13,7 +13,7 @@ inline boson_algebra::ExpressionHandler cr_a() {
 }
 
 inline boson_algebra::ExpressionHandler an_a() {
-    return boson_algebra::BosonAnihilationOperator::make(a);
+    return boson_algebra::BosonAnnihilationOperator::make(a);
 }
 
 inline boson_algebra::ExpressionHandler n_a() {
@@ -25,7 +25,7 @@ inline boson_algebra::ExpressionHandler cr_b() {
 }
 
 inline boson_algebra::ExpressionHandler an_b() {
-    return boson_algebra::BosonAnihilationOperator::make(b);
+    return boson_algebra::BosonAnnihilationOperator::make(b);
 }
 
 inline boson_algebra::ExpressionHandler n_b() {
@@ -37,7 +37,7 @@ inline boson_algebra::ExpressionHandler cr_c() {
 }
 
 inline boson_algebra::ExpressionHandler an_c() {
-    return boson_algebra::BosonAnihilationOperator::make(c);
+    return boson_algebra::BosonAnnihilationOperator::make(c);
 }
 
 inline boson_algebra::ExpressionHandler n_c() {
@@ -49,7 +49,7 @@ inline boson_algebra::ExpressionHandler cr_d() {
 }
 
 inline boson_algebra::ExpressionHandler an_d() {
-    return boson_algebra::BosonAnihilationOperator::make(d);
+    return boson_algebra::BosonAnnihilationOperator::make(d);
 }
 
 inline boson_algebra::ExpressionHandler n_d() {
