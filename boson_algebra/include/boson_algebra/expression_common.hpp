@@ -3,6 +3,9 @@
 
 #include <boson_algebra/expression_abstract.hpp>
 #include <boson_algebra/util_make.hpp>
+//BOOST:
+#include <boost/algorithm/string/join.hpp>
+#include <boost/range/adaptor/transformed.hpp>
 
 namespace boson_algebra {
 
@@ -224,36 +227,22 @@ inline bool VectorNumerousExpression::equals_helper_function(const VectorNumerou
 }
 
 inline std::string VectorNumerousExpression::str_helper_function(
-    // TODO better style.
     const std::string& string_when_empty,
     const std::string& string_for_operand) const {
     if (n_subexpressions() == 0) {
         return string_when_empty;
     }
-    std::string result;
-    result += "❪";
-    result += subexpression(0).target().str();
-    for (unsigned n_subexpression = 1; n_subexpression < n_subexpressions(); n_subexpression++) {
-        result += string_for_operand;
-        result += subexpression(n_subexpression).target().str();
-    }
-    result += "❫";
-    return result;
+    std::string args = boost::algorithm::join(
+        crange() | boost::adaptors::transformed([](const ExpressionHandler& _) { return _.str(); }),
+        string_for_operand);
+    return "❪" + args + "❫";
 }
 
 inline std::string VectorNumerousExpression::repr_helper_function(const std::string& string_for_function_name) const {
-    // TODO better style.
-    std::string result;
-    result += string_for_function_name;
-    if (n_subexpressions() > 0) {
-        result += subexpression(0).target().repr();
-    }
-    for (unsigned n_subexpression = 1; n_subexpression < n_subexpressions(); n_subexpression++) {
-        result += ",";
-        result += subexpression(n_subexpression).target().repr();
-    }
-    result += ")";
-    return result;
+    std::string args = boost::algorithm::join(
+        crange() | boost::adaptors::transformed([](const ExpressionHandler& _) { return _.repr(); }),
+        ", ");
+    return string_for_function_name + "(" + args + ")";
 }
 
 }  // namespace boson_algebra
