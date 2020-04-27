@@ -54,8 +54,8 @@ class ExpressionHandler final : public StrRepr {
     ExpressionHandler(const ExpressionHandler&) = delete;
     ExpressionHandler& operator=(const ExpressionHandler&) = delete;
     // move semantic:
-    ExpressionHandler(ExpressionHandler&&) = default;
-    ExpressionHandler& operator=(ExpressionHandler&&) = default;
+    ExpressionHandler(ExpressionHandler&&);
+    ExpressionHandler& operator=(ExpressionHandler&&);
     // drained checker (drained = after move => invalid):
     bool is_drained() const;
     // creation model:
@@ -125,9 +125,30 @@ class Expression : public StrRepr {
 // **********************************************************
 
 inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr)
-    : _expr(std::move(expr)),
-      _is_drained(false) {
-    assert(_expr);
+    : _expr(nullptr),
+      _is_drained(true) {
+    assert(expr);
+    _expr = std::move(expr);
+    _is_drained = false;
+}
+
+inline ExpressionHandler::ExpressionHandler(ExpressionHandler&& other)
+    : _expr(nullptr),
+      _is_drained(true) {
+    assert(!other.is_drained());
+    assert(other._expr);
+    other._is_drained = true;
+    _expr = std::move(other._expr);
+    _is_drained = false;
+}
+
+inline ExpressionHandler& ExpressionHandler::operator=(ExpressionHandler&& other) {
+    assert(!other.is_drained());
+    assert(other._expr);
+    other._is_drained = true;
+    _expr = std::move(other._expr);
+    _is_drained = false;
+    return *this;
 }
 
 inline bool ExpressionHandler::is_drained() const {
