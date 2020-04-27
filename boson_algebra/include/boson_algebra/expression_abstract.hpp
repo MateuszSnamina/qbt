@@ -28,11 +28,28 @@
 namespace boson_algebra {
 
 class Expression;
+class ExpressionHandler;
+
+
+using ExpressionHandlerVector = std::vector<ExpressionHandler>;
+using ExpressionHandlerList = std::list<ExpressionHandler>;
+template <std::size_t N>
+using ExpressionHandlerArray = std::array<ExpressionHandler, N>;
+template <class KeyT>
+using ExpressionHandlerMap = std::map<KeyT, ExpressionHandler>;
+using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
+using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
+//using UnsafeTransformFunctionT = std::function<std::unique_ptr<Expression>(Expression&&)>;
+using ExpressionHandlerSinglePassRange = boost::any_range<ExpressionHandler, boost::single_pass_traversal_tag>;
+using ExpressionHandlerForwardRange = boost::any_range<ExpressionHandler, boost::forward_traversal_tag>;
+using ExpressionHandlerBidirectionalRange = boost::any_range<ExpressionHandler, boost::bidirectional_traversal_tag>;
+using ExpressionHandlerRandomAccessRange = boost::any_range<ExpressionHandler, boost::random_access_traversal_tag>;
+using ConstExpressionHandlerSinglePassRange = boost::any_range<const ExpressionHandler, boost::single_pass_traversal_tag>;
+using ConstExpressionHandlerForwardRange = boost::any_range<const ExpressionHandler, boost::forward_traversal_tag>;
+using ConstExpressionHandlerBidirectionalRange = boost::any_range<const ExpressionHandler, boost::bidirectional_traversal_tag>;
+using ConstExpressionHandlerRandomAccessRange = boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag>;
 
 class ExpressionHandler final : public StrRepr {
-    using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
-    using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
-
    public:
     // move semantic:
     ExpressionHandler(ExpressionHandler&&) = default;
@@ -52,7 +69,14 @@ class ExpressionHandler final : public StrRepr {
     const ExpressionDerrivedClass& casted_target() const;
     template <class ExpressionDerrivedClass>
     const bool is_of_type() const;
-    // string representation:
+    // quick access for the underying expression -- tree structure accessos:
+    unsigned n_subexpressions() const;
+    ExpressionHandler& subexpression(unsigned n_subexpression);
+    const ExpressionHandler& subexpression(unsigned n_subexpression) const;
+    ExpressionHandlerRandomAccessRange range();
+    ConstExpressionHandlerRandomAccessRange range() const;
+    ConstExpressionHandlerRandomAccessRange crange() const;
+    // quick access for the underying expression -- string representation:
     std::string str() const override;
     std::string repr() const override;
     // other methods:
@@ -69,24 +93,6 @@ class ExpressionHandler final : public StrRepr {
    private:
     std::unique_ptr<Expression> _expr;
 };
-
-using ExpressionHandlerVector = std::vector<ExpressionHandler>;
-using ExpressionHandlerList = std::list<ExpressionHandler>;
-template <std::size_t N>
-using ExpressionHandlerArray = std::array<ExpressionHandler, N>;
-template <class KeyT>
-using ExpressionHandlerMap = std::map<KeyT, ExpressionHandler>;
-using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
-using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
-//using UnsafeTransformFunctionT = std::function<std::unique_ptr<Expression>(Expression&&)>;
-using ExpressionHandlerSinglePassRange = boost::any_range<ExpressionHandler, boost::single_pass_traversal_tag>;
-using ExpressionHandlerForwardRange = boost::any_range<ExpressionHandler, boost::forward_traversal_tag>;
-using ExpressionHandlerBidirectionalRange = boost::any_range<ExpressionHandler, boost::bidirectional_traversal_tag>;
-using ExpressionHandlerRandomAccessRange = boost::any_range<ExpressionHandler, boost::random_access_traversal_tag>;
-using ConstExpressionHandlerSinglePassRange = boost::any_range<const ExpressionHandler, boost::single_pass_traversal_tag>;
-using ConstExpressionHandlerForwardRange = boost::any_range<const ExpressionHandler, boost::forward_traversal_tag>;
-using ConstExpressionHandlerBidirectionalRange = boost::any_range<const ExpressionHandler, boost::bidirectional_traversal_tag>;
-using ConstExpressionHandlerRandomAccessRange = boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag>;
 
 class Expression : public StrRepr {
    public:
@@ -139,6 +145,30 @@ inline std::string ExpressionHandler::str() const {
 
 inline std::string ExpressionHandler::repr() const {
     return target().repr();
+}
+
+inline unsigned ExpressionHandler::n_subexpressions() const {
+    return target().n_subexpressions();
+}
+
+inline ExpressionHandler& ExpressionHandler::subexpression(unsigned n_subexpression) {
+    return target().subexpression(n_subexpression);
+}
+
+inline const ExpressionHandler& ExpressionHandler::subexpression(unsigned n_subexpression) const {
+    return target().subexpression(n_subexpression);
+}
+
+inline ExpressionHandlerRandomAccessRange ExpressionHandler::range() {
+    return target().range();
+}
+
+inline ConstExpressionHandlerRandomAccessRange ExpressionHandler::range() const {
+    return target().range();
+}
+
+inline ConstExpressionHandlerRandomAccessRange ExpressionHandler::crange() const {
+    return target().crange();
 }
 
 inline ExpressionHandler ExpressionHandler::clone() const {

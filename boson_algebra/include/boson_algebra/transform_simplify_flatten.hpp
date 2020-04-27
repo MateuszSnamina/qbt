@@ -14,7 +14,7 @@ ExpressionHandlerOptional transform_simplify_flatten(const ExpressionHandler& ex
     if (!expression_hdl.is_of_type<VectorNumerousExpressionDerrivedClass>()) {
         return std::nullopt;
     }
-    const auto& range = expression_hdl.target().crange();
+    const auto& range = expression_hdl.crange();
     const auto subproduct_hdl_iter = boost::find_if(range, [](const ExpressionHandler& expression_hdl) {
         return expression_hdl.is_of_type<VectorNumerousExpressionDerrivedClass>();
     });
@@ -24,7 +24,7 @@ ExpressionHandlerOptional transform_simplify_flatten(const ExpressionHandler& ex
     ExpressionHandlerVector v;
     for (const auto& subexpression_hdl : range) {
         if (subexpression_hdl.is_of_type<VectorNumerousExpressionDerrivedClass>()) {
-            for (const auto& subsubexpression_hdl : subexpression_hdl.target().crange()) {
+            for (const auto& subsubexpression_hdl : subexpression_hdl.crange()) {
                 v.emplace_back(std::move(subsubexpression_hdl.clone()));
             }
         } else {

@@ -137,7 +137,7 @@ int main() {
         ExpressionHandler cr_b = BosonCreationOperator::make(b);
         ExpressionHandler cr_c = BosonCreationOperator::make(c);
         ExpressionHandler mut_product = ProductExpression::make(std::move(cr_a), std::move(cr_b), std::move(cr_c));
-        for (const auto& xxx : mut_product.target().range()) {
+        for (const auto& xxx : mut_product.range()) {
             std::cout << "===>: " << xxx.repr() << std::endl;
         }
         for (auto&& xxx : mut_product.target().range()) {
@@ -150,10 +150,10 @@ int main() {
         ExpressionHandler cr_b = BosonCreationOperator::make(b);
         ExpressionHandler cr_c = BosonCreationOperator::make(c);
         const ExpressionHandler const_product = ProductExpression::make(std::move(cr_a), std::move(cr_b), std::move(cr_c));
-        for (const auto& xxx : const_product.target().range()) {
+        for (const auto& xxx : const_product.range()) {
             std::cout << "===>: " << xxx.repr() << std::endl;
         }
-        for (auto&& xxx : const_product.target().range()) {
+        for (auto&& xxx : const_product.range()) {
             (void)xxx;
             // ExpressionHandler stealed{std::move(xxx)}; // compile error.
         }

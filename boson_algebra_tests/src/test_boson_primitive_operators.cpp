@@ -16,9 +16,9 @@ TEST(BosonPrimitiveOperator, BosonCreationOperator) {
     ASSERT_EQ(expression.is_of_type<ba::BosonCreationOperator>(), true);
     ASSERT_EQ(expression.is_of_type<ba::BosonAnnihilationOperator>(), false);
     ASSERT_EQ(expression.is_of_type<ba::BosonNumberOperator>(), false);
-    ASSERT_EQ(expression.target().n_subexpressions(), 0);     // TODO  remove target when wpoosible
-    ASSERT_EQ(boost::size(expression.target().range()), 0);   // TODO  remove target when wpoosible
-    ASSERT_EQ(boost::size(expression.target().crange()), 0);  // TODO  remove target when wpoosible
+    ASSERT_EQ(expression.n_subexpressions(), 0);
+    ASSERT_EQ(boost::size(expression.range()), 0);
+    ASSERT_EQ(boost::size(expression.crange()), 0);
 
     const auto expression1 = cr_d();
     ASSERT_TRUE(expression.equals(expression1));
