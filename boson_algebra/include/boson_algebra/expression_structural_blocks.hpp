@@ -119,7 +119,7 @@ inline ProductExpression::ProductExpression(std::vector<ExpressionHandler>&& exp
 
 template <class... Args>
 inline ProductExpression::ProductExpression(Args&&... expr_hdls)
-    : VectorNumerousExpression(std::move(expr_hdls)...) {
+    : VectorNumerousExpression(std::forward<Args>(expr_hdls)...) {
 }
 
 inline ExpressionHandler ProductExpression::make(std::vector<ExpressionHandler>&& expr_hdls) {
@@ -128,7 +128,7 @@ inline ExpressionHandler ProductExpression::make(std::vector<ExpressionHandler>&
 
 template <class... Args>
 ExpressionHandler ProductExpression::make(Args&&... expr_hdls) {
-    return ExpressionHandler::make<ProductExpression>(std::move(expr_hdls)...);
+    return ExpressionHandler::make<ProductExpression>(std::forward<Args>(expr_hdls)...);
 }
 
 inline ExpressionHandler ProductExpression::make_identity() {
@@ -199,7 +199,7 @@ inline SumExpression::SumExpression(std::vector<ExpressionHandler>&& expr_hdls)
 
 template <class... Args>
 inline SumExpression::SumExpression(Args&&... expr_hdls)
-    : VectorNumerousExpression(std::move(expr_hdls)...) {
+    : VectorNumerousExpression(std::forward<Args>(expr_hdls)...) {
 }
 
 inline ExpressionHandler SumExpression::make(std::vector<ExpressionHandler>&& expr_hdls) {
@@ -208,7 +208,7 @@ inline ExpressionHandler SumExpression::make(std::vector<ExpressionHandler>&& ex
 
 template <class... Args>
 ExpressionHandler SumExpression::make(Args&&... expr_hdls) {
-    return ExpressionHandler::make<SumExpression>(std::move(expr_hdls)...);
+    return ExpressionHandler::make<SumExpression>(std::forward<Args>(expr_hdls)...);
 }
 
 inline ExpressionHandler SumExpression::make_zero() {

@@ -5,6 +5,8 @@
 
 namespace boson_algebra {
 
+extern const std::vector<std::shared_ptr<boson_algebra::CharBoson>> char_boson;
+
 std::shared_ptr<CharBoson> operator"" _b(char ch);
 
 ExpressionHandler operator"" _cr(char ch);
