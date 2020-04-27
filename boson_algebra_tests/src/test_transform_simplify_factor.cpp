@@ -1,5 +1,3 @@
-// SELF:
-#include <boson_algebra_tests/example_expressions.hpp>  //TODO removed
 // TESTED LIBRARY:
 #include <boson_algebra/expression_all.hpp>
 #include <boson_algebra/expression_pragma.hpp>
