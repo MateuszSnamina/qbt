@@ -1,6 +1,7 @@
 //SELF:
-#include <boson_algebra/transform_simplify_product.hpp>
 #include <boson_algebra/expression_all.hpp>
+#include <boson_algebra/expression_pragma.hpp>
+#include <boson_algebra/transform_simplify_product.hpp>
 #include <boson_algebra/util_make.hpp>
 // STD:
 #include <iostream>
@@ -244,5 +245,17 @@ int main() {
         std::cout << "End Dfs." << std::endl;
         std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
+    }
+
+    {
+        // When writing code you may utilize expression pragma.
+        // Expression pragma literals:
+        std::cout << ('u'_b)->repr() << std::endl;
+        std::cout << ('u'_cr).str() << std::endl;
+        std::cout << ('u'_an).str() << std::endl;
+        std::cout << ('u'_no).str() << std::endl;
+        // Expression pragma operators:
+        std::cout << ((3 * 'a'_cr) + 'u'_no).str() << std::endl;
+        std::cout << ('a'_cr * 'b'_cr * 'c'_cr).str() << std::endl;
     }
 }
