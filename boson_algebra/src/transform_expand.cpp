@@ -1,5 +1,5 @@
 //MY HEADER:
-#include <boson_algebra/transform_simplify_product.hpp>
+#include <boson_algebra/transform_expand.hpp>
 //SELF:
 #include <boson_algebra/expression_structural_blocks.hpp>
 // BOOST:

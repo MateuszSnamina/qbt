@@ -1,5 +1,5 @@
 //MY HEADER:
-#include <boson_algebra/transform_simplify_product.hpp>
+#include <boson_algebra/transform_sort_product_of_boson_primitive_operators.hpp>
 //SELF:
 #include <boson_algebra/expression_boson_primitive_operators.hpp>
 #include <boson_algebra/expression_structural_blocks.hpp>

@@ -2,8 +2,6 @@
 #define BOSON_ALGEBRA_TEST_ABCD_HPP
 
 #include <boson_algebra/expression_all.hpp>
-#include <boson_algebra/expression_pragma.hpp>
-#include <boson_algebra/transform_simplify_product.hpp>
 
 namespace ba = boson_algebra;
 

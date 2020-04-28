@@ -1,7 +1,7 @@
 //SELF:
 #include <boson_algebra/expression_all.hpp>
 #include <boson_algebra/expression_pragma.hpp>
-#include <boson_algebra/transform_simplify_product.hpp>
+#include <boson_algebra/transform_flatten_product.hpp>
 #include <boson_algebra/util_make.hpp>
 // STD:
 #include <iostream>
@@ -243,7 +243,7 @@ int main() {
         ExpressionHandler expr1 = expression_1(a, b, c, d);
         ExpressionHandler expr1_clone = expr1.clone();
         std::cout << "Start Dfs." << std::endl;
-        expr1.safe_dfs_transform(transform_simplify_product);
+        expr1.safe_dfs_transform(transform_flatten_product);
         std::cout << "End Dfs." << std::endl;
         std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
