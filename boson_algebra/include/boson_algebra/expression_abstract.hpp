@@ -4,8 +4,8 @@
 // SELF:
 #include <boson_algebra/str_repr.hpp>
 // BOOST:
-#include <boost/range/any_range.hpp>
 #include <boost/algorithm/cxx11/any_of.hpp>
+#include <boost/range/any_range.hpp>
 // STD STL:
 #include <array>
 #include <list>
@@ -158,7 +158,10 @@ inline bool ExpressionHandler::is_shallow_drained() const {
 }
 
 inline bool ExpressionHandler::is_deep_drained() const {
-    return boost::algorithm::any_of(crange(), [](const  auto& _){return _.is_deep_drained();});
+    if (_is_drained) {
+        return true;
+    }
+    return boost::algorithm::any_of(crange(), [](const auto& _) { return _.is_deep_drained(); });
 }
 
 template <class ExpressionDerrivedClass, class... Args>
