@@ -5,6 +5,7 @@
 #include <boson_algebra/str_repr.hpp>
 // BOOST:
 #include <boost/range/any_range.hpp>
+#include <boost/algorithm/cxx11/any_of.hpp>
 // STD STL:
 #include <array>
 #include <list>
@@ -57,7 +58,8 @@ class ExpressionHandler final : public StrRepr {
     ExpressionHandler(ExpressionHandler&&);
     ExpressionHandler& operator=(ExpressionHandler&&);
     // drained checker (drained = after move => invalid):
-    bool is_drained() const;
+    bool is_shallow_drained() const;
+    bool is_deep_drained() const;
     // creation model:
     template <class ExpressionDerrivedClass, class... Args>
     static ExpressionHandler make(Args&&... expression_class_ctor_args);
@@ -135,7 +137,7 @@ inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr)
 inline ExpressionHandler::ExpressionHandler(ExpressionHandler&& other)
     : _expr(nullptr),
       _is_drained(true) {
-    assert(!other.is_drained());
+    assert(!other.is_shallow_drained());
     assert(other._expr);
     other._is_drained = true;
     _expr = std::move(other._expr);
@@ -143,7 +145,7 @@ inline ExpressionHandler::ExpressionHandler(ExpressionHandler&& other)
 }
 
 inline ExpressionHandler& ExpressionHandler::operator=(ExpressionHandler&& other) {
-    assert(!other.is_drained());
+    assert(!other.is_shallow_drained());
     assert(other._expr);
     other._is_drained = true;
     _expr = std::move(other._expr);
@@ -151,9 +153,14 @@ inline ExpressionHandler& ExpressionHandler::operator=(ExpressionHandler&& other
     return *this;
 }
 
-inline bool ExpressionHandler::is_drained() const {
+inline bool ExpressionHandler::is_shallow_drained() const {
     return _is_drained;
 }
+
+inline bool ExpressionHandler::is_deep_drained() const {
+    return boost::algorithm::any_of(crange(), [](const  auto& _){return _.is_deep_drained();});
+}
+
 template <class ExpressionDerrivedClass, class... Args>
 ExpressionHandler ExpressionHandler::make(Args&&... expression_class_ctor_args) {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
@@ -161,7 +168,7 @@ ExpressionHandler ExpressionHandler::make(Args&&... expression_class_ctor_args) 
 }
 
 inline Expression& ExpressionHandler::target() {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     assert(_expr);
     return *_expr;
 }
@@ -171,60 +178,60 @@ inline const Expression& ExpressionHandler::target() const {
 }
 
 inline std::string ExpressionHandler::str() const {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return target().str();
 }
 
 inline std::string ExpressionHandler::repr() const {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return target().repr();
 }
 
 inline unsigned ExpressionHandler::n_subexpressions() const {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return target().n_subexpressions();
 }
 
 inline ExpressionHandler& ExpressionHandler::subexpression(unsigned n_subexpression) {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return target().subexpression(n_subexpression);
 }
 
 inline const ExpressionHandler& ExpressionHandler::subexpression(unsigned n_subexpression) const {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return target().subexpression(n_subexpression);
 }
 
 inline ExpressionHandlerRandomAccessRange ExpressionHandler::range() {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return target().range();
 }
 
 inline ConstExpressionHandlerRandomAccessRange ExpressionHandler::range() const {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return target().range();
 }
 
 inline ConstExpressionHandlerRandomAccessRange ExpressionHandler::crange() const {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return target().crange();
 }
 
 inline ExpressionHandler ExpressionHandler::clone() const {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return ExpressionHandler(target().clone());
 }
 
 inline bool ExpressionHandler::equals(const ExpressionHandler& other) const {
-    assert(!other.is_drained());
-    assert(!is_drained());
+    assert(!other.is_shallow_drained());
+    assert(!is_shallow_drained());
     return target().equals(other.target());
 }
 
 template <class ExpressionDerrivedClass>
 ExpressionDerrivedClass& ExpressionHandler::casted_target() {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     assert(is_of_type<ExpressionDerrivedClass>());
     return dynamic_cast<ExpressionDerrivedClass&>(target());
 }
@@ -232,7 +239,7 @@ ExpressionDerrivedClass& ExpressionHandler::casted_target() {
 template <class ExpressionDerrivedClass>
 const ExpressionDerrivedClass& ExpressionHandler::casted_target() const {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     assert(is_of_type<ExpressionDerrivedClass>());
     return dynamic_cast<const ExpressionDerrivedClass&>(target());
 }
@@ -240,12 +247,12 @@ const ExpressionDerrivedClass& ExpressionHandler::casted_target() const {
 template <class ExpressionDerrivedClass>
 const bool ExpressionHandler::is_of_type() const {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     return bool(dynamic_cast<const ExpressionDerrivedClass*>(&target()));
 }
 
 inline void ExpressionHandler::safe_dfs_transform(const SafeTransformFunctionT& fun) {
-    assert(!is_drained());
+    assert(!is_shallow_drained());
     for (unsigned n_subexpression = 0; n_subexpression < target().n_subexpressions(); n_subexpression++) {
         target().subexpression(n_subexpression).safe_dfs_transform(fun);
     }

@@ -7,23 +7,25 @@ namespace boson_algebra {
 // ***  IdClass                                           ***
 // **********************************************************
 
+using IdIntegralType = unsigned long;
+
 class IdClass {
    public:
-    unsigned long id() const;
+    IdIntegralType id() const;
     virtual ~IdClass() = default;
 
    protected:
     IdClass();
 
    private:
-    unsigned long _id;
-    static unsigned long _pool_id;
+    IdIntegralType _id;
+    static IdIntegralType _pool_id;
 };
 
 inline IdClass::IdClass() : _id(_pool_id++) {
 }
 
-inline unsigned long IdClass::id() const {
+inline IdIntegralType IdClass::id() const {
     return _id;
 }
 
