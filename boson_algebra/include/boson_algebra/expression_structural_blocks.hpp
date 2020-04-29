@@ -3,6 +3,10 @@
 
 #include <boson_algebra/expression_common.hpp>
 
+// References:
+// (1) list-of-all-unicodes-open-close-brackets:
+// https://stackoverflow.com/questions/13535172/list-of-all-unicodes-open-close-brackets
+
 // ##########################################################
 // ###########  StructuralBlockExpressions   ################
 // ##########################################################

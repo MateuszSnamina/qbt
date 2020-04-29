@@ -10,10 +10,6 @@
 // ###########  BosonPrimitiveOperators #####################
 // ##########################################################
 
-// References:
-// (1) list-of-all-unicodes-open-close-brackets:
-// https://stackoverflow.com/questions/13535172/list-of-all-unicodes-open-close-brackets
-
 // **********************************************************
 // ***  BosonPrimitiveOperators                           ***
 // **********************************************************
