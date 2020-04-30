@@ -22,7 +22,7 @@ class BosonPrimitiveOperators : public LeafExpression {
 
    protected:
     // ctor:
-    BosonPrimitiveOperators(std::shared_ptr<Boson> boson);
+    BosonPrimitiveOperators(std::shared_ptr<Boson>);
     // move semantic:
     BosonPrimitiveOperators(BosonPrimitiveOperators&&) = default;
     BosonPrimitiveOperators& operator=(BosonPrimitiveOperators&&) = default;
@@ -42,12 +42,33 @@ inline std::shared_ptr<Boson> BosonPrimitiveOperators::boson() const {
 }  // namespace boson_algebra
 
 // **********************************************************
+// ***  BosonCreationAnnihilationBase                     ***
+// **********************************************************
+
+namespace boson_algebra {
+
+class BosonCreationAnnihilationBase : public BosonPrimitiveOperators {
+   protected:
+    // ctor:
+    BosonCreationAnnihilationBase(std::shared_ptr<Boson>);
+    // move semantic:
+    BosonCreationAnnihilationBase(BosonCreationAnnihilationBase&&) = default;
+    BosonCreationAnnihilationBase& operator=(BosonCreationAnnihilationBase&&) = default;
+};
+
+inline BosonCreationAnnihilationBase::BosonCreationAnnihilationBase(std::shared_ptr<Boson> boson)
+    : BosonPrimitiveOperators(boson) {
+}
+
+}  // namespace boson_algebra
+
+// **********************************************************
 // ***  BosonCreationOperator                             ***
 // **********************************************************
 
 namespace boson_algebra {
 
-class BosonCreationOperator final : public BosonPrimitiveOperators {
+class BosonCreationOperator final : public BosonCreationAnnihilationBase {
    public:
     static ExpressionHandler make(std::shared_ptr<Boson> boson);
     ExpressionHandler clone() const override;
@@ -63,7 +84,7 @@ class BosonCreationOperator final : public BosonPrimitiveOperators {
 };
 
 inline BosonCreationOperator::BosonCreationOperator(std::shared_ptr<Boson> boson)
-    : BosonPrimitiveOperators(boson) {
+    : BosonCreationAnnihilationBase(boson) {
 }
 
 inline ExpressionHandler BosonCreationOperator::make(std::shared_ptr<Boson> boson) {
@@ -94,12 +115,12 @@ inline std::string BosonCreationOperator::repr() const {
 }  // namespace boson_algebra
 
 // **********************************************************
-// ***  BosonAnnihilationOperator                          ***
+// ***  BosonAnnihilationOperator                         ***
 // **********************************************************
 
 namespace boson_algebra {
 
-class BosonAnnihilationOperator final : public BosonPrimitiveOperators {
+class BosonAnnihilationOperator final : public BosonCreationAnnihilationBase {
    public:
     static ExpressionHandler make(std::shared_ptr<Boson> boson);
     ExpressionHandler clone() const override;
@@ -115,7 +136,7 @@ class BosonAnnihilationOperator final : public BosonPrimitiveOperators {
 };
 
 inline BosonAnnihilationOperator::BosonAnnihilationOperator(std::shared_ptr<Boson> boson)
-    : BosonPrimitiveOperators(boson) {
+    : BosonCreationAnnihilationBase(boson) {
 }
 
 inline ExpressionHandler BosonAnnihilationOperator::make(std::shared_ptr<Boson> boson) {
