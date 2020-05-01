@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 // STD NOT-STL:
-//#include <iostream>
+//#include <iostream>//DEBUG
 #include <functional>
 #include <memory>
 #include <type_traits>
@@ -86,7 +86,7 @@ class ExpressionHandler final : public StrRepr {
     ExpressionHandler clone() const;
     bool equals(const ExpressionHandler&) const;
     // modifier algorithms:
-    void safe_dfs_transform(const SafeTransformFunctionT&);
+    void safe_dfs_transform(const SafeTransformFunctionT&, bool greedy = true);
     //void unsafe_dfs_transform(const UnsafeTransformFunctionT&);
 
    private:
@@ -254,13 +254,19 @@ const bool ExpressionHandler::is_of_type() const {
     return bool(dynamic_cast<const ExpressionDerrivedClass*>(&target()));
 }
 
-inline void ExpressionHandler::safe_dfs_transform(const SafeTransformFunctionT& fun) {
+inline void ExpressionHandler::safe_dfs_transform(const SafeTransformFunctionT& fun, bool greedy) {
     assert(!is_shallow_drained());
     for (unsigned n_subexpression = 0; n_subexpression < target().n_subexpressions(); n_subexpression++) {
         target().subexpression(n_subexpression).safe_dfs_transform(fun);
     }
-    while (auto transformation_result = fun(*this)) {
-        swap(*this, *transformation_result);
+    if (greedy) {
+        while (auto transformation_result = fun(*this)) {
+            swap(*this, *transformation_result);
+        }
+    } else {
+        if (auto transformation_result = fun(*this)) {
+            swap(*this, *transformation_result);
+        }
     }
 }
 
