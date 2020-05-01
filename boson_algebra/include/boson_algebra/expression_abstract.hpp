@@ -257,7 +257,7 @@ const bool ExpressionHandler::is_of_type() const {
 inline void ExpressionHandler::safe_dfs_transform(const SafeTransformFunctionT& fun, bool greedy) {
     assert(!is_shallow_drained());
     for (unsigned n_subexpression = 0; n_subexpression < target().n_subexpressions(); n_subexpression++) {
-        target().subexpression(n_subexpression).safe_dfs_transform(fun);
+        target().subexpression(n_subexpression).safe_dfs_transform(fun, greedy);
     }
     if (greedy) {
         while (auto transformation_result = fun(*this)) {
