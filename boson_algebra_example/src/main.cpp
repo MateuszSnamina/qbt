@@ -130,7 +130,7 @@ int main() {
         ExpressionHandler cr_b = BosonCreationOperator::make(b);
         ExpressionHandler cr_c = BosonCreationOperator::make(c);
         ExpressionHandlerVector v = util::make<ExpressionHandlerVector>(std::move(cr_a), std::move(cr_b), std::move(cr_c));
-        const ExpressionHandler product = ProductExpression::make(std::move(v));
+        const ExpressionHandler product = ProductExpression::make_from_buffer(std::move(v));
         std::cout << "Structured Expressions str:  " << product.str() << std::endl;
         std::cout << "Structured Expressions repr: " << product.repr() << std::endl;
     }
@@ -161,17 +161,6 @@ int main() {
             // ExpressionHandler stealed{std::move(xxx)}; // compile error.
         }
     }
-    {
-        //  Product expression may be defined using a constructor with ExpressionHandlerVector:
-        ExpressionHandler cr_a = BosonCreationOperator::make(a);
-        ExpressionHandler cr_b = BosonCreationOperator::make(b);
-        ExpressionHandler cr_c = BosonCreationOperator::make(c);
-        ExpressionHandlerVector v = util::make<ExpressionHandlerVector>(std::move(cr_a), std::move(cr_b), std::move(cr_c));
-        const ExpressionHandler product = ProductExpression::make(std::move(v));
-        std::cout << "Structured Expressions str:  " << product.str() << std::endl;
-        std::cout << "Structured Expressions repr: " << product.repr() << std::endl;
-    }
-
     // **********************************************************
     // ***  Clone                                             ***
     // **********************************************************

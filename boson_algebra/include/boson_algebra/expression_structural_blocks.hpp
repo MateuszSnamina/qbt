@@ -98,7 +98,6 @@ namespace boson_algebra {
 
 class ProductExpression final : public VectorNumerousExpression {
    public:
-    static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);//DEPRECATED
     static ExpressionHandler make_from_buffer(ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
     static ExpressionHandler make(Args&&... expr_hdls);
@@ -107,38 +106,33 @@ class ProductExpression final : public VectorNumerousExpression {
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
-    bool is_identity() const;  // it is identity if it is empy.
+    bool is_identity() const;  // it is identity if it is empty.
 
    private:
+    ProductExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
-    ProductExpression(Args&&... expr_hdls);
-    ProductExpression(ExpressionHandlerVector&& expr_hdls);
+    ProductExpression(VariadicTag, Args&&... expr_hdls);
     std::unique_ptr<ProductExpression> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
-inline ProductExpression::ProductExpression(std::vector<ExpressionHandler>&& expr_hdls)
-    : VectorNumerousExpression(std::move(expr_hdls)) {
+inline ProductExpression::ProductExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls)
+    : VectorNumerousExpression(FromBufferTag{}, std::move(expr_hdls)) {
 }
 
 template <class... Args>
-inline ProductExpression::ProductExpression(Args&&... expr_hdls)
-    : VectorNumerousExpression(std::forward<Args>(expr_hdls)...) {
-}
-
-//DEPRECATED
-inline ExpressionHandler ProductExpression::make(std::vector<ExpressionHandler>&& expr_hdls) {
-    return ExpressionHandler::make<ProductExpression>(std::move(expr_hdls));
+inline ProductExpression::ProductExpression(VariadicTag, Args&&... expr_hdls)
+    : VectorNumerousExpression(VariadicTag{}, std::forward<Args>(expr_hdls)...) {
 }
 
 inline ExpressionHandler ProductExpression::make_from_buffer(ExpressionHandlerVector&& expr_hdls) {
-    return ExpressionHandler::make<ProductExpression>(std::move(expr_hdls));
+    return ExpressionHandler::make<ProductExpression>(FromBufferTag{}, std::move(expr_hdls));
 }
 
 template <class... Args>
 ExpressionHandler ProductExpression::make(Args&&... expr_hdls) {
-    return ExpressionHandler::make<ProductExpression>(std::forward<Args>(expr_hdls)...);
+    return ExpressionHandler::make<ProductExpression>(VariadicTag{}, std::forward<Args>(expr_hdls)...);
 }
 
 inline ExpressionHandler ProductExpression::make_identity() {
@@ -147,12 +141,12 @@ inline ExpressionHandler ProductExpression::make_identity() {
 
 inline std::unique_ptr<ProductExpression> ProductExpression::casted_clone() const {
     auto v = clone_expr_hdls_vector();
-    return std::unique_ptr<ProductExpression>(new ProductExpression(std::move(v)));
+    return std::unique_ptr<ProductExpression>(new ProductExpression(FromBufferTag{}, std::move(v)));
 }
 
 inline ExpressionHandler ProductExpression::clone() const {
     auto v = clone_expr_hdls_vector();
-    return ExpressionHandler::make<ProductExpression>(std::move(v));
+    return ExpressionHandler::make<ProductExpression>(FromBufferTag{}, std::move(v));
 }
 
 inline bool ProductExpression::equals(const Expression& other) const {
@@ -185,7 +179,6 @@ inline bool ProductExpression::is_identity() const {
 namespace boson_algebra {
 class SumExpression final : public VectorNumerousExpression {
    public:
-    static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);//DEPRECATED
     static ExpressionHandler make_from_buffer(ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
     static ExpressionHandler make(Args&&... expr_hdls);
@@ -196,35 +189,30 @@ class SumExpression final : public VectorNumerousExpression {
     std::string repr() const override;
     bool is_zero() const;  // it is zero if it is empy.
    private:
+    SumExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
-    SumExpression(Args&&... expr_hdls);
-    SumExpression(ExpressionHandlerVector&& expr_hdls);
+    SumExpression(VariadicTag, Args&&... expr_hdls);
     std::unique_ptr<SumExpression> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
-inline SumExpression::SumExpression(std::vector<ExpressionHandler>&& expr_hdls)
-    : VectorNumerousExpression(std::move(expr_hdls)) {
+inline SumExpression::SumExpression(FromBufferTag, std::vector<ExpressionHandler>&& expr_hdls)
+    : VectorNumerousExpression(FromBufferTag{}, std::move(expr_hdls)) {
 }
 
 template <class... Args>
-inline SumExpression::SumExpression(Args&&... expr_hdls)
-    : VectorNumerousExpression(std::forward<Args>(expr_hdls)...) {
-}
-
-//DEPRECATED:
-inline ExpressionHandler SumExpression::make(std::vector<ExpressionHandler>&& expr_hdls) {
-    return ExpressionHandler::make<SumExpression>(std::move(expr_hdls));
+inline SumExpression::SumExpression(VariadicTag, Args&&... expr_hdls)
+    : VectorNumerousExpression(VariadicTag{}, std::forward<Args>(expr_hdls)...) {
 }
 
 inline ExpressionHandler SumExpression::make_from_buffer(ExpressionHandlerVector&& expr_hdls) {
-    return ExpressionHandler::make<SumExpression>(std::move(expr_hdls));
+    return ExpressionHandler::make<SumExpression>(FromBufferTag{}, std::move(expr_hdls));
 }
 
 template <class... Args>
 ExpressionHandler SumExpression::make(Args&&... expr_hdls) {
-    return ExpressionHandler::make<SumExpression>(std::forward<Args>(expr_hdls)...);
+    return ExpressionHandler::make<SumExpression>(VariadicTag{}, std::forward<Args>(expr_hdls)...);
 }
 
 inline ExpressionHandler SumExpression::make_zero() {
@@ -233,12 +221,12 @@ inline ExpressionHandler SumExpression::make_zero() {
 
 inline std::unique_ptr<SumExpression> SumExpression::casted_clone() const {
     auto v = clone_expr_hdls_vector();
-    return std::unique_ptr<SumExpression>(new SumExpression(std::move(v)));
+    return std::unique_ptr<SumExpression>(new SumExpression(FromBufferTag{}, std::move(v)));
 }
 
 inline ExpressionHandler SumExpression::clone() const {
     auto v = clone_expr_hdls_vector();
-    return ExpressionHandler::make<SumExpression>(std::move(v));
+    return ExpressionHandler::make<SumExpression>(FromBufferTag{}, std::move(v));
 }
 
 inline bool SumExpression::equals(const Expression& other) const {

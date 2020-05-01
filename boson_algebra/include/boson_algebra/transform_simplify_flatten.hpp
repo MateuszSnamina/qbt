@@ -1,4 +1,4 @@
-#ifndef BOSON_ALGEBRA_TRANSFORM_SIMPLIFY_FLATTEN_HPP
+#ifndef BOSON_ALGEBRA_TRANSFORM_SIMPLIFY_FLATTEN_HPP //TODO remove SIMPLIFY WORD!!
 #define BOSON_ALGEBRA_TRANSFORM_SIMPLIFY_FLATTEN_HPP
 
 // SELF
@@ -47,7 +47,7 @@ ExpressionHandlerOptional transform_simplify_flatten(const ExpressionHandler& ex
     // ***************************************************************
     // *** return the flattened expression                          **
     // ***************************************************************
-    return VectorNumerousExpressionDerrivedClass::make(std::move(v));
+    return VectorNumerousExpressionDerrivedClass::make_from_buffer(std::move(v));
 }
 
 }  // namespace boson_algebra

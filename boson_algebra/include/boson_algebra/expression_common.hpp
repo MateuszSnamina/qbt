@@ -135,6 +135,12 @@ inline BridgeExpression::~BridgeExpression() {
 // ***  VectorNumerousExpression                          ***
 // **********************************************************
 
+struct FromBufferTag{
+};
+
+struct VariadicTag{
+};
+
 class VectorNumerousExpression : public Expression {
    public:
     // copy semantic:
@@ -152,9 +158,9 @@ class VectorNumerousExpression : public Expression {
 
    protected:
     // ctor:
-    VectorNumerousExpression(ExpressionHandlerVector&& expr_hdls);
+    VectorNumerousExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
-    VectorNumerousExpression(Args&&... expr_hdls);
+    VectorNumerousExpression(VariadicTag, Args&&... expr_hdls);
     // move semantic:
     VectorNumerousExpression(VectorNumerousExpression&&) = default;
     VectorNumerousExpression& operator=(VectorNumerousExpression&&) = default;
@@ -168,12 +174,12 @@ class VectorNumerousExpression : public Expression {
     ExpressionHandlerVector _expr_hdls;
 };
 
-inline VectorNumerousExpression::VectorNumerousExpression(ExpressionHandlerVector&& expr_hdls)
+inline VectorNumerousExpression::VectorNumerousExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls)
     : _expr_hdls(std::move(expr_hdls)) {
 }
 
 template <class... Args>
-VectorNumerousExpression::VectorNumerousExpression(Args&&... expr_hdls)
+VectorNumerousExpression::VectorNumerousExpression(VariadicTag, Args&&... expr_hdls)
     : _expr_hdls(util::make<ExpressionHandlerVector>(std::move(expr_hdls)...)) {
 }
 
