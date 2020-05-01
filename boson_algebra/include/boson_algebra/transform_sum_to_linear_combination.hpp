@@ -6,11 +6,11 @@
 namespace boson_algebra {
 
 /*
- * Transfomration goal: Transform sum to lineal combination
- * Transfomration example: a+(3*a)+b+c => (1*a)+(3*a)+(1*b)+(1*c)
+ * Transformation goal: Transform sum expression to the corresponding linear combination expression 
+ * Transformation example: a+(3*a)+b+c => (1*a)+(3*a)+(1*b)+(1*c)
  */
 
-ExpressionHandlerOptional transform_sum_to_linear_combination(const ExpressionHandler& expression_hdl);
+ExpressionHandlerOptional transform_sum_to_linear_combination(const ExpressionHandler&);
 
 }  // namespace boson_algebra
 

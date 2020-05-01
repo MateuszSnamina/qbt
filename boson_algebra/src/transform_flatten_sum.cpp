@@ -6,8 +6,8 @@
 
 namespace boson_algebra {
 
-ExpressionHandlerOptional transform_flatten_sum(const ExpressionHandler& expression_hdl) {
-    return transform_simplify_flatten<SumExpression>(expression_hdl);
+ExpressionHandlerOptional transform_flatten_sum(const ExpressionHandler& expression) {
+    return transform_simplify_flatten<SumExpression>(expression);
 }
 
 }  // namespace boson_algebra

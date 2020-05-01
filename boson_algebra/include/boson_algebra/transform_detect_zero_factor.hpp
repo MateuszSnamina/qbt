@@ -6,11 +6,11 @@
 namespace boson_algebra {
 
 /*
- * Transfomration goal: Detect when a factor expression has the zero factor
- * Transfomration example: (0a) => 𝟘,  (5*𝟘) => 𝟘
+ * Transformation goal: Detect when a factor expression has the zero factor
+ * Transformation example: (0a) => 𝟘,  (5*𝟘) => 𝟘
  */
 
-ExpressionHandlerOptional transform_detect_zero_factor(const ExpressionHandler& expression_hdl);
+ExpressionHandlerOptional transform_detect_zero_factor(const ExpressionHandler&);
 
 }  // namespace boson_algebra
 

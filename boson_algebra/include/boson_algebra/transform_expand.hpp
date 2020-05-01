@@ -6,11 +6,11 @@
 namespace boson_algebra {
 
 /*
- * Transfomration goal: Standard Expand
- * Transfomration example: a*(b+c)*d => a*b*d + a*c*d
+ * Transformation goal: Standard Expand
+ * Transformation example: a*(b+c)*d => a*b*d + a*c*d
  */
 
-ExpressionHandlerOptional transform_expand(const ExpressionHandler& expression_hdl);
+ExpressionHandlerOptional transform_expand(const ExpressionHandler&);
 
 }  // namespace boson_algebra
 

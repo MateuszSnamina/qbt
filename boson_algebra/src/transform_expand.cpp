@@ -8,36 +8,51 @@
 
 namespace boson_algebra {
 
-ExpressionHandlerOptional transform_expand(const ExpressionHandler& expression_hdl) {
-    if (!expression_hdl.is_of_type<ProductExpression>()) {
+ExpressionHandlerOptional transform_expand(const ExpressionHandler& expression) {
+    // ***************************************************************
+    // *** the transformation applies only to product expressions   **
+    // ***************************************************************
+    if (!expression.is_of_type<ProductExpression>()) {
         return std::nullopt;
     }
-    const auto& range = expression_hdl.crange();
+    const auto& range = expression.crange();
     const auto& range_begin = boost::begin(range);
     const auto& range_end = boost::end(range);
-    const auto subproduct_hdl_iter = boost::find_if(range, [](const ExpressionHandler& expression_hdl) {
-        return expression_hdl.is_of_type<SumExpression>();
-    });
-    if (subproduct_hdl_iter == range_end) {
+    // ***************************************************************
+    // *** the transformation applies only if                       **
+    // *** there is at least one factor being                       **
+    // *** of SumExpression type                                    **
+    // ***************************************************************
+    const auto is_sum_expression = [](const ExpressionHandler& expression) {
+        return expression.is_of_type<SumExpression>();
+    };
+    const auto subproduct_iter = boost::find_if(range, is_sum_expression);
+    if (subproduct_iter == range_end) {
         return std::nullopt;
     }
+    // ***************************************************************
+    // *** make the new subexpressions                              **
+    // ***************************************************************
     using ConstExpressionHandlerSinglePassSubRange = boost::sub_range<ConstExpressionHandlerSinglePassRange>;
-    const ConstExpressionHandlerSinglePassSubRange range1(range_begin, subproduct_hdl_iter);
-    const ConstExpressionHandlerSinglePassSubRange range2(subproduct_hdl_iter + 1, range_end);
-    const auto& subproduct_hdl = *subproduct_hdl_iter;
-    const auto subproduct_range = subproduct_hdl.crange();
+    const ConstExpressionHandlerSinglePassSubRange range1(range_begin, subproduct_iter);
+    const ConstExpressionHandlerSinglePassSubRange range2(subproduct_iter + 1, range_end);
+    const auto& subproduct = *subproduct_iter;
+    const auto subproduct_range = subproduct.crange();
     ExpressionHandlerVector new_subexpressions;
-    for (const auto& subsubexpression_hdl : subproduct_range) {
+    for (const auto& subsubexpression : subproduct_range) {
         ExpressionHandlerVector new_subsubexpressions;
-        for (auto& subexpression_hdl : range1) {
-            new_subsubexpressions.push_back(subexpression_hdl.clone());
+        for (auto& subexpression : range1) {
+            new_subsubexpressions.push_back(subexpression.clone());
         }
-        new_subsubexpressions.push_back(subsubexpression_hdl.clone());
-        for (auto& subexpression_hdl : range2) {
-            new_subsubexpressions.push_back(subexpression_hdl.clone());
+        new_subsubexpressions.push_back(subsubexpression.clone());
+        for (auto& subexpression : range2) {
+            new_subsubexpressions.push_back(subexpression.clone());
         }
         new_subexpressions.push_back(ProductExpression::make(std::move(new_subsubexpressions)));
     }
+    // ***************************************************************
+    // *** return the expression in the expanded form               **
+    // ***************************************************************
     return SumExpression::make(std::move(new_subexpressions));
 }
 

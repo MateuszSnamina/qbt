@@ -6,11 +6,11 @@
 namespace boson_algebra {
 
 /*
- * Transfomration goal: Perform simplification due to product associativity.
- * Transfomration example: 5*(3*a) => 15*a
+ * Transformation goal: Perform simplification due to factor product associativity.
+ * Transformation example: 5*(3*a) => 15*a
  */
 
-ExpressionHandlerOptional transform_simplify_factor(const ExpressionHandler& expression_hdl);
+ExpressionHandlerOptional transform_simplify_factor(const ExpressionHandler&);
 
 }  // namespace boson_algebra
 

@@ -6,11 +6,11 @@
 namespace boson_algebra {
 
 /*
- * Transfomration goal: Simplify linear combination
- * Transfomration example: (3*a)+(1*b)+(2*a) => (5*a)+(1*b)
+ * Transformation goal: Simplify linear combination expressions
+ * Transformation example: (3*a)+(1*b)+(2*a) => (5*a)+(1*b)
  */
 
-ExpressionHandlerOptional transform_simplify_linear_combination(const ExpressionHandler& expression_hdl);
+ExpressionHandlerOptional transform_simplify_linear_combination(const ExpressionHandler&);
 
 }  // namespace boson_algebra
 
