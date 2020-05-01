@@ -7,7 +7,8 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Take out the accumulated factor of factors
- * Transformation example: (3*a)◦(1*b)◦(2*a) => 6(a◦b◦a)
+ * Transformation example: ❪❪3a❫◦❪1b❫◦❪2a❫❫ => ❪6❪a◦b◦a❫❫
+ * 
  */
 
 ExpressionHandlerOptional transform_prod_factors_to_factor_prod(const ExpressionHandler&);

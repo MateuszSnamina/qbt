@@ -7,7 +7,7 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Perform simplification due to factor product associativity.
- * Transformation example: 5*(3*a) => 15*a
+ * Transformation example: ❪5❪3a❫❫ => ❪15a❫
  */
 
 ExpressionHandlerOptional transform_simplify_factor(const ExpressionHandler&);

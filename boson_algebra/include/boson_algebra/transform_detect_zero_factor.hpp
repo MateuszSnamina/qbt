@@ -6,8 +6,9 @@
 namespace boson_algebra {
 
 /*
- * Transformation goal: Detect when a factor expression has the zero factor
- * Transformation example: (0a) => 𝟘,  (5*𝟘) => 𝟘
+ * Transformation goal: Detect when a factor expression has the zero factor or the zero subexpression
+ * Transformation example: ❪0a❫ => 𝟘
+ * Transformation example: ❪5𝟘❫ => 𝟘
  */
 
 ExpressionHandlerOptional transform_detect_zero_factor(const ExpressionHandler&);

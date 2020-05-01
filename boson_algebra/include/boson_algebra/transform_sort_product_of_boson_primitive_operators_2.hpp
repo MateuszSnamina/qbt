@@ -7,7 +7,8 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Make the product more like the "desired" product
- * Transformation example: ♭a◦♭a◦♯a => ♭a◦♯a◦♭a + ♭a◦𝕀
+ * Transformation example: ❪♭a◦♭a◦♯a❫ => ❪❪♭a◦♯a◦♭a❫ + ❪♭a◦𝕀❫❫
+ * Transformation example: ❪♯b◦♯b◦♭b◦♭b◦♭b❫ => ❪❪♯b◦♭b◦♯b◦♭b◦♭b❫+❪-❪♯b◦𝕀◦♭b◦♭b❫❫❫
  * 
  * Full explanation:
  * For every product of creation operators and annihilation operators defined for one boson

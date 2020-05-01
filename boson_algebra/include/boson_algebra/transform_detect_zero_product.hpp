@@ -7,7 +7,7 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Detect when product expression has the zero factor
- * Transformation example: a◦b◦𝟘◦c◦d => 𝟘
+ * Transformation example: ❪a◦b◦𝟘◦c◦d❫ => 𝟘
  */
 
 ExpressionHandlerOptional transform_detect_zero_product(const ExpressionHandler&);

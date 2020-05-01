@@ -7,7 +7,7 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Transform sum expression to the corresponding linear combination expression 
- * Transformation example: a+(3*a)+b+c => (1*a)+(3*a)+(1*b)+(1*c)
+ * Transformation example: ❪a+❪3a❫+b+c❫ => ❪❪1a❫+❪3a❫+❪1b❫+(1c❫❫
  */
 
 ExpressionHandlerOptional transform_sum_to_linear_combination(const ExpressionHandler&);

@@ -7,7 +7,7 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: stable sort of boson primitive operators product factors regarding the bosons id.
- * Transformation example: ♭a◦♯b◦ℕa◦♭a◦ℕc◦♯a◦♭b => ♭a◦ℕa◦♭a◦♯a◦♯b◦♭b◦ℕc
+ * Transformation example: ❪♭a◦♯b◦ℕa◦♭a◦ℕc◦♯a◦♭b❫ => ❪♭a◦ℕa◦♭a◦♯a◦♯b◦♭b◦ℕc❫
  */
 
 ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_0(const ExpressionHandler& expression_hdl);

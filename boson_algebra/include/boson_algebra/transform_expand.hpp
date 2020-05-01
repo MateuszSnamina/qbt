@@ -7,9 +7,8 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Standard Expand
- * Transformation example: a*(b+c)*d => a*b*d + a*c*d
+ * Transformation example: ❪a◦❪b+c❫◦d❫ => ❪❪a◦b◦d❫+❪a◦c◦d❫❫
  */
-
 ExpressionHandlerOptional transform_expand(const ExpressionHandler&);
 
 }  // namespace boson_algebra

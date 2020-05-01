@@ -7,7 +7,7 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Simplify linear combination expressions
- * Transformation example: (3*a)+(1*b)+(2*a) => (5*a)+(1*b)
+ * Transformation example: ❪❪3*a❫+❪1*b❫+❪2*a❫❫ => ❪❪5*a❫+❪1*b❫❫
  */
 
 ExpressionHandlerOptional transform_simplify_linear_combination(const ExpressionHandler&);
