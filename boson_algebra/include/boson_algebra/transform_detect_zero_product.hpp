@@ -11,6 +11,7 @@ namespace boson_algebra {
  */
 
 ExpressionHandlerOptional transform_detect_zero_product(const ExpressionHandler&);
+//ExpressionHandlerOptional transform_detect_zero_product(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

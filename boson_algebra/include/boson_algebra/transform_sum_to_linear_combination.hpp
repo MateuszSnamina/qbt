@@ -11,6 +11,7 @@ namespace boson_algebra {
  */
 
 ExpressionHandlerOptional transform_sum_to_linear_combination(const ExpressionHandler&);
+//ExpressionHandlerOptional transform_sum_to_linear_combination(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 
