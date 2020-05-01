@@ -71,10 +71,10 @@ TEST(TransformExpand, MinimalExample4) {
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪❪♭b+♯c❫❫");
     const auto transformed_expression_optional = transform_expand(expression);
-    ASSERT_TRUE(transformed_expression_optional);
-    const auto& transformed_expression = *transformed_expression_optional;
-    //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♭b❫+❪♯c❫❫");
+    ASSERT_FALSE(transformed_expression_optional);
+    // const auto& transformed_expression = *transformed_expression_optional;
+    // //std::cout << transformed_expression.str() << std::endl;
+    // ASSERT_EQ(transformed_expression.str(), "❪❪♭b❫+❪♯c❫❫");
 }
 
 TEST(TransformExpand, MinimalExample5) {

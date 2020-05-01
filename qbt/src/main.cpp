@@ -45,6 +45,7 @@ ba::ExpressionHandler do_simplification(ba::ExpressionHandler&& expression) {
     std::cout << "SimpLA: " << expression.str() << std::endl;
     expression.safe_dfs_transform(ba::transform_detect_one_factor, false);
     std::cout << "1Factor:" << expression.str() << std::endl;
+
     return std::move(expression);
 }
 

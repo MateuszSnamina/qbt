@@ -8,6 +8,7 @@
 #include <boost/range/adaptor/indexed.hpp>
 #include <boost/range/algorithm/stable_sort.hpp>
 #include <boost/range/algorithm/transform.hpp>
+#include <boost/range/algorithm_ext/is_sorted.hpp>// DOTO fast exit when already sorted.
 // STD
 //#include <iostream>  // debug
 #include <iterator>
@@ -32,16 +33,29 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_0(
     if (!boost::algorithm::all_of(range, is_boson_primitive_operator)) {
         return std::nullopt;
     }
+
     // ***************************************************************
-    // ***  stable sort of the operators                            **
+    // ***  the boson driven operators sort predictate              **
     // ***************************************************************
-    ExpressionHandlerVector new_subexpressions;
-    boost::transform(range, std::back_inserter(new_subexpressions), [](const ExpressionHandler& _) { return _.clone(); });
     const auto sort_predicate = [](const ExpressionHandler& lhs_exp, const ExpressionHandler& rhs_exp) {
         const auto& lhs_boson = lhs_exp.casted_target<BosonPrimitiveOperators>().boson();
         const auto& rhs_boson = rhs_exp.casted_target<BosonPrimitiveOperators>().boson();
         return lhs_boson->id() < rhs_boson->id();
     };
+    // ***************************************************************
+    // ***  the transformation applies only                         **
+    // ***  if the operators are not already sorted                 **
+    // ***************************************************************
+    // TODO:
+    // if(boost::is_sorted(range, sort_predicate)){
+    //  return std::nullopt;
+    //}
+
+    // ***************************************************************
+    // ***  stable sort of the operators                            **
+    // ***************************************************************
+    ExpressionHandlerVector new_subexpressions;
+    boost::transform(range, std::back_inserter(new_subexpressions), [](const ExpressionHandler& _) { return _.clone(); });
     boost::stable_sort(new_subexpressions, sort_predicate);
     // ***************************************************************
     // *** return the product of sorted operators                   **
