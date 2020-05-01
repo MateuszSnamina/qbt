@@ -45,7 +45,7 @@ ExpressionHandlerOptional transform_sum_to_linear_combination(const ExpressionHa
     // *** return the sum expression with subexpressions            **
     // *** arranged to be like in a linear combination              **
     // ***************************************************************
-    return SumExpression::make(std::move(new_subexpressions));
+    return SumExpression::make_from_buffer(std::move(new_subexpressions));
 }
 
 }  // namespace boson_algebra

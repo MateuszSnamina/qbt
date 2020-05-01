@@ -244,7 +244,7 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_2(
         for (const auto& subexpression : sub_range_2) {
             new_subsubexpressions.push_back(subexpression.clone());
         }
-        return ProductExpression::make(std::move(new_subsubexpressions));
+        return ProductExpression::make_from_buffer(std::move(new_subsubexpressions));
     };
     const auto make_new_subexpression_2 = [&expression, &index_of_first_operator_pair_to_transpose]() -> ExpressionHandler {
         using ConstExpressionHandlerSinglePassSubRange = boost::sub_range<ConstExpressionHandlerSinglePassRange>;
@@ -261,7 +261,7 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_2(
         for (const auto& subexpression : sub_range_2) {
             new_subsubexpressions.push_back(subexpression.clone());
         }
-        return ProductExpression::make(std::move(new_subsubexpressions));
+        return ProductExpression::make_from_buffer(std::move(new_subsubexpressions));
     };
     ExpressionHandler new_subexpression_1 = make_new_subexpression_1();
     ExpressionHandler new_subexpression_2 = make_new_subexpression_2();

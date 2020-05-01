@@ -46,7 +46,7 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_0(
     // ***************************************************************
     // *** return the product of sorted operators                   **
     // ***************************************************************
-    return ProductExpression::make(std::move(new_subexpressions));
+    return ProductExpression::make_from_buffer(std::move(new_subexpressions));
 }
 
 }  // namespace boson_algebra

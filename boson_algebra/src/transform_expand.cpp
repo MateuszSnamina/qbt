@@ -48,12 +48,12 @@ ExpressionHandlerOptional transform_expand(const ExpressionHandler& expression) 
         for (auto& subexpression : range2) {
             new_subsubexpressions.push_back(subexpression.clone());
         }
-        new_subexpressions.push_back(ProductExpression::make(std::move(new_subsubexpressions)));
+        new_subexpressions.push_back(ProductExpression::make_from_buffer(std::move(new_subsubexpressions)));
     }
     // ***************************************************************
     // *** return the expression in the expanded form               **
     // ***************************************************************
-    return SumExpression::make(std::move(new_subexpressions));
+    return SumExpression::make_from_buffer(std::move(new_subexpressions));
 }
 
 }  // namespace boson_algebra

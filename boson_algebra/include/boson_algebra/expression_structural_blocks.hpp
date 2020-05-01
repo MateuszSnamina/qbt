@@ -98,9 +98,8 @@ namespace boson_algebra {
 
 class ProductExpression final : public VectorNumerousExpression {
    public:
-    template <class... Args>
-    ProductExpression(Args&&... expr_hdls);
-    static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);
+    static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);//DEPRECATED
+    static ExpressionHandler make_from_buffer(ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
     static ExpressionHandler make(Args&&... expr_hdls);
     static ExpressionHandler make_identity();
@@ -111,7 +110,9 @@ class ProductExpression final : public VectorNumerousExpression {
     bool is_identity() const;  // it is identity if it is empy.
 
    private:
-    ProductExpression(std::vector<ExpressionHandler>&& expr_hdls);
+    template <class... Args>
+    ProductExpression(Args&&... expr_hdls);
+    ProductExpression(ExpressionHandlerVector&& expr_hdls);
     std::unique_ptr<ProductExpression> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
@@ -126,7 +127,12 @@ inline ProductExpression::ProductExpression(Args&&... expr_hdls)
     : VectorNumerousExpression(std::forward<Args>(expr_hdls)...) {
 }
 
+//DEPRECATED
 inline ExpressionHandler ProductExpression::make(std::vector<ExpressionHandler>&& expr_hdls) {
+    return ExpressionHandler::make<ProductExpression>(std::move(expr_hdls));
+}
+
+inline ExpressionHandler ProductExpression::make_from_buffer(ExpressionHandlerVector&& expr_hdls) {
     return ExpressionHandler::make<ProductExpression>(std::move(expr_hdls));
 }
 
@@ -179,9 +185,8 @@ inline bool ProductExpression::is_identity() const {
 namespace boson_algebra {
 class SumExpression final : public VectorNumerousExpression {
    public:
-    template <class... Args>
-    SumExpression(Args&&... expr_hdls);
-    static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);
+    static ExpressionHandler make(std::vector<ExpressionHandler>&& expr_hdls);//DEPRECATED
+    static ExpressionHandler make_from_buffer(ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
     static ExpressionHandler make(Args&&... expr_hdls);
     static ExpressionHandler make_zero();
@@ -191,7 +196,9 @@ class SumExpression final : public VectorNumerousExpression {
     std::string repr() const override;
     bool is_zero() const;  // it is zero if it is empy.
    private:
-    SumExpression(std::vector<ExpressionHandler>&& expr_hdls);
+    template <class... Args>
+    SumExpression(Args&&... expr_hdls);
+    SumExpression(ExpressionHandlerVector&& expr_hdls);
     std::unique_ptr<SumExpression> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
@@ -206,7 +213,12 @@ inline SumExpression::SumExpression(Args&&... expr_hdls)
     : VectorNumerousExpression(std::forward<Args>(expr_hdls)...) {
 }
 
+//DEPRECATED:
 inline ExpressionHandler SumExpression::make(std::vector<ExpressionHandler>&& expr_hdls) {
+    return ExpressionHandler::make<SumExpression>(std::move(expr_hdls));
+}
+
+inline ExpressionHandler SumExpression::make_from_buffer(ExpressionHandlerVector&& expr_hdls) {
     return ExpressionHandler::make<SumExpression>(std::move(expr_hdls));
 }
 

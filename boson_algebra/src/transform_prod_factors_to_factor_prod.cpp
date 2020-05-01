@@ -46,7 +46,7 @@ ExpressionHandlerOptional transform_prod_factors_to_factor_prod(const Expression
     // ***************************************************************
     // *** return the factored product                              **
     // ***************************************************************
-    auto new_prod = ProductExpression::make(std::move(new_subexpressions));
+    auto new_prod = ProductExpression::make_from_buffer(std::move(new_subexpressions));
     return IntegerFactoredExpression::make(accumulated_factor, std::move(new_prod));
 }
 
