@@ -29,7 +29,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators1, OnEmptyProduct) {
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "𝕀");
     const auto transformed_expression_optional = transform_sort_product_of_boson_primitive_operators_1(expression);
-    ASSERT_TRUE(transformed_expression_optional);
+    ASSERT_FALSE(transformed_expression_optional);
     // const auto& transformed_expression = *transformed_expression_optional;
     // //std::cout << transformed_expression.str() << std::endl;
     // ASSERT_EQ(transformed_expression.str(), "𝕀");
@@ -41,9 +41,9 @@ TEST(TransformSortProductOfBosonPrimitiveOperators1, OnProductOfBosonPrimitiveOp
     ASSERT_EQ(expression.str(), "❪♯a◦♭b❫");
     const auto transformed_expression_optional = transform_sort_product_of_boson_primitive_operators_1(expression);
     ASSERT_TRUE(transformed_expression_optional);
-    // const auto& transformed_expression = *transformed_expression_optional;
-    // //std::cout << transformed_expression.str() << std::endl;
-    // ASSERT_EQ(transformed_expression.str(), "❪♯a◦♭b❫");
+    const auto& transformed_expression = *transformed_expression_optional;
+    std::cout << transformed_expression.str() << std::endl;
+    ASSERT_EQ(transformed_expression.str(), "❪❪♯a❫◦❪♭b❫❫");
 }
 
 TEST(TransformSortProductOfBosonPrimitiveOperators1, OnProductOfBosonPrimitiveOperators2) {
@@ -52,25 +52,58 @@ TEST(TransformSortProductOfBosonPrimitiveOperators1, OnProductOfBosonPrimitiveOp
     ASSERT_EQ(expression.str(), "❪♭b◦♯a❫");
     const auto transformed_expression_optional = transform_sort_product_of_boson_primitive_operators_1(expression);
     ASSERT_TRUE(transformed_expression_optional);
-    // const auto& transformed_expression = *transformed_expression_optional;
-    // //std::cout << transformed_expression.str() << std::endl;
-    // ASSERT_EQ(transformed_expression.str(), "❪♯a◦♭b❫");
+    const auto& transformed_expression = *transformed_expression_optional;
+    std::cout << transformed_expression.str() << std::endl;
+    ASSERT_EQ(transformed_expression.str(), "❪❪♭b❫◦❪♯a❫❫");
 }
 
 TEST(TransformSortProductOfBosonPrimitiveOperators1, OnProductOfBosonPrimitiveOperators3) {
-    const auto expression = ba::ProductExpression::make('d'_cr, 'b'_cr, 'a'_an, 'c'_an, 'a'_cr, 'b'_an, 'b'_cr, 'c'_cr, 'a'_cr, 'b'_an, 'a'_no, 'a'_an, 'b'_an, 'c'_an, 'd'_no, 'b'_cr, 'a'_cr);
+    const auto expression = ('a'_an * 'a'_cr);
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪♯d◦♯b◦♭a◦♭c◦♯a◦♭b◦♯b◦♯c◦♯a◦♭b◦ℕa◦♭a◦♭b◦♭c◦ℕd◦♯b◦♯a❫");
+    ASSERT_EQ(expression.str(), "❪♭a◦♯a❫");
     const auto transformed_expression_optional = transform_sort_product_of_boson_primitive_operators_1(expression);
     ASSERT_TRUE(transformed_expression_optional);
-    // const auto& transformed_expression = *transformed_expression_optional;
-    // //std::cout << transformed_expression.str() << std::endl;
-    // ASSERT_EQ(transformed_expression.str(), "❪♭a◦♯a◦♯a◦ℕa◦♭a◦♯a◦♯b◦♭b◦♯b◦♭b◦♭b◦♯b◦♭c◦♯c◦♭c◦♯d◦ℕd❫");
+    const auto& transformed_expression = *transformed_expression_optional;
+    std::cout << transformed_expression.str() << std::endl;
+    ASSERT_EQ(transformed_expression.str(), "❪❪♭a◦♯a❫❫");
 }
 
-TEST(TransformSortProductOfBosonPrimitiveOperators1, OnHeterogeneousProductOfBosonPrimitiveOperators3) {
-    const auto expression = 'd'_cr * ('d'_cr * 'd'_cr);
+TEST(TransformSortProductOfBosonPrimitiveOperators1, OnProductOfBosonPrimitiveOperators4) {
+    const auto expression = ba::ProductExpression::make('d'_cr, 'a'_cr, 'a'_an, 'c'_an);
     //std::cout << expression.str() << std::endl;
+    ASSERT_EQ(expression.str(), "❪♯d◦♯a◦♭a◦♭c❫");
+    const auto transformed_expression_optional = transform_sort_product_of_boson_primitive_operators_1(expression);
+    ASSERT_TRUE(transformed_expression_optional);
+    const auto& transformed_expression = *transformed_expression_optional;
+    std::cout << transformed_expression.str() << std::endl;
+    ASSERT_EQ(transformed_expression.str(), "❪❪♯d❫◦❪♯a◦♭a❫◦❪♭c❫❫");
+}
+
+TEST(TransformSortProductOfBosonPrimitiveOperators1, OnProductOfBosonPrimitiveOperators5) {
+    const auto expression = ba::ProductExpression::make('d'_cr, 'd'_cr, 'd'_an, 'c'_an, 'a'_cr, 'b'_an, 'b'_cr, 'c'_cr, 'a'_cr, 'b'_an, 'a'_no, 'a'_an, 'b'_an, 'c'_an, 'c'_no, 'c'_cr, 'a'_cr);
+    //std::cout << expression.str() << std::endl;
+    ASSERT_EQ(expression.str(), "❪♯d◦♯d◦♭d◦♭c◦♯a◦♭b◦♯b◦♯c◦♯a◦♭b◦ℕa◦♭a◦♭b◦♭c◦ℕc◦♯c◦♯a❫");
+    const auto transformed_expression_optional = transform_sort_product_of_boson_primitive_operators_1(expression);
+    ASSERT_TRUE(transformed_expression_optional);
+    const auto& transformed_expression = *transformed_expression_optional;
+    // //std::cout << transformed_expression.str() << std::endl;
+    ASSERT_EQ(transformed_expression.str(), "❪❪♯d◦♯d◦♭d❫◦❪♭c❫◦❪♯a❫◦❪♭b◦♯b❫◦❪♯c❫◦❪♯a❫◦❪♭b❫◦❪ℕa◦♭a❫◦❪♭b❫◦❪♭c◦ℕc◦♯c❫◦❪♯a❫❫");
+}
+
+TEST(TransformSortProductOfBosonPrimitiveOperators1, OnProductOfBosonPrimitiveOperators6) {
+    const auto expression = ba::ProductExpression::make('a'_cr, 'd'_cr, 'd'_an, 'c'_an, 'a'_cr, 'b'_an, 'b'_cr, 'c'_cr, 'a'_cr, 'b'_an, 'a'_no, 'a'_an, 'b'_an, 'c'_an, 'c'_no, 'a'_cr, 'a'_cr);
+    //std::cout << expression.str() << std::endl;
+    ASSERT_EQ(expression.str(), "❪♯a◦♯d◦♭d◦♭c◦♯a◦♭b◦♯b◦♯c◦♯a◦♭b◦ℕa◦♭a◦♭b◦♭c◦ℕc◦♯a◦♯a❫");
+    const auto transformed_expression_optional = transform_sort_product_of_boson_primitive_operators_1(expression);
+    ASSERT_TRUE(transformed_expression_optional);
+    const auto& transformed_expression = *transformed_expression_optional;
+    // //std::cout << transformed_expression.str() << std::endl;
+    ASSERT_EQ(transformed_expression.str(), "❪❪♯a❫◦❪♯d◦♭d❫◦❪♭c❫◦❪♯a❫◦❪♭b◦♯b❫◦❪♯c❫◦❪♯a❫◦❪♭b❫◦❪ℕa◦♭a❫◦❪♭b❫◦❪♭c◦ℕc❫◦❪♯a◦♯a❫❫");
+}
+
+TEST(TransformSortProductOfBosonPrimitiveOperators1, OnHeterogeneousProductOfBosonPrimitiveOperators) {
+    const auto expression = 'd'_cr * ('d'_cr * 'd'_cr);
+    // std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯d◦❪♯d◦♯d❫❫");
     const auto transformed_expression_optional = transform_sort_product_of_boson_primitive_operators_1(expression);
     ASSERT_FALSE(transformed_expression_optional);

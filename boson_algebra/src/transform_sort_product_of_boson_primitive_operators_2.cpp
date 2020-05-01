@@ -6,16 +6,14 @@
 // BOOST:
 #include <boost/algorithm/cxx11/all_of.hpp>
 #include <boost/range/adaptor/indexed.hpp>
-#include <boost/range/adaptor/indexed.hpp>
 #include <boost/range/adaptor/sliced.hpp>
+#include <boost/range/algorithm/adjacent_find.hpp>
 #include <boost/range/algorithm/count_if.hpp>
 #include <boost/range/combine.hpp>
 #include <boost/range/irange.hpp>
-#include <boost/range/algorithm/adjacent_find.hpp>
 #include <boost/range/sub_range.hpp>
-//STD
-#include <iostream>
-#include <iterator>
+// STD:
+//#include <iterator>
 
 namespace {
 
@@ -24,20 +22,20 @@ enum class CrAn {
     An
 };
 
-std::ostream& operator<<(std::ostream& s, const CrAn& _) {
-    switch (_) {
-        case CrAn::Cr:
-            s << "Cr";
-            break;
-        case CrAn::An:
-            s << "An";
-            break;
-        default:
-            s << "??";
-            break;
-    }
-    return s;
-}
+// std::ostream& operator<<(std::ostream& s, const CrAn& _) {
+//     switch (_) {
+//         case CrAn::Cr:
+//             s << "Cr";
+//             break;
+//         case CrAn::An:
+//             s << "An";
+//             break;
+//         default:
+//             s << "??";
+//             break;
+//     }
+//     return s;
+// }
 
 CrAn expression_to_cr_an(const boson_algebra::ExpressionHandler& expression) {
     if (expression.is_of_type<boson_algebra::BosonCreationOperator>()) {
@@ -156,7 +154,7 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_2(
     // *** defining the operators order in the desired product      **
     // ***************************************************************
     const DesiredStateCalculator desired_state_calculator{n_cr, n_an};
-    std::cout << "n_cr , n_an = " << n_cr << " " << n_an << std::endl;  //Deebug
+    // std::cout << "n_cr , n_an = " << n_cr << " " << n_an << std::endl;  //Deebug
     // ***************************************************************
     // *** find the first not-matching operator                     **
     // *** (not matching to the desired operators order)            **
@@ -173,9 +171,9 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_2(
             const auto desired_cr_an = _.get<1>();
             const auto& expression = _.get<2>();
             const auto found_cr_an = expression_to_cr_an(expression);
-            std::cout << "-> index: " << index << std::endl;                  //Deebug
-            std::cout << "-> desired_cr_an: " << desired_cr_an << std::endl;  //Deebug
-            std::cout << "-> found_cr_an: " << found_cr_an << std::endl;      //Deebug
+            // std::cout << "-> index: " << index << std::endl;                  //Deebug
+            // std::cout << "-> desired_cr_an: " << desired_cr_an << std::endl;  //Deebug
+            // std::cout << "-> found_cr_an: " << found_cr_an << std::endl;      //Deebug
             if (found_cr_an != desired_cr_an) {
                 return index;
             }
@@ -193,7 +191,7 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_2(
     const auto index_of_first_not_matching_subexpression = *index_of_first_not_matching_subexpression_optional;
     assert(index_of_first_not_matching_subexpression < expression.n_subexpressions());
     assert(index_of_first_not_matching_subexpression != expression.n_subexpressions() - 1);
-    std::cout << "index_of_first_not_matching_subexpression: " << index_of_first_not_matching_subexpression << std::endl;
+    //std::cout << "index_of_first_not_matching_subexpression: " << index_of_first_not_matching_subexpression << std::endl;//Deebug
     // ***************************************************************
     // **** find the first adjecent operator pair                   **
     // **** (the operators pair from the transformed product)       **
@@ -224,7 +222,7 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_2(
     const auto index_of_first_operator_pair_to_transpose = find_index_of_first_operator_pair_to_transpose();
     assert(index_of_first_operator_pair_to_transpose < expression.n_subexpressions());
     assert(index_of_first_operator_pair_to_transpose != expression.n_subexpressions() - 1);
-    std::cout << "index_of_first_operator_pair_to_transpose: " << index_of_first_operator_pair_to_transpose << std::endl;
+    //std::cout << "index_of_first_operator_pair_to_transpose: " << index_of_first_operator_pair_to_transpose << std::endl;//Deebug
     // ***************************************************************
     // ***** make the two new subexpressions                        **
     // ***************************************************************
