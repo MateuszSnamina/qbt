@@ -8,7 +8,7 @@ namespace ba = boson_algebra;
 using namespace ba::literals;
 using namespace ba::operators;
 
-TEST(TransformSortProductOfBosonPrimitiveOperators, OnBosonPrimitiveOperator) {
+TEST(TransformSortProductOfBosonPrimitiveOperators0, OnBosonPrimitiveOperator) {
     const auto expression = 'd'_cr;
     ASSERT_EQ(expression.str(), "♯d");
     //std::cout << expression.str() << std::endl;
@@ -16,7 +16,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators, OnBosonPrimitiveOperator) {
     ASSERT_FALSE(transformed_expression_optional);
 }
 
-TEST(TransformSortProductOfBosonPrimitiveOperators, OnEmptySum) {
+TEST(TransformSortProductOfBosonPrimitiveOperators0, OnEmptySum) {
     const auto expression = ba::SumExpression::make();
     ASSERT_EQ(expression.str(), "𝟘");
     //std::cout << expression.str() << std::endl;
@@ -24,7 +24,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators, OnEmptySum) {
     ASSERT_FALSE(transformed_expression_optional);
 }
 
-TEST(TransformSortProductOfBosonPrimitiveOperators, OnEmptyProduct) {
+TEST(TransformSortProductOfBosonPrimitiveOperators0, OnEmptyProduct) {
     const auto expression = ba::ProductExpression::make();
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "𝕀");
@@ -35,7 +35,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators, OnEmptyProduct) {
     ASSERT_EQ(transformed_expression.str(), "𝕀");
 }
 
-TEST(TransformSortProductOfBosonPrimitiveOperators, OnProductOfBosonPrimitiveOperators1) {
+TEST(TransformSortProductOfBosonPrimitiveOperators0, OnProductOfBosonPrimitiveOperators1) {
     const auto expression = ('a'_cr * 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯a◦♭b❫");
@@ -46,7 +46,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators, OnProductOfBosonPrimitiveOpe
     ASSERT_EQ(transformed_expression.str(), "❪♯a◦♭b❫");
 }
 
-TEST(TransformSortProductOfBosonPrimitiveOperators, OnProductOfBosonPrimitiveOperators2) {
+TEST(TransformSortProductOfBosonPrimitiveOperators0, OnProductOfBosonPrimitiveOperators2) {
     const auto expression = ('b'_an * 'a'_cr);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♭b◦♯a❫");
@@ -57,7 +57,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators, OnProductOfBosonPrimitiveOpe
     ASSERT_EQ(transformed_expression.str(), "❪♯a◦♭b❫");
 }
 
-TEST(TransformSortProductOfBosonPrimitiveOperators, OnProductOfBosonPrimitiveOperators3) {
+TEST(TransformSortProductOfBosonPrimitiveOperators0, OnProductOfBosonPrimitiveOperators3) {
     const auto expression = ba::ProductExpression::make('d'_cr, 'b'_cr, 'a'_an, 'c'_an, 'a'_cr, 'b'_an, 'b'_cr, 'c'_cr, 'a'_cr, 'b'_an, 'a'_no, 'a'_an, 'b'_an, 'c'_an, 'd'_no, 'b'_cr, 'a'_cr);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯d◦♯b◦♭a◦♭c◦♯a◦♭b◦♯b◦♯c◦♯a◦♭b◦ℕa◦♭a◦♭b◦♭c◦ℕd◦♯b◦♯a❫");
@@ -68,7 +68,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators, OnProductOfBosonPrimitiveOpe
     ASSERT_EQ(transformed_expression.str(), "❪♭a◦♯a◦♯a◦ℕa◦♭a◦♯a◦♯b◦♭b◦♯b◦♭b◦♭b◦♯b◦♭c◦♯c◦♭c◦♯d◦ℕd❫");
 }
 
-TEST(TransformSortProductOfBosonPrimitiveOperators, OnHeterogeneousProductOfBosonPrimitiveOperators3) {
+TEST(TransformSortProductOfBosonPrimitiveOperators0, OnHeterogeneousProductOfBosonPrimitiveOperators3) {
     const auto expression = 'd'_cr * ('d'_cr * 'd'_cr);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯d◦❪♯d◦♯d❫❫");
