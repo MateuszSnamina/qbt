@@ -10,7 +10,7 @@ ExpressionHandlerOptional transform_detect_zero_factor(const ExpressionHandler& 
         return std::nullopt;
     }
     const auto expression_factor = expression.casted_target<IntegerFactoredExpression>().factor();
-    const auto& subexpression = expression.target().subexpression(0);
+    const auto& subexpression = expression.subexpression(0);
     const auto is_expression_factor_zero = (expression_factor == 0);
     const auto is_subexpression_zero = subexpression.is_of_type<SumExpression>() && subexpression.casted_target<SumExpression>().is_zero();
     if ((!is_subexpression_zero) && (!is_expression_factor_zero)) {

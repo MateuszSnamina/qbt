@@ -10,7 +10,7 @@ ExpressionHandlerOptional transform_detect_one_factor(const ExpressionHandler& e
         return std::nullopt;
     }
     const auto expression_factor = expression.casted_target<IntegerFactoredExpression>().factor();
-    const auto& subexpression = expression.target().subexpression(0);
+    const auto& subexpression = expression.subexpression(0);
     const auto is_expression_factor_one = (expression_factor == 1);
     if (!is_expression_factor_one) {
         return std::nullopt;

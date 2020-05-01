@@ -19,6 +19,13 @@ ExpressionHandlerOptional transform_expand(const ExpressionHandler& expression) 
     const auto& range_begin = boost::begin(range);
     const auto& range_end = boost::end(range);
     // ***************************************************************
+    // *** the transformation does apply to product expressions     **
+    // *** with zero factors or only one factor                     **
+    // ***************************************************************
+    if (expression.n_subexpressions() < 2) {
+        return std::nullopt;
+    };    
+    // ***************************************************************
     // *** the transformation applies only if                       **
     // *** there is at least one factor being                       **
     // *** of SumExpression type                                    **
