@@ -41,6 +41,7 @@ unsigned safe_dfs_transform(
             break;
         case GreedinessLevel::DoDfsForReplacedExpressions:
             if (auto transformation_result = fun(expression)) {
+                swap(expression, *transformation_result);
                 replacement_counter += safe_dfs_transform(expression, fun, greediness);
             }
             break;
