@@ -23,8 +23,8 @@ unsigned safe_dfs_transform(
     GreedinessLevel greediness = GreedinessLevel::DoNotTouchReplacedExpressions) {
     assert(!expression.is_shallow_drained());
     unsigned replacement_counter = 0;
-    for (auto& subexpression: expression.range()){
-        replacement_counter += safe_dfs_transform(subexpression, fun, greediness);        
+    for (auto& subexpression : expression.range()) {
+        replacement_counter += safe_dfs_transform(subexpression, fun, greediness);
     }
     switch (greediness) {
         case GreedinessLevel::DoNotTouchReplacedExpressions:
