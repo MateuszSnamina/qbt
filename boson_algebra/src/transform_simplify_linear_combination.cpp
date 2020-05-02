@@ -44,7 +44,7 @@ ExpressionHandlerOptional transform_simplify_linear_combination(const Expression
             const auto& subexpression = expression.subexpression(*it);
             const auto& subsubexpression = subexpression.subexpression(0);
             if (processed_subsubexpression.equals(subsubexpression)) {
-                accumulated_factor += subexpression.casted_target_new_api<IntegerFactoredExpression>().unwrap().get().factor();
+                accumulated_factor += subexpression.casted_target<IntegerFactoredExpression>().unwrap().get().factor();
                 it = indices.erase(it);
             } else {
                 it++;

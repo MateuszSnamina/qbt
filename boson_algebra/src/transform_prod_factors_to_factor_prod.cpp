@@ -37,7 +37,7 @@ ExpressionHandlerOptional transform_prod_factors_to_factor_prod(const Expression
     long long accumulated_factor = 1;
     for (const auto& subexpression : range) {
         if (subexpression.is_of_type<IntegerFactoredExpression>()) {
-            accumulated_factor *= subexpression.casted_target_new_api<IntegerFactoredExpression>().unwrap().get().factor();
+            accumulated_factor *= subexpression.casted_target<IntegerFactoredExpression>().unwrap().get().factor();
             new_subexpressions.push_back(subexpression.subexpression(0).clone());
         } else {
             new_subexpressions.push_back(subexpression.clone());

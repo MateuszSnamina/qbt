@@ -22,30 +22,30 @@ using namespace boson_algebra::literals;
 namespace ba = boson_algebra;
 
 ba::ExpressionHandler do_simplification(ba::ExpressionHandler&& expression) {
-    expression.safe_dfs_transform(ba::transform_sort_product_of_boson_primitive_operators_0, false);
+    ba::safe_dfs_transform(expression, ba::transform_sort_product_of_boson_primitive_operators_0);
     std::cout << "Sort0:  " << expression.str() << std::endl;
-    expression.safe_dfs_transform(ba::transform_sort_product_of_boson_primitive_operators_1, false);
+    ba::safe_dfs_transform(expression, ba::transform_sort_product_of_boson_primitive_operators_1);
     std::cout << "Sort1:  " << expression.str() << std::endl;
-    expression.safe_dfs_transform(ba::transform_sort_product_of_boson_primitive_operators_2, false);
+    ba::safe_dfs_transform(expression, ba::transform_sort_product_of_boson_primitive_operators_2);
     std::cout << "Sort2:  " << expression.str() << std::endl;
 
-    expression.safe_dfs_transform(ba::transform_detect_bridge_product, false);
+    ba::safe_dfs_transform(expression, ba::transform_detect_bridge_product);
     std::cout << "BridgP:  " << expression.str() << std::endl;
-    expression.safe_dfs_transform(ba::transform_detect_bridge_sum, false);
+    ba::safe_dfs_transform(expression, ba::transform_detect_bridge_sum);
     std::cout << "BridgS:  " << expression.str() << std::endl;
 
-    expression.safe_dfs_transform(ba::transform_expand, false);
+    ba::safe_dfs_transform(expression, ba::transform_expand);
     std::cout << "Expand: " << expression.str() << std::endl;
-    expression.safe_dfs_transform(ba::transform_flatten_product, false);
+    ba::safe_dfs_transform(expression, ba::transform_flatten_product);
     std::cout << "FlatP:  " << expression.str() << std::endl;
-    expression.safe_dfs_transform(ba::transform_flatten_sum, false);
+    ba::safe_dfs_transform(expression, ba::transform_flatten_sum);
     std::cout << "FlatS:  " << expression.str() << std::endl;
     
-    expression.safe_dfs_transform(ba::transform_sum_to_linear_combination, false);
+    ba::safe_dfs_transform(expression, ba::transform_sum_to_linear_combination);
     std::cout << "S->LA:  " << expression.str() << std::endl;
-    expression.safe_dfs_transform(ba::transform_simplify_linear_combination, false);
+    ba::safe_dfs_transform(expression, ba::transform_simplify_linear_combination);
     std::cout << "SimpLA: " << expression.str() << std::endl;
-    expression.safe_dfs_transform(ba::transform_detect_one_factor, false);
+    ba::safe_dfs_transform(expression, ba::transform_detect_one_factor);
     std::cout << "1Factor:" << expression.str() << std::endl;
 
     return std::move(expression);
@@ -54,7 +54,7 @@ ba::ExpressionHandler do_simplification(ba::ExpressionHandler&& expression) {
 int main() {
     //ba::ExpressionHandler expression = 'a'_an * 'c'_cr * 'a'_cr * 'b'_cr;
     ba::ExpressionHandler expression = 'a'_an * 'a'_cr * 'a'_an * 'a'_cr;
-    expression.safe_dfs_transform(ba::transform_flatten_product);
+    ba::safe_dfs_transform(expression, ba::transform_flatten_product);
     
     std::cout << "INPUT:" << expression.str() << std::endl;
     expression = do_simplification(std::move(expression));

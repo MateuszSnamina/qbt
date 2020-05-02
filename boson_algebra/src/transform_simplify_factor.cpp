@@ -14,8 +14,8 @@ ExpressionHandlerOptional transform_simplify_factor(const ExpressionHandler& exp
         return std::nullopt;
     }
     const auto& subsubexpression = subexpression.target().subexpression(0);
-    const auto expression_factor = expression.casted_target_new_api<IntegerFactoredExpression>().unwrap().get().factor();
-    const auto subexpression_factor =  subexpression.casted_target_new_api<IntegerFactoredExpression>().unwrap().get().factor();
+    const auto expression_factor = expression.casted_target<IntegerFactoredExpression>().unwrap().get().factor();
+    const auto subexpression_factor =  subexpression.casted_target<IntegerFactoredExpression>().unwrap().get().factor();
     return IntegerFactoredExpression::make(expression_factor*subexpression_factor, subsubexpression.clone());
 }
 

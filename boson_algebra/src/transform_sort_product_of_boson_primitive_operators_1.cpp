@@ -50,8 +50,8 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_1(
     using ConstExpressionHandlerRandomAccessRangeIteratorVector = std::vector<ConstExpressionHandlerRandomAccessRangeIterator>;
     const auto& get_split_points = [&range]() -> ConstExpressionHandlerRandomAccessRangeIteratorVector {
         const auto have_different_bosons = [](const ExpressionHandler& expression1, const ExpressionHandler& expression2) {
-            const auto boson1 = expression1.casted_target_new_api<BosonPrimitiveOperators>().unwrap().get().boson();
-            const auto boson2 = expression2.casted_target_new_api<BosonPrimitiveOperators>().unwrap().get().boson();
+            const auto boson1 = expression1.casted_target<BosonPrimitiveOperators>().unwrap().get().boson();
+            const auto boson2 = expression2.casted_target<BosonPrimitiveOperators>().unwrap().get().boson();
             return boson1->id() != boson2->id();
         };
         assert(boost::size(range) >= 2);

@@ -3,6 +3,7 @@
 #include <boson_algebra/expression_pragma.hpp>
 #include <boson_algebra/transform_flatten_product.hpp>
 #include <boson_algebra/util_make.hpp>
+#include <boson_algebra/algorithm_dfs.hpp>
 // STD:
 #include <iostream>
 
@@ -200,7 +201,7 @@ int main() {
         ExpressionHandler expr1 = expression_1(a, b, c, d);
         ExpressionHandler expr1_clone = expr1.clone();
         std::cout << "Start Dfs." << std::endl;
-        expr1.safe_dfs_transform(fun);
+        safe_dfs_transform(expr1, fun);
         std::cout << "End Dfs." << std::endl;
         std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
@@ -212,7 +213,7 @@ int main() {
             if (!expr_hdl.is_of_type<BosonNumberOperator>()) {
                 return std::nullopt;
             }
-            const auto& casted_other = expr_hdl.casted_target_new_api<BosonNumberOperator>().unwrap().get();
+            const auto& casted_other = expr_hdl.casted_target<BosonNumberOperator>().unwrap().get();
             const auto boson = casted_other.boson();
             ExpressionHandler cr = BosonCreationOperator::make(boson);
             ExpressionHandler an = BosonAnnihilationOperator::make(boson);
@@ -221,7 +222,7 @@ int main() {
         ExpressionHandler expr1 = expression_1(a, b, c, d);
         ExpressionHandler expr1_clone = expr1.clone();
         std::cout << "Start Dfs." << std::endl;
-        expr1.safe_dfs_transform(fun);
+        safe_dfs_transform(expr1, fun);
         std::cout << "End Dfs." << std::endl;
         std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
@@ -232,7 +233,7 @@ int main() {
         ExpressionHandler expr1 = expression_1(a, b, c, d);
         ExpressionHandler expr1_clone = expr1.clone();
         std::cout << "Start Dfs." << std::endl;
-        expr1.safe_dfs_transform(transform_flatten_product);
+        safe_dfs_transform(expr1, transform_flatten_product);
         std::cout << "End Dfs." << std::endl;
         std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;

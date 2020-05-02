@@ -6,42 +6,46 @@
 
 namespace boson_algebra {
 
-enum class Greediness {
+enum class GreedinessLevel {
     DoNotTouchReplacedExpressions,
     RepeatForReplacedExpressions,
     DoDfsForReplacedExpressions,
 };
 
-struct DfsResult {
-    ExpressionHandler expression;
-    unsigned replacement_counter;
-};
+// struct DfsResult {
+//     ExpressionHandler expression;
+//     unsigned replacement_counter;
+// };
 
-unsigned safe_dfs_transform(ExpressionHandler& expression, const SafeTransformFunctionT& fun, Greediness greediness) {
+unsigned safe_dfs_transform(
+    ExpressionHandler& expression,
+    const SafeTransformFunctionT& fun,
+    GreedinessLevel greediness = GreedinessLevel::DoNotTouchReplacedExpressions) {
     assert(!expression.is_shallow_drained());
     unsigned replacement_counter = 0;
-    for (unsigned n_subexpression = 0; n_subexpression < expression.n_subexpressions(); n_subexpression++) {
-        replacement_counter += safe_dfs_transform(expression.subexpression(n_subexpression), fun, greediness);
+    for (auto& subexpression: expression.range()){
+        replacement_counter += safe_dfs_transform(subexpression, fun, greediness);        
     }
     switch (greediness) {
-        case Greediness::DoNotTouchReplacedExpressions:
+        case GreedinessLevel::DoNotTouchReplacedExpressions:
             if (auto transformation_result = fun(expression)) {
                 swap(expression, *transformation_result);
                 replacement_counter++;
             }
             break;
-        case Greediness::RepeatForReplacedExpressions:
+        case GreedinessLevel::RepeatForReplacedExpressions:
             while (auto transformation_result = fun(expression)) {
                 swap(expression, *transformation_result);
                 replacement_counter++;
             }
             break;
-        case Greediness::DoDfsForReplacedExpressions:
-            //TODO:
-            assert(0);
+        case GreedinessLevel::DoDfsForReplacedExpressions:
+            if (auto transformation_result = fun(expression)) {
+                replacement_counter += safe_dfs_transform(expression, fun, greediness);
+            }
             break;
         default:
-            assert(0);
+            assert(false);
     }
     return replacement_counter;
 }
