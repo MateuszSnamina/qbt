@@ -1,6 +1,6 @@
-//MY HEADER:
+// MY HEADER:
 #include <boson_algebra/transform_flatten_product.hpp>
-//SELF:
+// SELF:
 #include <boson_algebra/transform_simplify_flatten.hpp>
 #include <boson_algebra/expression_structural_blocks.hpp>
 

@@ -1,20 +1,13 @@
-//MY HEADER:
+// MY HEADER:
 #include <boson_algebra/transform_detect_bridge_product.hpp>
-//SELF:
+// SELF:
 #include <boson_algebra/expression_structural_blocks.hpp>
+#include <boson_algebra/transform_detect_bridge_numerous_expression.hpp>
 
 namespace boson_algebra {
 
 ExpressionHandlerOptional transform_detect_bridge_product(const ExpressionHandler& expression) {
-    if (!expression.is_of_type<ProductExpression>()) {
-        return std::nullopt;
-    }
-    const auto is_bridge = (expression.n_subexpressions() == 1);
-    if (!is_bridge) {
-        return std::nullopt;
-    }
-    const auto& subexpression = expression.subexpression(0);
-    return subexpression.clone();
+    return transform_detect_bridge_numerous_expression<ProductExpression>(expression);
 }
 
 }  // namespace boson_algebra

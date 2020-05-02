@@ -1,6 +1,6 @@
-//MY HEADER:
+// MY HEADER:
 #include <boson_algebra/transform_expand.hpp>
-//SELF:
+// SELF:
 #include <boson_algebra/expression_structural_blocks.hpp>
 // BOOST:
 #include <boost/range/algorithm.hpp>

@@ -1,8 +1,8 @@
-//MY HEADER:
+// MY HEADER:
 #include <boson_algebra/transform_detect_zero_product.hpp>
-//SELF:
+// SELF:
 #include <boson_algebra/expression_structural_blocks.hpp>
-//BOOST:
+// BOOST:
 #include <boost/range/algorithm/find_if.hpp>
 
 namespace boson_algebra {

@@ -38,7 +38,7 @@ ba::ExpressionHandler do_simplification(ba::ExpressionHandler&& expression) {
     std::cout << "FlatP:  " << expression.str() << std::endl;
     expression.safe_dfs_transform(ba::transform_flatten_sum, false);
     std::cout << "FlatS:  " << expression.str() << std::endl;
-
+    
     expression.safe_dfs_transform(ba::transform_sum_to_linear_combination, false);
     std::cout << "S->LA:  " << expression.str() << std::endl;
     expression.safe_dfs_transform(ba::transform_simplify_linear_combination, false);
@@ -50,8 +50,8 @@ ba::ExpressionHandler do_simplification(ba::ExpressionHandler&& expression) {
 }
 
 int main() {
-    ba::ExpressionHandler expression = 'a'_an * 'c'_cr * 'a'_cr * 'b'_cr;
-    //ba::ExpressionHandler expression = 'a'_an * 'a'_cr * 'a'_an * 'a'_cr;
+    //ba::ExpressionHandler expression = 'a'_an * 'c'_cr * 'a'_cr * 'b'_cr;
+    ba::ExpressionHandler expression = 'a'_an * 'a'_cr * 'a'_an * 'a'_cr;
     expression.safe_dfs_transform(ba::transform_flatten_product);
     
     std::cout << "INPUT:" << expression.str() << std::endl;

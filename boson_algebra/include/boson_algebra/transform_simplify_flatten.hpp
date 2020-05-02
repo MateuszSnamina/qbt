@@ -5,6 +5,8 @@
 #include <boson_algebra/expression_common.hpp>
 // BOOST:
 #include <boost/algorithm/cxx11/any_of.hpp>
+// STD:
+#include <type_traits>
 
 namespace boson_algebra {
 

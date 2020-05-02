@@ -1,10 +1,10 @@
-//MY HEADER:
+// MY HEADER:
 #include <boson_algebra/transform_simplify_linear_combination.hpp>
-//SELF:
+// SELF:
 #include <boson_algebra/expression_structural_blocks.hpp>
-//BOOST:
+// BOOST:
 #include <boost/algorithm/cxx11/all_of.hpp>
-//STD:
+// STD:
 #include <numeric>
 
 namespace boson_algebra {
