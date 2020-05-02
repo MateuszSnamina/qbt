@@ -1,5 +1,5 @@
-#ifndef BOSON_ALGEBRA_TRANSFORM_SIMPLIFY_FLATTEN_HPP //TODO remove SIMPLIFY WORD!!
-#define BOSON_ALGEBRA_TRANSFORM_SIMPLIFY_FLATTEN_HPP
+#ifndef BOSON_ALGEBRA_TRANSFORM_FLATTEN_NUMEROUS_EXPRESSION_HPP
+#define BOSON_ALGEBRA_TRANSFORM_FLATTEN_NUMEROUS_EXPRESSION_HPP
 
 // SELF
 #include <boson_algebra/expression_common.hpp>
@@ -11,7 +11,7 @@
 namespace boson_algebra {
 
 template<class VectorNumerousExpressionDerrivedClass>
-ExpressionHandlerOptional transform_simplify_flatten(const ExpressionHandler& expression) {
+ExpressionHandlerOptional transform_flatten_numerous_expression(const ExpressionHandler& expression) {
     static_assert(std::is_base_of_v<VectorNumerousExpression, VectorNumerousExpressionDerrivedClass>);
     // ***************************************************************
     // *** the transformation applies only to expressions being     **
