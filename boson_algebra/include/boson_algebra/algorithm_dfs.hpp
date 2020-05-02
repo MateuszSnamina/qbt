@@ -14,23 +14,36 @@ enum class Greediness {
 
 struct DfsResult {
     ExpressionHandler expression;
-    int replacement_counter;
+    unsigned replacement_counter;
 };
 
-DfsResult dfs(ExpressionHandler& expression, const SafeTransformFunctionT&, Greediness greediness) {
-    // assert(!is_shallow_drained());
-    // for (unsigned n_subexpression = 0; n_subexpression < target().n_subexpressions(); n_subexpression++) {
-    //     target().subexpression(n_subexpression).safe_dfs_transform(fun, greedy);
-    // }
-    // if (greedy) {
-    //     while (auto transformation_result = fun(*this)) {
-    //         swap(*this, *transformation_result);
-    //     }
-    // } else {
-    //     if (auto transformation_result = fun(*this)) {
-    //         swap(*this, *transformation_result);
-    //     }
-    // }
+unsigned safe_dfs_transform(ExpressionHandler& expression, const SafeTransformFunctionT& fun, Greediness greediness) {
+    assert(!expression.is_shallow_drained());
+    unsigned replacement_counter = 0;
+    for (unsigned n_subexpression = 0; n_subexpression < expression.n_subexpressions(); n_subexpression++) {
+        replacement_counter += safe_dfs_transform(expression.subexpression(n_subexpression), fun, greediness);
+    }
+    switch (greediness) {
+        case Greediness::DoNotTouchReplacedExpressions:
+            if (auto transformation_result = fun(expression)) {
+                swap(expression, *transformation_result);
+                replacement_counter++;
+            }
+            break;
+        case Greediness::RepeatForReplacedExpressions:
+            while (auto transformation_result = fun(expression)) {
+                swap(expression, *transformation_result);
+                replacement_counter++;
+            }
+            break;
+        case Greediness::DoDfsForReplacedExpressions:
+            //TODO:
+            assert(0);
+            break;
+        default:
+            assert(0);
+    }
+    return replacement_counter;
 }
 
 }  // namespace boson_algebra

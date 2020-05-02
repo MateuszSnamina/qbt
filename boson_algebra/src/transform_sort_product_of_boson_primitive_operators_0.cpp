@@ -38,8 +38,8 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_0(
     // ***  the boson driven operators sort predictate              **
     // ***************************************************************
     const auto sort_predicate = [](const ExpressionHandler& lhs_exp, const ExpressionHandler& rhs_exp) {
-        const auto& lhs_boson = lhs_exp.casted_target<BosonPrimitiveOperators>().boson();
-        const auto& rhs_boson = rhs_exp.casted_target<BosonPrimitiveOperators>().boson();
+        const auto& lhs_boson = lhs_exp.casted_target_new_api<BosonPrimitiveOperators>().unwrap().get().boson();
+        const auto& rhs_boson = rhs_exp.casted_target_new_api<BosonPrimitiveOperators>().unwrap().get().boson();
         return lhs_boson->id() < rhs_boson->id();
     };
     // ***************************************************************

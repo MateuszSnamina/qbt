@@ -212,7 +212,7 @@ int main() {
             if (!expr_hdl.is_of_type<BosonNumberOperator>()) {
                 return std::nullopt;
             }
-            const auto& casted_other = expr_hdl.casted_target<BosonNumberOperator>();
+            const auto& casted_other = expr_hdl.casted_target_new_api<BosonNumberOperator>().unwrap().get();
             const auto boson = casted_other.boson();
             ExpressionHandler cr = BosonCreationOperator::make(boson);
             ExpressionHandler an = BosonAnnihilationOperator::make(boson);

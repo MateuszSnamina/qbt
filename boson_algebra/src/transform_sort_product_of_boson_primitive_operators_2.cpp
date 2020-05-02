@@ -129,8 +129,8 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_2(
     // *** of operators associated with the only one boson          **
     // ***************************************************************
     const auto have_different_bosons = [](const ExpressionHandler& expression1, const ExpressionHandler& expression2) {
-        const auto boson1 = expression1.casted_target<BosonCreationAnnihilationBase>().boson();
-        const auto boson2 = expression2.casted_target<BosonCreationAnnihilationBase>().boson();
+        const auto boson1 = expression1.casted_target_new_api<BosonCreationAnnihilationBase>().unwrap().get().boson();
+        const auto boson2 = expression2.casted_target_new_api<BosonCreationAnnihilationBase>().unwrap().get().boson();
         return boson1->id() != boson2->id();
     };
     if (boost::adjacent_find(range, have_different_bosons) != boost::end(range)) {

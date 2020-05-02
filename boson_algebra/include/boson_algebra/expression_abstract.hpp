@@ -2,6 +2,7 @@
 #define BOSON_ALGEBRA_EXPRESSION_ABSTRACT_HPP
 
 // SELF:
+#include <boson_algebra/result.hpp>
 #include <boson_algebra/str_repr.hpp>
 // BOOST:
 #include <boost/algorithm/cxx11/any_of.hpp>
@@ -192,9 +193,9 @@ class ExpressionHandler final : public StrRepr {
     Expression& target();
     const Expression& target() const;
     template <class ExpressionDerrivedClass>
-    ExpressionDerrivedClass& casted_target();
+    BosonAlgebraResult<std::reference_wrapper<ExpressionDerrivedClass>> casted_target_new_api();
     template <class ExpressionDerrivedClass>
-    const ExpressionDerrivedClass& casted_target() const;
+    BosonAlgebraResult<std::reference_wrapper<const ExpressionDerrivedClass>> casted_target_new_api() const;
     template <class ExpressionDerrivedClass>
     const bool is_of_type() const;
     // quick access for the underying expression -- tree structure accessos:
@@ -211,8 +212,8 @@ class ExpressionHandler final : public StrRepr {
     ExpressionHandler clone() const;
     bool equals(const ExpressionHandler&) const;
     // modifier algorithms:
-    void safe_dfs_transform(const SafeTransformFunctionT&, bool greedy = true);//TODO: DEPRECATED
-    //void unsafe_dfs_transform(const UnsafeTransformFunctionT&);
+    void safe_dfs_transform(const SafeTransformFunctionT&, bool greedy = true);  //TODO: DEPRECATED
+                                                                                 //void unsafe_dfs_transform(const UnsafeTransformFunctionT&);
 
    private:
     ExpressionHandler(std::unique_ptr<Expression>) noexcept;
@@ -336,6 +337,8 @@ inline Expression& ExpressionHandler::target() {
 }
 
 inline const Expression& ExpressionHandler::target() const {
+    assert(!is_shallow_drained());
+    assert(_expr);
     return *_expr;
 }
 
@@ -391,19 +394,27 @@ inline bool ExpressionHandler::equals(const ExpressionHandler& other) const {
 }
 
 template <class ExpressionDerrivedClass>
-ExpressionDerrivedClass& ExpressionHandler::casted_target() {
+inline BosonAlgebraResult<std::reference_wrapper<ExpressionDerrivedClass>> ExpressionHandler::casted_target_new_api() {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
     assert(!is_shallow_drained());
-    assert(is_of_type<ExpressionDerrivedClass>());
-    return dynamic_cast<ExpressionDerrivedClass&>(target());
+    const auto ptr = dynamic_cast<ExpressionDerrivedClass*>(&target());
+    if (!ptr) {
+        const BosonAlgebraRuntimeException exception{"dynamic cast error", std::any{}};
+        return BosonAlgebraResult<std::reference_wrapper<ExpressionDerrivedClass>>::Err(exception);
+    }
+    return BosonAlgebraResult<std::reference_wrapper<ExpressionDerrivedClass>>::Ok(std::ref(*ptr));
 }
 
 template <class ExpressionDerrivedClass>
-const ExpressionDerrivedClass& ExpressionHandler::casted_target() const {
+inline BosonAlgebraResult<std::reference_wrapper<const ExpressionDerrivedClass>> ExpressionHandler::casted_target_new_api() const {
     static_assert(std::is_base_of_v<Expression, ExpressionDerrivedClass>);
     assert(!is_shallow_drained());
-    assert(is_of_type<ExpressionDerrivedClass>());
-    return dynamic_cast<const ExpressionDerrivedClass&>(target());
+    const auto ptr = dynamic_cast<const ExpressionDerrivedClass*>(&target());
+    if (!ptr) {
+        const BosonAlgebraRuntimeException exception{"dynamic cast error", std::any{}};
+        return BosonAlgebraResult<std::reference_wrapper<const ExpressionDerrivedClass>>::Err(exception);
+    }
+    return BosonAlgebraResult<std::reference_wrapper<const ExpressionDerrivedClass>>::Ok(std::cref(*ptr));
 }
 
 template <class ExpressionDerrivedClass>

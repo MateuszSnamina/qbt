@@ -193,7 +193,17 @@ ExceptionT Result<OutT, ExceptionT>::unwrap_err() const {
     return std::visit(visitor, _variant);
 }
 
-// -----------------------------------------------------------------------
+}  // namespace boson_algebra
+
+
+// #######################################################################
+// ## BosonAlgebraResultResult                                          ##
+// #######################################################################
+
+namespace boson_algebra {
+
+template<typename OutT>
+using BosonAlgebraResult = Result<OutT, BosonAlgebraRuntimeException>;
 
 }  // namespace boson_algebra
 
