@@ -22,7 +22,7 @@ using namespace boson_algebra::literals;
 namespace ba = boson_algebra;
 
 unsigned do_simplification(ba::ExpressionHandler& expression) {
-    std::cout << "INPUT: " << expression.str() << std::endl;
+    //std::cout << "INPUT: " << expression.str() << std::endl;
     // Do the job:
     ba::safe_dfs_transform(expression, ba::transform_sort_product_of_boson_primitive_operators_0);
     //std::cout << "Sort0:  " << expression.str() << std::endl;
@@ -32,7 +32,7 @@ unsigned do_simplification(ba::ExpressionHandler& expression) {
     //std::cout << "Sort2:  " << expression.str() << std::endl;
     // Transform to the canonical form:
     ba::safe_dfs_transform(expression, ba::transform_canonical_math, ba::GreedinessLevel::DoDfsForReplacedExpressions);
-    std::cout << "CanMath:" << expression.str() << std::endl;
+    //std::cout << "CanMath:" << expression.str() << std::endl;
     // Sum up the same expressions:
     ba::safe_dfs_transform(expression, ba::transform_sum_to_linear_combination);
     // std::cout << "S->LA:  " << expression.str() << std::endl;
@@ -43,8 +43,8 @@ unsigned do_simplification(ba::ExpressionHandler& expression) {
     ba::safe_dfs_transform(expression, ba::transform_detect_zero_factor);
     // std::cout << "0Factor:" << expression.str() << std::endl;
     // Print output:
-    std::cout << "n_replacements: " << n_replacements << std::endl;
-    std::cout << "OUTPUT:" << expression.str() << std::endl;
+    //std::cout << "n_replacements: " << n_replacements << std::endl;
+    //std::cout << "OUTPUT:" << expression.str() << std::endl;
     // Return
     return n_replacements;
 }
@@ -55,9 +55,9 @@ int main() {
     //ba::ExpressionHandler expression = 'a'_cr * 'a'_cr * 'a'_an * 'a'_an * 'b'_an * 'b'_cr;
     ba::ExpressionHandler expression = 'a'_an * 'a'_an * 'a'_cr * 'a'_cr * 'b'_an * 'b'_cr;
 
+    std::cout << "INPUT: " << expression.str() << std::endl;
     ba::safe_dfs_transform(expression, ba::transform_flatten_product);
     while (do_simplification(expression) != 0) {
     };
-
-    //std::cout << "OUTPUT:" << expression.str() << std::endl;
+    std::cout << "OUTPUT:" << expression.str() << std::endl;
 }
