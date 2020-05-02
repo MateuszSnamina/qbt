@@ -2,7 +2,7 @@
 #define BOSON_ALGEBRA_BOSON_HPP
 
 // SELF:
-#include <boson_algebra/str_repr.hpp>
+#include <boson_algebra/util_str_repr.hpp>
 #include <boson_algebra/util_id.hpp>
 // STD:
 #include <memory>
@@ -18,7 +18,7 @@
 
 namespace boson_algebra {
 
-class Boson : public IdClass, public StrRepr {
+class Boson : public IdClass, public util::StrRepr {
    public:
     virtual bool equals(const Boson&) const = 0;
     virtual ~Boson() = default;

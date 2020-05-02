@@ -1,13 +1,14 @@
-#ifndef BOSON_ALGEBRA_STR_REPR_HPP
-#define BOSON_ALGEBRA_STR_REPR_HPP
+#ifndef BOSON_ALGEBRA_UTIL_STR_REPR_HPP
+#define BOSON_ALGEBRA_UTIL_STR_REPR_HPP
 
-#include<string>
+#include <string>
 
 // **********************************************************
 // ***  StrRepr                                           ***
 // **********************************************************
 
 namespace boson_algebra {
+namespace util {
 
 class StrRepr {
    public:
@@ -16,6 +17,7 @@ class StrRepr {
     virtual ~StrRepr() = default;
 };
 
+}  // namespace util
 }  // namespace boson_algebra
 
 #endif
