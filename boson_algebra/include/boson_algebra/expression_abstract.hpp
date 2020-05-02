@@ -6,7 +6,6 @@
 // BOOST:
 #include <boost/algorithm/cxx11/any_of.hpp>
 #include <boost/range/any_range.hpp>
-//#include <boost/range/iterator_range.hpp>  //TODO ???
 // STD STL:
 #include <array>
 #include <list>
@@ -110,6 +109,21 @@
  *   template <class ExpressionDerrivedClass>ExpressionHandler::const ExpressionDerrivedClass& casted_target() const;
  *   template <class ExpressionDerrivedClass> ExpressionHandler::is_of_type() const;
  * ```
+ * 
+ * Expressions -- known implementations:
+ * ┏[Expression]                         [abstract]       [expression_abstract.hpp]
+ * ┣┳[LeafExpression]                    [abstract]       [expression_common.hpp]
+ * ┃┣┳[BosonPrimitiveOperators]          [abstract]       [expression_boson_primitive_operators.hpp.hpp]
+ * ┃┃┣┳[BosonCreationAnnihilationBase]   [abstract]       [expression_boson_primitive_operators.hpp.hpp]
+ * ┃┃┃┣━BosonCreationOperator            [final concrete] [expression_boson_primitive_operators.hpp]
+ * ┃┃┃┣━BosonAnnihilationOperator        [final concrete] [expression_boson_primitive_operators.hpp]
+ * ┃┃┣━BosonNumberOperator               [final concrete] [expression_boson_primitive_operators.hpp]
+ * ┣┳[BridgeExpression]                  [abstract]       [expression_common.hpp]
+ * ┃┣━IntegerFactoredExpression          [final concrete] [expression_structural_blocks.hpp]
+ * ┣┳[VectorNumerousExpression]          [abstract]       [expression_common.hpp]
+ * ┃┣━ProductExpression                  [final concrete] [expression_structural_blocks.hpp]
+ * ┃┣━SumExpression                      [final concrete] [expression_structural_blocks.hpp]
+ * 
  */
 
 // **********************************************************

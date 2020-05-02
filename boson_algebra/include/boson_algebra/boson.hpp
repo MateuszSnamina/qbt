@@ -47,25 +47,6 @@ class CharBoson final : public Boson {
     char _c;
 };
 
-inline CharBoson::CharBoson(char c) : _c(c) {
-}
-
-inline std::unique_ptr<CharBoson> CharBoson::make(char c) {
-    return std::unique_ptr<CharBoson>(new CharBoson(c));
-}
-
-inline bool CharBoson::equals(const Boson& other) const {
-    return id() == other.id();
-}
-
-inline std::string CharBoson::str() const {
-    return std::string(1, _c);
-}
-
-inline std::string CharBoson::repr() const {
-    return std::string("B[") + _c + std::string("]");
-}
-
 }  // namespace boson_algebra
 
 #endif
