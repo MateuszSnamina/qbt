@@ -6,6 +6,7 @@
 // BOOST:
 #include <boost/algorithm/cxx11/any_of.hpp>
 #include <boost/range/any_range.hpp>
+//#include <boost/range/iterator_range.hpp>  //TODO ???
 // STD STL:
 #include <array>
 #include <list>
@@ -22,8 +23,97 @@
 
 #define UNUSED(x) (void)x;
 
+// ##########################################################
+// ###  Expression + ExpressionHandler                    ###
+// ##########################################################
+
+/*
+ *
+ * Expression is an abstract describing for describing compound many bosons operators.
+ * In particular, the following is an expression:
+ * - any “primitive boson operaotr”, like:
+ * -- a boson creation operator,
+ * -- a boson annihilation operator,
+ * -- a boson number operator,
+ * - any “structural block” of expressions, like:
+ * -- a sum of expressions,
+ * -- a product of expressions (“operator domain product”),
+ * -- a factored expressions (“scalar times operator product”).
+ * Scalars are not considered as Expressions.
+ * 
+ * Expressions are AST (abstract syntax tree) nodes.
+ * To acount this Expressions offer the standard tree node functionalities:
+ * - suppression accessors, supporting both “indexing schematics” and “range semantics”,
+ * - deep copy,
+ * - equality rest.
+ * See the following pure abstract member functions:
+ * ```
+ *   Expression::n_subexpressions() const = 0;
+ *   Expression::subexpression(unsigned n_subexpression) = 0;
+ *   Expression::subexpression(unsigned n_subexpression) const = 0;
+ *   Expression::range() = 0;
+ *   Expression::range() const = 0;
+ *   Expression::crange() const = 0;
+ *   clone() const;
+ *   equals(const ExpressionHandler&) const;
+ * ```
+ * 
+ * Note on equality rest: this tests the AST semantic equivalence.
+ * This is not the instances identity equality test, nor mathematical equality.
+ * Example1: two different instances of creation operator defined for a boson
+ *           are considered AST semantic equivalent
+ *           (despite their identity is different).
+ * Example2: two different trees -- the first representing a product
+ *           of creation operator and annitilation operator for a boson,
+ *           and the second representing the number operator for the boson
+ *           are not considered AST semantic equivalent
+ *           (despite the trees represent operators being mathematically equivalent).
+ * Following the standard OOP consideration `equals` member function
+ * should be overridden only in final concrete subclasses.
+ * (The not-final concrete subclasses are not compatible with the equivalence semantics).
+ * The two instances should be considered equal only if they are
+ * of the same final concrete subclass type.
+ * 
+ * Expressions implement “python-style” string representation. See the following member functions:
+ * ```
+ *   std::string str() const;
+ *   std::string repr() const;
+ * ```
+ * 
+ * Expressions are designed to be referenced by means of ExpressionsHandler.
+ * Every concrete subclass should have all constructors private, forcing usage of static factory methods.
+ * The naming of the factory methods should be like this: `make(...)`, `make_from_XXX(...)`, `make_somethins(...)`.
+ * The factory methods should return ExpressionsHandler.
+ * Both Expressions and ExpressionsHandler supports move semantic with copy semantic explicitly deleted.
+ * 
+ * ExpressionsHandler represents ownership of the wrapped Expression.
+ * All expressions reference their subexpressions by means of ExpressionsHandlers.
+ * 
+ * ExpressionsHandler has numerous “fast acceess” member functions defined do make the wrapper as easy to use as possible:
+ * ```
+ *   ExpressionHandler::n_subexpressions() const;
+ *   ExpressionHandler::subexpression(unsigned n_subexpression);
+ *   subexpression(unsigned n_subexpression) const;
+ *   ExpressionHandler::range();
+ *   ExpressionHandler::range() const;
+ *   ExpressionHandler::crange() const;
+ *   ExpressionHandler::str() const override;
+ *   ExpressionHandler::repr() const override;
+ *   ExpressionHandler::ExpressionHandler clone() const;
+ *   ExpressionHandler::equals(const ExpressionHandler&) const;
+ * ```
+ * Wrapper deference may be accomplished by one of the following  methods:
+ * ```
+ *   ExpressionHandler::target();
+ *   ExpressionHandler::target() const;
+ *   template <class ExpressionDerrivedClass>ExpressionHandler::ExpressionDerrivedClass& casted_target();
+ *   template <class ExpressionDerrivedClass>ExpressionHandler::const ExpressionDerrivedClass& casted_target() const;
+ *   template <class ExpressionDerrivedClass> ExpressionHandler::is_of_type() const;
+ * ```
+ */
+
 // **********************************************************
-// ***  Expression + ExpressionHandler                    ***
+// ***  Forward declarations                              ***
 // **********************************************************
 
 namespace boson_algebra {
@@ -31,23 +121,44 @@ namespace boson_algebra {
 class Expression;
 class ExpressionHandler;
 
+}  // namespace boson_algebra
+
+// **********************************************************
+// ***  Typedefs for ExpressionHandler -- part 1          ***
+// **********************************************************
+
+namespace boson_algebra {
+
+// typedefs ExpressionHandler optional:
+using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
+// typedefs ExpressionHandler containers:
 using ExpressionHandlerVector = std::vector<ExpressionHandler>;
 using ExpressionHandlerList = std::list<ExpressionHandler>;
 template <std::size_t N>
 using ExpressionHandlerArray = std::array<ExpressionHandler, N>;
 template <class KeyT>
 using ExpressionHandlerMap = std::map<KeyT, ExpressionHandler>;
-using ExpressionHandlerOptional = std::optional<ExpressionHandler>;
-using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
-//using UnsafeTransformFunctionT = std::function<std::unique_ptr<Expression>(Expression&&)>;
+// typedefs ExpressionHandler ranges (not const flavour):
 using ExpressionHandlerSinglePassRange = boost::any_range<ExpressionHandler, boost::single_pass_traversal_tag>;
 using ExpressionHandlerForwardRange = boost::any_range<ExpressionHandler, boost::forward_traversal_tag>;
 using ExpressionHandlerBidirectionalRange = boost::any_range<ExpressionHandler, boost::bidirectional_traversal_tag>;
 using ExpressionHandlerRandomAccessRange = boost::any_range<ExpressionHandler, boost::random_access_traversal_tag>;
+// typedefs ExpressionHandler ranges (const flavour):
 using ConstExpressionHandlerSinglePassRange = boost::any_range<const ExpressionHandler, boost::single_pass_traversal_tag>;
 using ConstExpressionHandlerForwardRange = boost::any_range<const ExpressionHandler, boost::forward_traversal_tag>;
 using ConstExpressionHandlerBidirectionalRange = boost::any_range<const ExpressionHandler, boost::bidirectional_traversal_tag>;
 using ConstExpressionHandlerRandomAccessRange = boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag>;
+// typedefs for algorithms:
+using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
+using UnsafeTransformFunctionT = std::function<ExpressionHandler(ExpressionHandler&&)>;
+
+}  // namespace boson_algebra
+
+// **********************************************************
+// ***  ExpressionHandler                                 ***
+// **********************************************************
+
+namespace boson_algebra {
 
 class ExpressionHandler final : public StrRepr {
    public:
@@ -86,7 +197,7 @@ class ExpressionHandler final : public StrRepr {
     ExpressionHandler clone() const;
     bool equals(const ExpressionHandler&) const;
     // modifier algorithms:
-    void safe_dfs_transform(const SafeTransformFunctionT&, bool greedy = true);
+    void safe_dfs_transform(const SafeTransformFunctionT&, bool greedy = true);//TODO: DEPRECATED
     //void unsafe_dfs_transform(const UnsafeTransformFunctionT&);
 
    private:
@@ -98,6 +209,33 @@ class ExpressionHandler final : public StrRepr {
     std::unique_ptr<Expression> _expr;
     bool _is_drained;
 };
+
+}  // namespace boson_algebra
+
+// **********************************************************
+// ***  Typedefs for ExpressionHandler -- part 2          ***
+// **********************************************************
+
+namespace boson_algebra {
+
+// typedefs ExpressionHandlerranges iterators (not const flavour):
+using ExpressionHandlerSinglePassRangeIterator = boost::range_iterator<ExpressionHandlerSinglePassRange>::type;
+using ExpressionHandlerForwardRangeIterator = boost::range_iterator<ExpressionHandlerForwardRange>::type;
+using ExpressionHandlerBidirectionalRangeIterator = boost::range_iterator<ExpressionHandlerBidirectionalRange>::type;
+using ExpressionHandlerRandomAccessRangeIterator = boost::range_iterator<ExpressionHandlerRandomAccessRange>::type;
+// typedefs ExpressionHandlerranges iterators (const flavour):
+using ConstExpressionHandlerSinglePassRangeIterator = boost::range_iterator<ConstExpressionHandlerSinglePassRange>::type;
+using ConstExpressionHandlerForwardRangeIterator = boost::range_iterator<ConstExpressionHandlerForwardRange>::type;
+using ConstExpressionHandlerBidirectionalRangeIterator = boost::range_iterator<ConstExpressionHandlerBidirectionalRange>::type;
+using ConstExpressionHandlerRandomAccessRangeIterator = boost::range_iterator<ConstExpressionHandlerRandomAccessRange>::type;
+
+}  // namespace boson_algebra
+
+// **********************************************************
+// ***  Expression                                        ***
+// **********************************************************
+
+namespace boson_algebra {
 
 class Expression : public StrRepr {
    public:
@@ -124,7 +262,14 @@ class Expression : public StrRepr {
     Expression() = default;
 };
 
+}  // namespace boson_algebra
+
 // **********************************************************
+// ***  ExpressionHandler                                 ***
+// ***  (member functions implementation)                 ***
+// **********************************************************
+
+namespace boson_algebra {
 
 inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr)
     : _expr(nullptr),

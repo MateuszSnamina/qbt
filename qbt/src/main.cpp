@@ -1,17 +1,19 @@
 // BOSON ALGEBRA:
 #include <boson_algebra/expression_all.hpp>
 #include <boson_algebra/expression_pragma.hpp>
-#include <boson_algebra/transform_detect_one_factor.hpp>
-#include <boson_algebra/transform_detect_bridge_sum.hpp>
-#include <boson_algebra/transform_detect_bridge_product.hpp>
-#include <boson_algebra/transform_expand.hpp>
-#include <boson_algebra/transform_flatten_product.hpp>
-#include <boson_algebra/transform_flatten_sum.hpp>
-#include <boson_algebra/transform_simplify_linear_combination.hpp>
-#include <boson_algebra/transform_sort_product_of_boson_primitive_operators_0.hpp>
-#include <boson_algebra/transform_sort_product_of_boson_primitive_operators_1.hpp>
-#include <boson_algebra/transform_sort_product_of_boson_primitive_operators_2.hpp>
-#include <boson_algebra/transform_sum_to_linear_combination.hpp>
+#include <boson_algebra/transform_all.hpp>
+// #include <boson_algebra/transform_detect_one_factor.hpp>
+// #include <boson_algebra/transform_detect_bridge_sum.hpp>
+// #include <boson_algebra/transform_detect_bridge_product.hpp>
+// #include <boson_algebra/transform_expand.hpp>
+// #include <boson_algebra/transform_flatten_product.hpp>
+// #include <boson_algebra/transform_flatten_sum.hpp>
+// #include <boson_algebra/transform_simplify_linear_combination.hpp>
+// #include <boson_algebra/transform_sort_product_of_boson_primitive_operators_0.hpp>
+// #include <boson_algebra/transform_sort_product_of_boson_primitive_operators_1.hpp>
+// #include <boson_algebra/transform_sort_product_of_boson_primitive_operators_2.hpp>
+// #include <boson_algebra/transform_sum_to_linear_combination.hpp>
+#include <boson_algebra/algorithm_dfs.hpp>
 // STD:
 #include <iostream>
 

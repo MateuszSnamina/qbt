@@ -47,7 +47,6 @@ ExpressionHandlerOptional transform_sort_product_of_boson_primitive_operators_1(
     // *** they segregate the product factors into groups           **
     // *** of operators sharing the same underlying bodon           **
     // ***************************************************************
-    using ConstExpressionHandlerRandomAccessRangeIterator = boost::range_iterator<ConstExpressionHandlerRandomAccessRange>::type;  //TODO move to upper header
     using ConstExpressionHandlerRandomAccessRangeIteratorVector = std::vector<ConstExpressionHandlerRandomAccessRangeIterator>;
     const auto& get_split_points = [&range]() -> ConstExpressionHandlerRandomAccessRangeIteratorVector {
         const auto have_different_bosons = [](const ExpressionHandler& expression1, const ExpressionHandler& expression2) {
