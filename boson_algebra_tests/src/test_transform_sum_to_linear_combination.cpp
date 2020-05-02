@@ -46,21 +46,21 @@ TEST(TransformSumToLinearCombination, OnProductOfBosonPrimitiveOperators) {
 TEST(TransformSumToLinearCombination, OnSumOfBosonPrimitiveOperators) {
     const auto expression = ('a'_cr + 'b'_an);
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪♯a+♭b❫");
+    ASSERT_EQ(expression.str(), "❴♯a+♭b❵");
     const auto transformed_expression_optional = transform_sum_to_linear_combination(expression);
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪+♯a❫+❪+♭b❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪+♯a❫+❪+♭b❫❵");
 }
 
 TEST(TransformSumToLinearCombination, BigExample1) {
     const auto expression = ba::SumExpression::make((4*'c'_an), ('a'_cr * 'b'_cr), (5*'a'_an), 'd'_an);
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪❪4♭c❫+❪♯a◦♯b❫+❪5♭a❫+♭d❫");
+    ASSERT_EQ(expression.str(), "❴❪4♭c❫+❪♯a◦♯b❫+❪5♭a❫+♭d❵");
     const auto transformed_expression_optional = transform_sum_to_linear_combination(expression);
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪4♭c❫+❪+❪♯a◦♯b❫❫+❪5♭a❫+❪+♭d❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪4♭c❫+❪+❪♯a◦♯b❫❫+❪5♭a❫+❪+♭d❫❵");
 }

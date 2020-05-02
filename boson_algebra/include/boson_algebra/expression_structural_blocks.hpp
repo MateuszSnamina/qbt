@@ -159,7 +159,7 @@ inline bool ProductExpression::equals(const Expression& other) const {
 }
 
 inline std::string ProductExpression::str() const {
-    return str_helper_function("𝕀", "◦");
+    return str_helper_function("𝕀", "◦", {"❪", "❫"});
 }
 
 inline std::string ProductExpression::repr() const {
@@ -239,7 +239,7 @@ inline bool SumExpression::equals(const Expression& other) const {
 }
 
 inline std::string SumExpression::str() const {
-    return str_helper_function("𝟘", "+");
+    return str_helper_function("𝟘", "+", {"❴", "❵"});
 }
 
 inline std::string SumExpression::repr() const {

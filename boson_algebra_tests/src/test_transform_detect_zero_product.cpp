@@ -74,7 +74,7 @@ TEST(TransformDetectZeroProduct, OnZeroProduct2) {
 TEST(TransformDetectZeroProduct, OnSumWithZero) {
     const auto expression = (ba::SumExpression::make_zero() + 'b'_an);
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪𝟘+♭b❫");
+    ASSERT_EQ(expression.str(), "❴𝟘+♭b❵");
     const auto transformed_expression_optional = transform_detect_zero_product(expression);
     ASSERT_FALSE(transformed_expression_optional);
 }

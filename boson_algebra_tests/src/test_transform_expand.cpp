@@ -36,56 +36,56 @@ TEST(TransformExpand, OnProductOfBosonPrimitiveOperators) {
 TEST(TransformExpand, MinimalExample1) {
     const auto expression = ba::ProductExpression::make('a'_cr, ('b'_an + 'c'_cr), 'd'_cr);
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪♯a◦❪♭b+♯c❫◦♯d❫");
+    ASSERT_EQ(expression.str(), "❪♯a◦❴♭b+♯c❵◦♯d❫");
     const auto transformed_expression_optional = transform_expand(expression);
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♯a◦♭b◦♯d❫+❪♯a◦♯c◦♯d❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♯a◦♭b◦♯d❫+❪♯a◦♯c◦♯d❫❵");
 }
 
 TEST(TransformExpand, MinimalExample2) {
     const auto expression = ('a'_cr * ('b'_an + 'c'_cr));
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪♯a◦❪♭b+♯c❫❫");
+    ASSERT_EQ(expression.str(), "❪♯a◦❴♭b+♯c❵❫");
     const auto transformed_expression_optional = transform_expand(expression);
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♯a◦♭b❫+❪♯a◦♯c❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♯a◦♭b❫+❪♯a◦♯c❫❵");
 }
 
 TEST(TransformExpand, MinimalExample3) {
     const auto expression = (('b'_an + 'c'_cr) * 'd'_cr);
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪❪♭b+♯c❫◦♯d❫");
+    ASSERT_EQ(expression.str(), "❪❴♭b+♯c❵◦♯d❫");
     const auto transformed_expression_optional = transform_expand(expression);
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♭b◦♯d❫+❪♯c◦♯d❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♭b◦♯d❫+❪♯c◦♯d❫❵");
 }
 
 TEST(TransformExpand, MinimalExample4) {
     const auto expression = ba::ProductExpression::make(('b'_an + 'c'_cr));
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪❪♭b+♯c❫❫");
+    ASSERT_EQ(expression.str(), "❪❴♭b+♯c❵❫");
     const auto transformed_expression_optional = transform_expand(expression);
     ASSERT_FALSE(transformed_expression_optional);
     // const auto& transformed_expression = *transformed_expression_optional;
     // //std::cout << transformed_expression.str() << std::endl;
-    // ASSERT_EQ(transformed_expression.str(), "❪❪♭b❫+❪♯c❫❫");
+    // ASSERT_EQ(transformed_expression.str(), "❴❪♭b❫+❪♯c❫❵");
 }
 
 TEST(TransformExpand, MinimalExample5) {
     const auto expression = (('b'_an + 'c'_cr) * (2 * 'd'_cr));
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪❪♭b+♯c❫◦❪2♯d❫❫");
+    ASSERT_EQ(expression.str(), "❪❴♭b+♯c❵◦❪2♯d❫❫");
     const auto transformed_expression_optional = transform_expand(expression);
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♭b◦❪2♯d❫❫+❪♯c◦❪2♯d❫❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♭b◦❪2♯d❫❫+❪♯c◦❪2♯d❫❫❵");
 }
 
 TEST(TransformExpand, MinimalExample6) {

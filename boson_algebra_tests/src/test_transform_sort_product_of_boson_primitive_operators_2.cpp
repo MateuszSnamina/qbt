@@ -56,7 +56,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOp
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♯b◦♭b❫+❪𝕀❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♯b◦♭b❫+❪𝕀❫❵");
 }
 
 TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOperators4) {
@@ -84,7 +84,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOp
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♯b◦♭b◦♯b◦♭b◦♭b❫+❪♯b◦♭b◦𝕀◦♭b❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♯b◦♭b◦♯b◦♭b◦♭b❫+❪♯b◦♭b◦𝕀◦♭b❫❵");
 }
 
 TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOperators7) {
@@ -96,7 +96,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOp
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♯b◦♭b◦♭b◦♯b◦♭b❫+❪♯b◦♭b◦♭b◦𝕀❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♯b◦♭b◦♭b◦♯b◦♭b❫+❪♯b◦♭b◦♭b◦𝕀❫❵");
 }
 
 TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOperators8) {
@@ -108,7 +108,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOp
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♯b◦♭b◦♯b◦♭b◦♭b❫+❪-❪♯b◦𝕀◦♭b◦♭b❫❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♯b◦♭b◦♯b◦♭b◦♭b❫+❪-❪♯b◦𝕀◦♭b◦♭b❫❫❵");
 }
 
 TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOperators9) {
@@ -120,7 +120,7 @@ TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOp
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♯b◦♭b◦♯b◦♭b◦♯b❫+❪♯b◦♭b◦𝕀◦♯b❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♯b◦♭b◦♯b◦♭b◦♯b❫+❪♯b◦♭b◦𝕀◦♯b❫❵");
 }
 
 TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOperators10) {
@@ -132,5 +132,5 @@ TEST(TransformSortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOp
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪❪♭b◦♯b◦♭b◦♯b◦♯b❫+❪♭b◦𝕀◦♯b◦♯b❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❴❪♭b◦♯b◦♭b◦♯b◦♯b❫+❪♭b◦𝕀◦♯b◦♯b❫❵");
 }

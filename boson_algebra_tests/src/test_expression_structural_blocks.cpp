@@ -266,7 +266,7 @@ TEST(ExpressionStructuralBlocks, EmptySum) {
 
 TEST(ExpressionStructuralBlocks, SingleChildSum) {
     const auto expression = ba::SumExpression::make(cr_b());
-    ASSERT_EQ(expression.str(), "❪♯b❫");
+    ASSERT_EQ(expression.str(), "❴♯b❵");
     ASSERT_EQ(expression.is_of_type<ba::BosonCreationOperator>(), false);
     ASSERT_EQ(expression.is_of_type<ba::BosonAnnihilationOperator>(), false);
     ASSERT_EQ(expression.is_of_type<ba::ProductExpression>(), false);
@@ -308,7 +308,7 @@ TEST(ExpressionStructuralBlocks, SingleChildSum) {
     }
     {
         const auto expression1 = expression.clone();
-        ASSERT_EQ(expression1.str(), "❪♯b❫");
+        ASSERT_EQ(expression1.str(), "❴♯b❵");
         ASSERT_TRUE(expression1.equals(expression1));
         ASSERT_FALSE(std::addressof(expression.target()) == std::addressof(expression1.target()));
     }
@@ -316,7 +316,7 @@ TEST(ExpressionStructuralBlocks, SingleChildSum) {
 
 TEST(ExpressionStructuralBlocks, ThreeChildrenSum) {
     const auto expression = ba::SumExpression::make(cr_b(), cr_a(), an_d());
-    ASSERT_EQ(expression.str(), "❪♯b+♯a+♭d❫");
+    ASSERT_EQ(expression.str(), "❴♯b+♯a+♭d❵");
     ASSERT_EQ(expression.is_of_type<ba::BosonCreationOperator>(), false);
     ASSERT_EQ(expression.is_of_type<ba::BosonAnnihilationOperator>(), false);
     ASSERT_EQ(expression.is_of_type<ba::ProductExpression>(), false);
@@ -362,7 +362,7 @@ TEST(ExpressionStructuralBlocks, ThreeChildrenSum) {
     }
     {
         const auto expression1 = expression.clone();
-        ASSERT_EQ(expression1.str(), "❪♯b+♯a+♭d❫");
+        ASSERT_EQ(expression1.str(), "❴♯b+♯a+♭d❵");
         ASSERT_TRUE(expression1.equals(expression1));
         ASSERT_FALSE(std::addressof(expression.target()) == std::addressof(expression1.target()));
     }

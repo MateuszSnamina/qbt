@@ -60,18 +60,18 @@ TEST(TransformFlattenProduct, MinimalExample2) {
 TEST(TransformFlattenProduct, BigTest1) {
     const auto expression = make_expression_1();
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪❪♯a◦♭b◦❪2♯c❫❫◦❪♯c+♯c❫◦❪♭d◦ℕd❫◦❪❪♭a+ℕb❫+❪♭c+ℕd❫❫❫");
+    ASSERT_EQ(expression.str(), "❪❪♯a◦♭b◦❪2♯c❫❫◦❴♯c+♯c❵◦❪♭d◦ℕd❫◦❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❫");
     const auto transformed_expression_optional = transform_flatten_product(expression);
     ASSERT_TRUE(transformed_expression_optional);
     const auto& transformed_expression = *transformed_expression_optional;
     //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪♯a◦♭b◦❪2♯c❫◦❪♯c+♯c❫◦♭d◦ℕd◦❪❪♭a+ℕb❫+❪♭c+ℕd❫❫❫");
+    ASSERT_EQ(transformed_expression.str(), "❪♯a◦♭b◦❪2♯c❫◦❴♯c+♯c❵◦♭d◦ℕd◦❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❫");
 }
 
 TEST(TransformFlattenProduct, BigTest2) {
     const auto expression = make_expression_2();
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪❪♯a◦♭b◦❪2♯c❫❫+❪♯c+♯c❫+❪♭d◦ℕd❫+❪❪♭a+ℕb❫+❪♭c+ℕd❫❫❫");
+    ASSERT_EQ(expression.str(), "❴❪♯a◦♭b◦❪2♯c❫❫+❴♯c+♯c❵+❪♭d◦ℕd❫+❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❵");
     const auto transformed_expression_optional = transform_flatten_product(expression);
     ASSERT_FALSE(transformed_expression_optional);
 }

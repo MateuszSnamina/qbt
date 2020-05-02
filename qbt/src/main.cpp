@@ -36,11 +36,33 @@ ba::ExpressionHandler do_simplification(ba::ExpressionHandler&& expression) {
 
     ba::safe_dfs_transform(expression, ba::transform_expand);
     std::cout << "Expand: " << expression.str() << std::endl;
+    ba::safe_dfs_transform(expression, ba::transform_prod_factors_to_factor_prod);
+    std::cout << "PF->FP: " << expression.str() << std::endl;
     ba::safe_dfs_transform(expression, ba::transform_flatten_product);
     std::cout << "FlatP:  " << expression.str() << std::endl;
+    ba::safe_dfs_transform(expression, ba::transform_prod_factors_to_factor_prod);
+    std::cout << "PF->FP: " << expression.str() << std::endl;
     ba::safe_dfs_transform(expression, ba::transform_flatten_sum);
     std::cout << "FlatS:  " << expression.str() << std::endl;
-    
+    ba::safe_dfs_transform(expression, ba::transform_simplify_factor);
+    std::cout << "SimpF: " << expression.str() << std::endl;
+
+    // repeate the above block:
+    ba::safe_dfs_transform(expression, ba::transform_expand);
+    std::cout << "Expand: " << expression.str() << std::endl;
+    ba::safe_dfs_transform(expression, ba::transform_prod_factors_to_factor_prod);
+    std::cout << "PF->FP: " << expression.str() << std::endl;
+    ba::safe_dfs_transform(expression, ba::transform_flatten_product);
+    std::cout << "FlatP:  " << expression.str() << std::endl;
+    ba::safe_dfs_transform(expression, ba::transform_prod_factors_to_factor_prod);
+    std::cout << "PF->FP: " << expression.str() << std::endl;
+    ba::safe_dfs_transform(expression, ba::transform_flatten_sum);
+    std::cout << "FlatS:  " << expression.str() << std::endl;
+    ba::safe_dfs_transform(expression, ba::transform_simplify_factor);
+    std::cout << "SimpF: " << expression.str() << std::endl;
+
+    ba::safe_dfs_transform(expression, ba::transform_simplify_factor);
+    std::cout << "SimpF: " << expression.str() << std::endl;
     ba::safe_dfs_transform(expression, ba::transform_sum_to_linear_combination);
     std::cout << "S->LA:  " << expression.str() << std::endl;
     ba::safe_dfs_transform(expression, ba::transform_simplify_linear_combination);
@@ -53,7 +75,8 @@ ba::ExpressionHandler do_simplification(ba::ExpressionHandler&& expression) {
 
 int main() {
     //ba::ExpressionHandler expression = 'a'_an * 'c'_cr * 'a'_cr * 'b'_cr;
-    ba::ExpressionHandler expression = 'a'_an * 'a'_cr * 'a'_an * 'a'_cr;
+    //ba::ExpressionHandler expression = 'a'_an * 'a'_cr * 'a'_an * 'a'_cr;
+    ba::ExpressionHandler expression = 'a'_cr * 'a'_cr * 'a'_an * 'a'_an * 'b'_an * 'b'_cr;
     ba::safe_dfs_transform(expression, ba::transform_flatten_product);
     
     std::cout << "INPUT:" << expression.str() << std::endl;

@@ -135,10 +135,10 @@ inline BridgeExpression::~BridgeExpression() {
 // ***  VectorNumerousExpression                          ***
 // **********************************************************
 
-struct FromBufferTag{
+struct FromBufferTag {
 };
 
-struct VariadicTag{
+struct VariadicTag {
 };
 
 class VectorNumerousExpression : public Expression {
@@ -167,8 +167,12 @@ class VectorNumerousExpression : public Expression {
     // helper function:
     ExpressionHandlerVector clone_expr_hdls_vector() const;
     bool equals_helper_function(const VectorNumerousExpression& other) const;
-    std::string str_helper_function(const std::string& string_when_empty, const std::string& string_for_operand) const;
-    std::string repr_helper_function(const std::string& string_for_function_name) const;
+    std::string str_helper_function(
+        const std::string& string_when_empty,
+        const std::string& string_for_operand,
+        const std::pair<std::string, std::string>& strings_open_close) const;
+    std::string repr_helper_function(
+        const std::string& string_for_function_name) const;
 
    private:
     ExpressionHandlerVector _expr_hdls;
@@ -234,14 +238,15 @@ inline bool VectorNumerousExpression::equals_helper_function(const VectorNumerou
 
 inline std::string VectorNumerousExpression::str_helper_function(
     const std::string& string_when_empty,
-    const std::string& string_for_operand) const {
+    const std::string& string_for_operand,
+    const std::pair<std::string, std::string>& strings_open_close) const {
     if (n_subexpressions() == 0) {
         return string_when_empty;
     }
     std::string args = boost::algorithm::join(
         crange() | boost::adaptors::transformed([](const ExpressionHandler& _) { return _.str(); }),
         string_for_operand);
-    return "❪" + args + "❫";
+    return strings_open_close.first + args + strings_open_close.second;
 }
 
 inline std::string VectorNumerousExpression::repr_helper_function(const std::string& string_for_function_name) const {

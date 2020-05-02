@@ -44,7 +44,7 @@ TEST(Draining, Test0) {
 
 TEST(Draining, Test1) {
     auto expression = ba::SumExpression::make('b'_cr, 'a'_cr, 'd'_an);
-    ASSERT_EQ(expression.str(), "❪♯b+♯a+♭d❫");
+    ASSERT_EQ(expression.str(), "❴♯b+♯a+♭d❵");
 
     ASSERT_EQ(expression.n_subexpressions(), 3);
     ASSERT_FALSE(expression.subexpression(0).is_shallow_drained());
@@ -66,7 +66,7 @@ TEST(Draining, Test1) {
 
 TEST(Draining, Test3) {
     auto expression = ('b'_cr * ('a'_cr + 'd'_an));
-    ASSERT_EQ(expression.str(), "❪♯b◦❪♯a+♭d❫❫");
+    ASSERT_EQ(expression.str(), "❪♯b◦❴♯a+♭d❵❫");
 
     ASSERT_EQ(expression.n_subexpressions(), 2);
     ASSERT_EQ(expression.subexpression(0).n_subexpressions(), 0);

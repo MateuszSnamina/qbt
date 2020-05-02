@@ -85,7 +85,7 @@ TEST(TransformDetectZeroFactor, OnNestedFactorExpression) {
 TEST(TransformDetectZeroFactor, NotWorking) {
     const auto expression = (4 * (ba::SumExpression::make_zero() + ba::SumExpression::make_zero()));
     //std::cout << expression.str() << std::endl;
-    ASSERT_EQ(expression.str(), "❪4❪𝟘+𝟘❫❫");
+    ASSERT_EQ(expression.str(), "❪4❴𝟘+𝟘❵❫");
     const auto transformed_expression_optional = transform_detect_zero_factor(expression);
     ASSERT_FALSE(transformed_expression_optional);
 }
