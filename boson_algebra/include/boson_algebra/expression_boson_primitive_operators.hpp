@@ -22,7 +22,7 @@ class BosonPrimitiveOperators : public LeafExpression {
 
    protected:
     // ctor:
-    BosonPrimitiveOperators(std::shared_ptr<Boson>);
+    BosonPrimitiveOperators(std::shared_ptr<Boson>) noexcept;
     // move semantic:
     BosonPrimitiveOperators(BosonPrimitiveOperators&&) = default;
     BosonPrimitiveOperators& operator=(BosonPrimitiveOperators&&) = default;
@@ -31,7 +31,8 @@ class BosonPrimitiveOperators : public LeafExpression {
     std::shared_ptr<Boson> _boson;
 };
 
-inline BosonPrimitiveOperators::BosonPrimitiveOperators(std::shared_ptr<Boson> boson) : _boson(boson) {
+inline BosonPrimitiveOperators::BosonPrimitiveOperators(std::shared_ptr<Boson> boson) noexcept
+    : _boson(boson) {
     assert(boson);
 }
 
@@ -50,13 +51,13 @@ namespace boson_algebra {
 class BosonCreationAnnihilationBase : public BosonPrimitiveOperators {
    protected:
     // ctor:
-    BosonCreationAnnihilationBase(std::shared_ptr<Boson>);
+    BosonCreationAnnihilationBase(std::shared_ptr<Boson>) noexcept;
     // move semantic:
     BosonCreationAnnihilationBase(BosonCreationAnnihilationBase&&) = default;
     BosonCreationAnnihilationBase& operator=(BosonCreationAnnihilationBase&&) = default;
 };
 
-inline BosonCreationAnnihilationBase::BosonCreationAnnihilationBase(std::shared_ptr<Boson> boson)
+inline BosonCreationAnnihilationBase::BosonCreationAnnihilationBase(std::shared_ptr<Boson> boson) noexcept
     : BosonPrimitiveOperators(boson) {
 }
 
@@ -77,13 +78,13 @@ class BosonCreationOperator final : public BosonCreationAnnihilationBase {
     std::string repr() const override;
 
    private:
-    BosonCreationOperator(std::shared_ptr<Boson> boson);
+    BosonCreationOperator(std::shared_ptr<Boson> boson) noexcept;
     std::unique_ptr<BosonCreationOperator> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
-inline BosonCreationOperator::BosonCreationOperator(std::shared_ptr<Boson> boson)
+inline BosonCreationOperator::BosonCreationOperator(std::shared_ptr<Boson> boson) noexcept
     : BosonCreationAnnihilationBase(boson) {
 }
 
@@ -129,13 +130,13 @@ class BosonAnnihilationOperator final : public BosonCreationAnnihilationBase {
     std::string repr() const override;
 
    private:
-    BosonAnnihilationOperator(std::shared_ptr<Boson> boson);
+    BosonAnnihilationOperator(std::shared_ptr<Boson> boson) noexcept;
     std::unique_ptr<BosonAnnihilationOperator> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
-inline BosonAnnihilationOperator::BosonAnnihilationOperator(std::shared_ptr<Boson> boson)
+inline BosonAnnihilationOperator::BosonAnnihilationOperator(std::shared_ptr<Boson> boson) noexcept
     : BosonCreationAnnihilationBase(boson) {
 }
 
@@ -181,13 +182,13 @@ class BosonNumberOperator final : public BosonPrimitiveOperators {
     std::string repr() const override;
 
    private:
-    BosonNumberOperator(std::shared_ptr<Boson> boson);
+    BosonNumberOperator(std::shared_ptr<Boson> boson) noexcept;
     std::unique_ptr<BosonNumberOperator> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
-inline BosonNumberOperator::BosonNumberOperator(std::shared_ptr<Boson> boson)
+inline BosonNumberOperator::BosonNumberOperator(std::shared_ptr<Boson> boson) noexcept
     : BosonPrimitiveOperators(boson) {
 }
 

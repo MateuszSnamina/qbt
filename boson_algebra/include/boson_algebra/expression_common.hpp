@@ -87,7 +87,7 @@ class BridgeExpression : public Expression {
 
    protected:
     // ctor:
-    BridgeExpression(ExpressionHandler&&);
+    BridgeExpression(ExpressionHandler&&) noexcept;
     // move semantic:
     BridgeExpression(BridgeExpression&&) = default;
     BridgeExpression& operator=(BridgeExpression&&) = default;
@@ -97,7 +97,7 @@ class BridgeExpression : public Expression {
     ExpressionHandler& _expr_hdl;
 };
 
-inline BridgeExpression::BridgeExpression(ExpressionHandler&& expr_hdl)
+inline BridgeExpression::BridgeExpression(ExpressionHandler&& expr_hdl) noexcept
     : _expr_hdls{std::move(expr_hdl)},
       _expr_hdl(_expr_hdls[0]) {
 }
@@ -158,9 +158,9 @@ class VectorNumerousExpression : public Expression {
 
    protected:
     // ctor:
-    VectorNumerousExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls);
+    VectorNumerousExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls) noexcept;
     template <class... Args>
-    VectorNumerousExpression(VariadicTag, Args&&... expr_hdls);
+    VectorNumerousExpression(VariadicTag, Args&&... expr_hdls) noexcept;
     // move semantic:
     VectorNumerousExpression(VectorNumerousExpression&&) = default;
     VectorNumerousExpression& operator=(VectorNumerousExpression&&) = default;
@@ -174,12 +174,12 @@ class VectorNumerousExpression : public Expression {
     ExpressionHandlerVector _expr_hdls;
 };
 
-inline VectorNumerousExpression::VectorNumerousExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls)
+inline VectorNumerousExpression::VectorNumerousExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls) noexcept
     : _expr_hdls(std::move(expr_hdls)) {
 }
 
 template <class... Args>
-VectorNumerousExpression::VectorNumerousExpression(VariadicTag, Args&&... expr_hdls)
+VectorNumerousExpression::VectorNumerousExpression(VariadicTag, Args&&... expr_hdls) noexcept
     : _expr_hdls(util::make<ExpressionHandlerVector>(std::move(expr_hdls)...)) {
 }
 

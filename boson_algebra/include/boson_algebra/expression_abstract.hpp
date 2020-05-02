@@ -215,7 +215,7 @@ class ExpressionHandler final : public StrRepr {
     //void unsafe_dfs_transform(const UnsafeTransformFunctionT&);
 
    private:
-    ExpressionHandler(std::unique_ptr<Expression>);
+    ExpressionHandler(std::unique_ptr<Expression>) noexcept;
     std::unique_ptr<Expression> substitute(std::unique_ptr<Expression>);
     friend void swap(ExpressionHandler& expr_1, ExpressionHandler& expr_2);
 
@@ -285,7 +285,7 @@ class Expression : public StrRepr {
 
 namespace boson_algebra {
 
-inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr)
+inline ExpressionHandler::ExpressionHandler(std::unique_ptr<Expression> expr) noexcept
     : _expr(nullptr),
       _is_drained(true) {
     assert(expr);

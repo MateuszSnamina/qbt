@@ -27,7 +27,7 @@ class IntegerFactoredExpression final : public BridgeExpression {
     long factor() const;
 
    private:
-    IntegerFactoredExpression(long factor, ExpressionHandler&& expr_hdl);
+    IntegerFactoredExpression(long factor, ExpressionHandler&& expr_hdl) noexcept;
     std::unique_ptr<IntegerFactoredExpression> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
@@ -36,7 +36,7 @@ class IntegerFactoredExpression final : public BridgeExpression {
     long _factor;
 };
 
-inline IntegerFactoredExpression::IntegerFactoredExpression(long factor, ExpressionHandler&& expr_hdl)
+inline IntegerFactoredExpression::IntegerFactoredExpression(long factor, ExpressionHandler&& expr_hdl) noexcept
     : BridgeExpression(std::move(expr_hdl)), _factor(factor) {
 }
 
@@ -109,20 +109,20 @@ class ProductExpression final : public VectorNumerousExpression {
     bool is_identity() const;  // it is identity if it is empty.
 
    private:
-    ProductExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls);
+    ProductExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls) noexcept;
     template <class... Args>
-    ProductExpression(VariadicTag, Args&&... expr_hdls);
+    ProductExpression(VariadicTag, Args&&... expr_hdls) noexcept;
     std::unique_ptr<ProductExpression> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
-inline ProductExpression::ProductExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls)
+inline ProductExpression::ProductExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls) noexcept
     : VectorNumerousExpression(FromBufferTag{}, std::move(expr_hdls)) {
 }
 
 template <class... Args>
-inline ProductExpression::ProductExpression(VariadicTag, Args&&... expr_hdls)
+inline ProductExpression::ProductExpression(VariadicTag, Args&&... expr_hdls) noexcept
     : VectorNumerousExpression(VariadicTag{}, std::forward<Args>(expr_hdls)...) {
 }
 
@@ -189,20 +189,20 @@ class SumExpression final : public VectorNumerousExpression {
     std::string repr() const override;
     bool is_zero() const;  // it is zero if it is empy.
    private:
-    SumExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls);
+    SumExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls) noexcept;
     template <class... Args>
-    SumExpression(VariadicTag, Args&&... expr_hdls);
+    SumExpression(VariadicTag, Args&&... expr_hdls) noexcept;
     std::unique_ptr<SumExpression> casted_clone() const;
     template <class ExpressionClass, class... Args>
     friend boson_algebra::ExpressionHandler boson_algebra::ExpressionHandler::make(Args&&...);
 };
 
-inline SumExpression::SumExpression(FromBufferTag, std::vector<ExpressionHandler>&& expr_hdls)
+inline SumExpression::SumExpression(FromBufferTag, std::vector<ExpressionHandler>&& expr_hdls) noexcept
     : VectorNumerousExpression(FromBufferTag{}, std::move(expr_hdls)) {
 }
 
 template <class... Args>
-inline SumExpression::SumExpression(VariadicTag, Args&&... expr_hdls)
+inline SumExpression::SumExpression(VariadicTag, Args&&... expr_hdls) noexcept
     : VectorNumerousExpression(VariadicTag{}, std::forward<Args>(expr_hdls)...) {
 }
 
