@@ -5,66 +5,7 @@
 #include <boson_algebra/expression_abstract.hpp>
 
 //*************************************************************************
-//*** GreedinessLevel                                                   ***
-//*************************************************************************
-
-namespace boson_algebra {
-
-enum class GreedinessLevel {
-    DoNotTouchReplacedExpressions,
-    RepeatForReplacedExpressions,
-    DoDfsForReplacedExpressions,
-};
-
-}
-
-//*************************************************************************
-//*** safe_dfs_transform                                                ***
-//*************************************************************************
-
-namespace boson_algebra {
-
-using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
-
-inline unsigned safe_dfs_transform(
-    ExpressionHandler& expression,
-    const SafeTransformFunctionT& fun,
-    GreedinessLevel greediness = GreedinessLevel::DoNotTouchReplacedExpressions) {
-    assert(!expression.is_shallow_drained());
-    unsigned replacement_counter = 0;
-    for (auto& subexpression : expression.range()) {
-        replacement_counter += safe_dfs_transform(subexpression, fun, greediness);
-    }
-    switch (greediness) {
-        case GreedinessLevel::DoNotTouchReplacedExpressions:
-            if (auto transformation_result = fun(expression)) {
-                swap(expression, *transformation_result);
-                replacement_counter++;
-            }
-            break;
-        case GreedinessLevel::RepeatForReplacedExpressions:
-            while (auto transformation_result = fun(expression)) {
-                swap(expression, *transformation_result);
-                replacement_counter++;
-            }
-            break;
-        case GreedinessLevel::DoDfsForReplacedExpressions:
-            if (auto transformation_result = fun(expression)) {
-                swap(expression, *transformation_result);
-                replacement_counter++;
-                replacement_counter += safe_dfs_transform(expression, fun, greediness);
-            }
-            break;
-        default:
-            assert(false);
-    }
-    return replacement_counter;
-}
-
-}  // namespace boson_algebra
-
-//*************************************************************************
-//*** MODIFICATION -- NEW API                                           ***
+//*** ModificationMode, ModificationResult                              ***
 //*************************************************************************
 
 namespace boson_algebra {
@@ -103,99 +44,35 @@ class ModificationResult {
     ExpressionHandler _result;
 };
 
-inline ModificationResult::ModificationResult(ModificationMode mode, ExpressionHandler&& result) noexcept
-    : _mode(mode),
-      _result(std::move(result)) {
-}
-
-inline ModificationResult ModificationResult::make_passed_through_result(ExpressionHandler&& result) {
-    return ModificationResult(ModificationMode::PassedThroughResult, std::move(result));
-}
-
-inline ModificationResult ModificationResult::make_generated_result(ExpressionHandler&& result) {
-    return ModificationResult(ModificationMode::GeneratedResult, std::move(result));
-}
-
-inline ModificationMode ModificationResult::mode() const {
-    return _mode;
-}
-
-inline bool ModificationResult::is_passed_through_result() const {
-    return _mode == ModificationMode::PassedThroughResult;
-}
-
-inline bool ModificationResult::is_generated_result() const {
-    return _mode == ModificationMode::GeneratedResult;
-}
-
-inline ModificationResult::operator bool() const {
-    return is_generated_result();
-}
-
-inline const ExpressionHandler& ModificationResult::result() const {
-    return _result;
-}
-
-inline ExpressionHandler ModificationResult::result() {
-    return std::move(_result);
-}
-
-inline const ExpressionHandler& ModificationResult::operator*() const {
-    return result();
-}
-
-inline ExpressionHandler ModificationResult::operator*() {
-    return result();
-}
-
 }  // namespace boson_algebra
 
 //*************************************************************************
-//*** safe_dfs_transform -- new api                                     ***
+//*** ModyficationFunctionT, modify_in_place                            ***
 //*************************************************************************
 
 namespace boson_algebra {
 
-// typedefs for algorithms:
 using UnsafeTransformFunctionT = std::function<ModificationResult(ExpressionHandler&&)>;
+bool modify_in_place(ExpressionHandler& expression, UnsafeTransformFunctionT fun);
 
-inline bool modify_in_place(ExpressionHandler& expression, UnsafeTransformFunctionT fun) {
-    auto result = fun(std::move(expression));
-    expression = std::move(*result);
-    return result.is_generated_result();
-}
+}  // namespace boson_algebra
 
-inline unsigned safe_dfs_transform_new_api(
+//*************************************************************************
+//*** GreedinessLevel, dfs_transform                                    ***
+//*************************************************************************
+
+namespace boson_algebra {
+
+enum class GreedinessLevel {
+    DoNotTouchReplacedExpressions,
+    RepeatForReplacedExpressions,
+    DoDfsForReplacedExpressions,
+};
+
+unsigned safe_dfs_transform_new_api(
     ExpressionHandler& expression,
     const UnsafeTransformFunctionT& fun,
-    GreedinessLevel greediness = GreedinessLevel::DoNotTouchReplacedExpressions) {
-    assert(!expression.is_shallow_drained());
-    unsigned replacement_counter = 0;
-    for (auto& subexpression : expression.range()) {
-        replacement_counter += safe_dfs_transform_new_api(subexpression, fun, greediness);
-    }
-    switch (greediness) {
-        case GreedinessLevel::DoNotTouchReplacedExpressions:
-            if (modify_in_place(expression, fun)) {
-                replacement_counter++;
-            }
-            break;
-        case GreedinessLevel::RepeatForReplacedExpressions:
-            while (modify_in_place(expression, fun)) {
-                replacement_counter++;
-            }
-            break;
-        case GreedinessLevel::DoDfsForReplacedExpressions:
-            if (modify_in_place(expression, fun)) {
-                replacement_counter++;
-                replacement_counter += safe_dfs_transform_new_api(expression, fun, greediness);
-            }
-            break;
-        default:
-            assert(false);
-    }
-    return replacement_counter;
-}
+    GreedinessLevel greediness = GreedinessLevel::DoNotTouchReplacedExpressions);
 
 }  // namespace boson_algebra
 
