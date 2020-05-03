@@ -12,8 +12,8 @@ message_fancy_list("${inc}")
 
 add_library("${TARGET_NAME}" ${src} ${inc})
 target_include_directories("${TARGET_NAME}" PUBLIC include)
-#target_link_libraries("${TARGET_NAME}"
-#  armadillo
-#)
+target_link_libraries("${TARGET_NAME}"
+  Boost::boost
+)
 
 message("CMake has processed: ${TARGET_NAME}")

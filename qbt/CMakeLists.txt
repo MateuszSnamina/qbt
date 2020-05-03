@@ -13,7 +13,7 @@ message_fancy_list("${inc}")
 add_executable("${TARGET_NAME}" ${src} ${inc})
 target_include_directories("${TARGET_NAME}" PUBLIC include)
 target_link_libraries("${TARGET_NAME}"
-  # boson_algebra
+  boson_algebra
   Boost::boost
   Boost::program_options
 )

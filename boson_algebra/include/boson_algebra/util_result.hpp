@@ -1,19 +1,19 @@
-#ifndef BOSON_ALGEBRA_RESULT_HPP
-#define BOSON_ALGEBRA_RESULT_HPP
+#ifndef BOSON_ALGEBRA_UTIL_RESULT_HPP
+#define BOSON_ALGEBRA_UTIL_RESULT_HPP
 
 #include <any>
+#include <cassert>
 #include <exception>
 #include <functional>
 #include <type_traits>
 #include <variant>
-
-#include <cassert>
 
 // #######################################################################
 // ## BosonAlgebraRuntimeExceptions                                    ##
 // #######################################################################
 
 namespace boson_algebra {
+namespace util {
 
 /*
  * The type used in conjunction with Result.
@@ -36,6 +36,7 @@ inline std::any BosonAlgebraRuntimeException::get_details() const {
     return _datails;
 }
 
+}  // namespace util
 }  // namespace boson_algebra
 
 // #######################################################################
@@ -43,6 +44,7 @@ inline std::any BosonAlgebraRuntimeException::get_details() const {
 // #######################################################################
 
 namespace boson_algebra {
+namespace util {
 
 template <typename OutT, typename ExceptionT>
 class Result {
@@ -65,6 +67,7 @@ class Result {
     const std::variant<OutT, ExceptionT> _variant;
 };
 
+}  // namespace util
 }  // namespace boson_algebra
 
 // #######################################################################
@@ -72,6 +75,7 @@ class Result {
 // #######################################################################
 
 namespace boson_algebra {
+namespace util {
 
 // -----------------------------------------------------------------------
 template <typename OutT, typename ExceptionT>
@@ -193,8 +197,20 @@ ExceptionT Result<OutT, ExceptionT>::unwrap_err() const {
     return std::visit(visitor, _variant);
 }
 
-// -----------------------------------------------------------------------
+}  // namespace util
+}  // namespace boson_algebra
 
+// #######################################################################
+// ## BosonAlgebraResultResult                                          ##
+// #######################################################################
+
+namespace boson_algebra {
+namespace util {
+
+template <typename OutT>
+using BosonAlgebraResult = Result<OutT, BosonAlgebraRuntimeException>;
+
+}
 }  // namespace boson_algebra
 
 #endif
