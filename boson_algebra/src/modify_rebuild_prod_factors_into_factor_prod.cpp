@@ -55,7 +55,7 @@ ModificationResult modify_rebuild_prod_factors_into_factor_prod_new_api(Expressi
     // *** the transformation applies only to product expressions   **
     // ***************************************************************
     if (!expression.is_of_type<ProductExpression>()) {
-        ModificationResult::make_passed_through_result(std::move(expression));
+        return ModificationResult::make_passed_through_result(std::move(expression));
     }
     const auto& range = expression.range();
     // ***************************************************************
@@ -69,7 +69,7 @@ ModificationResult modify_rebuild_prod_factors_into_factor_prod_new_api(Expressi
     const bool are_any_subexpression_factors =
         boost::algorithm::any_of(range, is_integer_factored_expression);
     if (!are_any_subexpression_factors) {
-        ModificationResult::make_passed_through_result(std::move(expression));
+        return ModificationResult::make_passed_through_result(std::move(expression));
     }
     // ***************************************************************
     // *** make the new subexpressions                              **

@@ -74,7 +74,7 @@ ModificationResult modify_flatten_numerous_expression_new_api(ExpressionHandler&
     };
     const bool is_any_of_subexpressions_of_given_type = boost::algorithm::any_of(range, is_given_type_expression);
     if (!is_any_of_subexpressions_of_given_type) {
-        ModificationResult::make_passed_through_result(std::move(expression));
+        return ModificationResult::make_passed_through_result(std::move(expression));
     }
     // ***************************************************************
     // *** make the new subexpressions                              **
