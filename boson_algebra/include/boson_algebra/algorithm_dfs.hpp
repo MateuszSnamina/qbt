@@ -48,38 +48,34 @@ inline unsigned safe_dfs_transform(
 }
 
 //*************************************************************************
+//*** MODIFICATION -- NEW API                                           ***
+//*************************************************************************
 
 class ModificationResult {
    public:
-    // copy semmantic:
+    // copy semantic:
     ModificationResult(const ModificationResult&) = delete;
     ModificationResult& operator=(const ModificationResult&) = delete;
     // move semantic:
+    ModificationResult( ModificationResult&&) = delete;
+    ModificationResult& operator=( ModificationResult&&) = delete;
+    // creational model:
     static ModificationResult make_passed_through_result(ExpressionHandler&&);
     static ModificationResult make_generated_result(ExpressionHandler&&);
-    bool is_passed_through_result() const {
-        return _is_passed_through;
-    }
-    bool is_generated_result() const {
-        return !_is_passed_through;
-    }
-    operator bool() const {
-        return is_generated_result();
-    }
-    ExpressionHandler result() {
-        return std::move(_result);
-    }
-    ExpressionHandler operator*() {
-        return result();
-    }
-
+    // accessors is_passed_through/is_generated_result:
+    bool is_passed_through_result() const;
+    bool is_generated_result() const;
+    operator bool() const; // returns true is is_generated_result.
+    // move the result:
+    ExpressionHandler result();
+    ExpressionHandler operator*();
    private:
-    ModificationResult(bool is_passed_through, ExpressionHandler&&);
+    ModificationResult(bool is_passed_through, ExpressionHandler&&) noexcept;
     bool _is_passed_through;
     ExpressionHandler _result;
 };
 
-inline ModificationResult::ModificationResult(bool is_passed_through, ExpressionHandler&& result)
+inline ModificationResult::ModificationResult(bool is_passed_through, ExpressionHandler&& result) noexcept
     : _is_passed_through(is_passed_through),
       _result(std::move(result)) {
 }
@@ -90,6 +86,26 @@ inline ModificationResult ModificationResult::make_passed_through_result(Express
 
 inline ModificationResult ModificationResult::make_generated_result(ExpressionHandler&& result) {
     return ModificationResult(false, std::move(result));
+}
+
+inline bool ModificationResult::is_passed_through_result() const {
+    return _is_passed_through;
+}
+
+inline bool ModificationResult::is_generated_result() const {
+    return !_is_passed_through;
+}
+
+inline ModificationResult::operator bool() const {
+    return is_generated_result();
+}
+
+inline ExpressionHandler ModificationResult::result() {
+    return std::move(_result);
+}
+
+inline ExpressionHandler ModificationResult::operator*() {
+    return result();
 }
 
 }  // namespace boson_algebra

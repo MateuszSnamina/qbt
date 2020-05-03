@@ -1,6 +1,7 @@
 #ifndef BOSON_ALGEBRA_MODIFY_REMOVE_BRIDGE_SUM_HPP
 #define BOSON_ALGEBRA_MODIFY_REMOVE_BRIDGE_SUM_HPP
 
+#include <boson_algebra/algorithm_dfs.hpp>
 #include <boson_algebra/expression_abstract.hpp>
 
 namespace boson_algebra {
@@ -11,7 +12,7 @@ namespace boson_algebra {
  */
 
 ExpressionHandlerOptional modify_remove_bridge_sum(const ExpressionHandler&);
-//ExpressionHandlerOptional modify_remove_bridge_sum(ExpressionHandler&&);
+ModificationResult modify_remove_bridge_sum_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

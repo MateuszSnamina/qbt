@@ -1,6 +1,7 @@
 #ifndef BOSON_ALGEBRA_MODIFY_REBUILD_PROD_FACTORS_INTO_FACTOR_PROD_HPP
 #define BOSON_ALGEBRA_MODIFY_REBUILD_PROD_FACTORS_INTO_FACTOR_PROD_HPP
 
+#include <boson_algebra/algorithm_dfs.hpp>
 #include <boson_algebra/expression_abstract.hpp>
 
 namespace boson_algebra {
@@ -12,6 +13,7 @@ namespace boson_algebra {
  */
 
 ExpressionHandlerOptional modify_rebuild_prod_factors_into_factor_prod(const ExpressionHandler&);
+ModificationResult modify_rebuild_prod_factors_into_factor_prod_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

@@ -1,6 +1,7 @@
 #ifndef BOSON_ALGEBRA_MODIFY_REBUILD_SUM_INTO_LINEAR_COMBINATION_HPP
 #define BOSON_ALGEBRA_MODIFY_REBUILD_SUM_INTO_LINEAR_COMBINATION_HPP
 
+#include <boson_algebra/algorithm_dfs.hpp>
 #include <boson_algebra/expression_abstract.hpp>
 
 namespace boson_algebra {
@@ -11,7 +12,7 @@ namespace boson_algebra {
  */
 
 ExpressionHandlerOptional modify_rebuild_sum_into_linear_combination(const ExpressionHandler&);
-//ExpressionHandlerOptional modify_rebuild_sum_into_linear_combination(ExpressionHandler&&);
+ModificationResult modify_rebuild_sum_into_linear_combination_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 
