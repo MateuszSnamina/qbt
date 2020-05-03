@@ -60,8 +60,8 @@ ModificationResult modify_rebuild_prod_sum_into_sum_prod(ExpressionHandler&& exp
     // ***************************************************************
     // *** return the sum_prod_expression                           **
     // ***************************************************************
-    auto sum_prod_expression = SumExpression::make_from_buffer(std::move(new_subexpressions));
-    return ModificationResult::make_generated_result(std::move(sum_prod_expression));
+    auto sum_product_expression = SumExpression::make_from_buffer(std::move(new_subexpressions));
+    return ModificationResult::make_generated_result(std::move(sum_product_expression));
 }
 
 }  // namespace boson_algebra

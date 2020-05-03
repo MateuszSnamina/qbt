@@ -13,7 +13,6 @@
 #include <boson_algebra/modify_remove_bridge_product.hpp>
 #include <boson_algebra/modify_remove_bridge_sum.hpp>
 // STD:
-#include <iostream>  //DEBUG
 
 namespace boson_algebra {
 
@@ -25,7 +24,6 @@ ModificationResult modify_canonical_math(ExpressionHandler&& expression) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
 
-
     if (modify_in_place(expression, modify_detect_one_factor)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
@@ -35,7 +33,6 @@ ModificationResult modify_canonical_math(ExpressionHandler&& expression) {
     if (modify_in_place(expression, modify_detect_zero_product)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
-
 
     if (modify_in_place(expression, modify_flatten_product)) {
         return ModificationResult::make_generated_result(std::move(expression));

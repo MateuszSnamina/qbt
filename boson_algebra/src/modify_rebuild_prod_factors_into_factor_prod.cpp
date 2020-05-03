@@ -46,9 +46,9 @@ ModificationResult modify_rebuild_prod_factors_into_factor_prod(ExpressionHandle
     // ***************************************************************
     // *** return the factored product                              **
     // ***************************************************************
-    auto new_prod = ProductExpression::make_from_buffer(std::move(new_subexpressions));
-    auto new_factor_product = IntegerFactoredExpression::make(accumulated_factor, std::move(new_prod));
-    return ModificationResult::make_generated_result(std::move(new_factor_product));
+    auto new_product_expression = ProductExpression::make_from_buffer(std::move(new_subexpressions));
+    auto new_factor_product_expression = IntegerFactoredExpression::make(accumulated_factor, std::move(new_product_expression));
+    return ModificationResult::make_generated_result(std::move(new_factor_product_expression));
 }
 
 }  // namespace boson_algebra

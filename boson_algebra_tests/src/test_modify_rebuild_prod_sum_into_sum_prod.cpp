@@ -84,12 +84,28 @@ TEST(ModifyRebuildProdSumIntoSumProd, MinimalExample4) {
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
     ASSERT_EQ(modified_expression.str(), "❪❴♭b+♯c❵❫");
+    // TODO: consider changing the desired behavior so to get the following:
     // const auto& modified_expression = *modification_result;
     // //std::cout << modified_expression.str() << std::endl;
     // ASSERT_EQ(modified_expression.str(), "❴❪♭b❫+❪♯c❫❵");
 }
 
 TEST(ModifyRebuildProdSumIntoSumProd, MinimalExample5) {
+    auto expression = ba::ProductExpression::make(ba::SumExpression::make_zero());
+    //std::cout << expression.str() << std::endl;
+    ASSERT_EQ(expression.str(), "❪𝟘❫");
+    const auto modification_result = modify_rebuild_prod_sum_into_sum_prod(std::move(expression));
+    ASSERT_FALSE(modification_result);
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "❪𝟘❫");
+    // TODO: consider changing the desired behavior so to get the following:
+    // const auto& modified_expression = *modification_result;
+    // //std::cout << modified_expression.str() << std::endl;
+    // ASSERT_EQ(modified_expression.str(), "𝟘");
+}
+
+TEST(ModifyRebuildProdSumIntoSumProd, MinimalExample6) {
     auto expression = (('b'_an + 'c'_cr) * (2 * 'd'_cr));
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪❴♭b+♯c❵◦❪2♯d❫❫");
@@ -100,7 +116,7 @@ TEST(ModifyRebuildProdSumIntoSumProd, MinimalExample5) {
     ASSERT_EQ(modified_expression.str(), "❴❪♭b◦❪2♯d❫❫+❪♯c◦❪2♯d❫❫❵");
 }
 
-TEST(ModifyRebuildProdSumIntoSumProd, MinimalExample6) {
+TEST(ModifyRebuildProdSumIntoSumProd, MinimalExample7) {
     auto expression = ba::ProductExpression::make('a'_cr, ('b'_an * 'c'_cr), 'd'_cr);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯a◦❪♭b◦♯c❫◦♯d❫");
@@ -109,4 +125,15 @@ TEST(ModifyRebuildProdSumIntoSumProd, MinimalExample6) {
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
     ASSERT_EQ(modified_expression.str(), "❪♯a◦❪♭b◦♯c❫◦♯d❫");
+}
+
+TEST(ModifyRebuildProdSumIntoSumProd, MinimalExample8) {
+    auto expression = (ba::SumExpression::make_zero() * 'd'_cr);
+    //std::cout << expression.str() << std::endl;
+    ASSERT_EQ(expression.str(), "❪𝟘◦♯d❫");
+    const auto modification_result = modify_rebuild_prod_sum_into_sum_prod(std::move(expression));
+    ASSERT_TRUE(modification_result);
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "𝟘");
 }

@@ -95,8 +95,8 @@ ModificationResult modify_sort_product_of_boson_primitive_operators_1(Expression
     // ***************************************************************
     // *** return the product of grouped operators                  **
     // ***************************************************************
-    auto new_product = ProductExpression::make_from_buffer(std::move(new_subexpressions));
-    return ModificationResult::make_generated_result(std::move(new_product));
+    auto new_product_expression = ProductExpression::make_from_buffer(std::move(new_subexpressions));
+    return ModificationResult::make_generated_result(std::move(new_product_expression));
 }
 
 }  // namespace boson_algebra

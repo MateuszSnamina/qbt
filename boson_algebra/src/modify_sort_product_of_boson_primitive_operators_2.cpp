@@ -277,8 +277,8 @@ ModificationResult modify_sort_product_of_boson_primitive_operators_2(Expression
     // ***************************************************************
     // *** return the composed expression                           **
     // ***************************************************************
-    auto new_sum = SumExpression::make(std::move(new_subexpression_1), std::move(new_subexpression_2));
-    return ModificationResult::make_generated_result(std::move(new_sum));
+    auto new_sum_expression = SumExpression::make(std::move(new_subexpression_1), std::move(new_subexpression_2));
+    return ModificationResult::make_generated_result(std::move(new_sum_expression));
 }
 
 }  // namespace boson_algebra

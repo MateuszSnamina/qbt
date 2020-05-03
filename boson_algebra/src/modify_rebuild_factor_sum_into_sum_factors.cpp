@@ -36,10 +36,10 @@ ModificationResult modify_rebuild_factor_sum_into_sum_factors(ExpressionHandler&
         new_subexpressions.push_back(std::move(new_subexpression));
     }
     // ***************************************************************
-    // *** return the sum_prod expression                           **
+    // *** return the new_sum_product_expression                    **
     // ***************************************************************
-    auto sum_prod_expression = SumExpression::make_from_buffer(std::move(new_subexpressions));
-    return ModificationResult::make_generated_result(std::move(sum_prod_expression));
+    auto new_sum_product_expression = SumExpression::make_from_buffer(std::move(new_subexpressions));
+    return ModificationResult::make_generated_result(std::move(new_sum_product_expression));
 }
 
 }  // namespace boson_algebra

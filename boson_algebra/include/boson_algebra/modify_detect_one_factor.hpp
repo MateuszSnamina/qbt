@@ -7,7 +7,7 @@
 namespace boson_algebra {
 
 /*
- * Transformation goal: Detect when a factor expression has the zero factor or the zero subexpression
+ * Transformation goal: Detect when a factor expression has the factor equal to one and eliminate the not needed factor expression
  * Transformation example: ❪1a❫ => a
  */
 

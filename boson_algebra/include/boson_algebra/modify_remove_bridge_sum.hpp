@@ -7,7 +7,7 @@
 namespace boson_algebra {
 
 /*
- * Transformation goal: Detect sum of one ingredient and ommit the not needed structural block
+ * Transformation goal: Detect sum of one ingredient and eliminate the not needed structural block
  * Transformation example: ❴a❵ => a
  */
 

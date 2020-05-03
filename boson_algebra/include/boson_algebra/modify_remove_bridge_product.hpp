@@ -7,7 +7,7 @@
 namespace boson_algebra {
 
 /*
- * Transformation goal: Detect product of one factor and ommit the not needed structural block
+ * Transformation goal: Detect product of one factor and eliminate the not needed structural block
  * Transformation example: ❪a❫ => a
  */
 
