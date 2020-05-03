@@ -1,7 +1,7 @@
 //SELF:
 #include <boson_algebra/expression_all.hpp>
 #include <boson_algebra/expression_pragma.hpp>
-#include <boson_algebra/transform_flatten_product.hpp>
+#include <boson_algebra/modify_flatten_product.hpp>
 #include <boson_algebra/util_make.hpp>
 #include <boson_algebra/algorithm_dfs.hpp>
 // STD:
@@ -207,7 +207,7 @@ int main() {
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
     }
     {
-        // Transfomration goal: Expand boson number operator when possible.
+        // Transfomration goal: Rebuild_prod_sum_into_sum_prod boson number operator when possible.
         // Transfomration example: 2*n(boson)=>2*(cr(boson)*an(boson))
         const auto fun = [](const ExpressionHandler& expr_hdl) -> ExpressionHandlerOptional {
             if (!expr_hdl.is_of_type<BosonNumberOperator>()) {
@@ -233,7 +233,7 @@ int main() {
         ExpressionHandler expr1 = expression_1(a, b, c, d);
         ExpressionHandler expr1_clone = expr1.clone();
         std::cout << "Start Dfs." << std::endl;
-        safe_dfs_transform(expr1, transform_flatten_product);
+        safe_dfs_transform(expr1, modify_flatten_product);
         std::cout << "End Dfs." << std::endl;
         std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
         std::cout << "After transforming DFS:  " << expr1.str() << std::endl;

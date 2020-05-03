@@ -27,8 +27,8 @@ struct maker<std::vector<T, A>> {
     auto operator()(Ts&&... ts) const -> result_type {
         result_type result;
         result.reserve(sizeof...(Ts));
-        using expand = int[];
-        void(expand{
+        using rebuild_prod_sum_into_sum_prod = int[];
+        void(rebuild_prod_sum_into_sum_prod{
             0,
             (result.push_back(std::forward<Ts>(ts)), 0)...});
 

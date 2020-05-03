@@ -12,12 +12,7 @@ enum class GreedinessLevel {
     DoDfsForReplacedExpressions,
 };
 
-// struct DfsResult {
-//     ExpressionHandler expression;
-//     unsigned replacement_counter;
-// };
-
-unsigned safe_dfs_transform(
+inline unsigned safe_dfs_transform(
     ExpressionHandler& expression,
     const SafeTransformFunctionT& fun,
     GreedinessLevel greediness = GreedinessLevel::DoNotTouchReplacedExpressions) {
@@ -50,6 +45,51 @@ unsigned safe_dfs_transform(
             assert(false);
     }
     return replacement_counter;
+}
+
+//*************************************************************************
+
+class ModificationResult {
+   public:
+    // copy semmantic:
+    ModificationResult(const ModificationResult&) = delete;
+    ModificationResult& operator=(const ModificationResult&) = delete;
+    // move semantic:
+    static ModificationResult make_passed_through_result(ExpressionHandler&&);
+    static ModificationResult make_generated_result(ExpressionHandler&&);
+    bool is_passed_through_result() const {
+        return _is_passed_through;
+    }
+    bool is_generated_result() const {
+        return !_is_passed_through;
+    }
+    operator bool() const {
+        return is_generated_result();
+    }
+    ExpressionHandler result() {
+        return std::move(_result);
+    }
+    ExpressionHandler operator*() {
+        return result();
+    }
+
+   private:
+    ModificationResult(bool is_passed_through, ExpressionHandler&&);
+    bool _is_passed_through;
+    ExpressionHandler _result;
+};
+
+inline ModificationResult::ModificationResult(bool is_passed_through, ExpressionHandler&& result)
+    : _is_passed_through(is_passed_through),
+      _result(std::move(result)) {
+}
+
+inline ModificationResult ModificationResult::make_passed_through_result(ExpressionHandler&& result) {
+    return ModificationResult(true, std::move(result));
+}
+
+inline ModificationResult ModificationResult::make_generated_result(ExpressionHandler&& result) {
+    return ModificationResult(false, std::move(result));
 }
 
 }  // namespace boson_algebra
