@@ -12,7 +12,7 @@ namespace boson_algebra {
  * 
  */
 
-ModificationResult modify_rebuild_prod_factors_into_factor_prod_new_api(ExpressionHandler&&);
+ModificationResult modify_rebuild_prod_factors_into_factor_prod(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

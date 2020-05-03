@@ -12,7 +12,7 @@
 namespace boson_algebra {
 
 template <class VectorNumerousExpressionDerrivedClass>
-ModificationResult modify_flatten_numerous_expression_new_api(ExpressionHandler&& expression) {
+ModificationResult modify_flatten_numerous_expression(ExpressionHandler&& expression) {
     static_assert(std::is_base_of_v<VectorNumerousExpression, VectorNumerousExpressionDerrivedClass>);
     // ***************************************************************
     // *** the transformation applies only to expressions being     **

@@ -15,7 +15,7 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_sort_product_of_boson_primitive_operators_0_new_api(ExpressionHandler&& expression){
+ModificationResult modify_sort_product_of_boson_primitive_operators_0(ExpressionHandler&& expression){
     // ***************************************************************
     // *** the transformation applies only to product expressions   **
     // ***************************************************************

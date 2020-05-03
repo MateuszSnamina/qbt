@@ -15,7 +15,7 @@ TEST(ModifyRebuildSumIntoLinearCombination, OnBosonPrimitiveOperator) {
     auto expression = 'd'_cr;
     ASSERT_EQ(expression.str(), "♯d");
     //std::cout << expression.str() << std::endl;
-    const auto modification_result = modify_rebuild_sum_into_linear_combination_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_sum_into_linear_combination(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -26,7 +26,7 @@ TEST(ModifyRebuildSumIntoLinearCombination, OnEmptyProduct) {
     auto expression = ba::ProductExpression::make();
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "𝕀");
-    const auto modification_result = modify_rebuild_sum_into_linear_combination_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_sum_into_linear_combination(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -37,7 +37,7 @@ TEST(ModifyRebuildSumIntoLinearCombination, OnEmptySum) {
     auto expression = ba::SumExpression::make();
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "𝟘");
-    const auto modification_result = modify_rebuild_sum_into_linear_combination_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_sum_into_linear_combination(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -48,7 +48,7 @@ TEST(ModifyRebuildSumIntoLinearCombination, OnProductOfBosonPrimitiveOperators) 
     auto expression = ('a'_cr * 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯a◦♭b❫");
-    const auto modification_result = modify_rebuild_sum_into_linear_combination_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_sum_into_linear_combination(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -59,7 +59,7 @@ TEST(ModifyRebuildSumIntoLinearCombination, OnSumOfBosonPrimitiveOperators) {
     auto expression = ('a'_cr + 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❴♯a+♭b❵");
-    const auto modification_result = modify_rebuild_sum_into_linear_combination_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_sum_into_linear_combination(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -70,7 +70,7 @@ TEST(ModifyRebuildSumIntoLinearCombination, BigExample1) {
     auto expression = ba::SumExpression::make((4 * 'c'_an), ('a'_cr * 'b'_cr), (5 * 'a'_an), 'd'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❴❪4♭c❫+❪♯a◦♯b❫+❪5♭a❫+♭d❵");
-    const auto modification_result = modify_rebuild_sum_into_linear_combination_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_sum_into_linear_combination(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;

@@ -15,7 +15,7 @@ TEST(ModifyRebuildFactorSumIntoSumFactors, OnBosonPrimitiveOperator) {
     auto expression = 'd'_cr;
     ASSERT_EQ(expression.str(), "♯d");
     //std::cout << expression.str() << std::endl;
-    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -26,7 +26,7 @@ TEST(ModifyRebuildFactorSumIntoSumFactors, OnEmptyProduct) {
     auto expression = ba::ProductExpression::make();
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "𝕀");
-    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -37,7 +37,7 @@ TEST(ModifyRebuildFactorSumIntoSumFactors, OnProductOfBosonPrimitiveOperators) {
     auto expression = ('a'_cr * 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯a◦♭b❫");
-    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -48,7 +48,7 @@ TEST(ModifyRebuildFactorSumIntoSumFactors, OnFactoredExpression1) {
     auto expression = (4 * 'b'_cr);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪4♯b❫");
-    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -59,7 +59,7 @@ TEST(ModifyRebuildFactorSumIntoSumFactors, OnFactoredExpression2) {
     auto expression = (4 * ('d'_an * 'a'_cr));
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪4❪♭d◦♯a❫❫");
-    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -70,7 +70,7 @@ TEST(ModifyRebuildFactorSumIntoSumFactors, MinimalExample1) {
     auto expression = (4 * ('d'_an + 'a'_cr));
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪4❴♭d+♯a❵❫");
-    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -81,7 +81,7 @@ TEST(ModifyRebuildFactorSumIntoSumFactors, MinimalExample2) {
     auto expression = (4 * ba::SumExpression::make('d'_an, 'a'_cr, (2 * 'c'_cr)));
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪4❴♭d+♯a+❪2♯c❫❵❫");
-    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors_new_api(std::move(expression));
+    const auto modification_result = modify_rebuild_factor_sum_into_sum_factors(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;

@@ -13,7 +13,7 @@ TEST(ModifyFlattenFactor, OnBosonPrimitiveOperator) {
     auto expression = 'd'_cr;
     ASSERT_EQ(expression.str(), "♯d");
     //std::cout << expression.str() << std::endl;
-    const auto modification_result = modify_flatten_factor_new_api(std::move(expression));
+    const auto modification_result = modify_flatten_factor(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -24,7 +24,7 @@ TEST(ModifyFlattenFactor, OnEmptyProduct) {
     auto expression = ba::ProductExpression::make();
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "𝕀");
-    const auto modification_result = modify_flatten_factor_new_api(std::move(expression));
+    const auto modification_result = modify_flatten_factor(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -35,7 +35,7 @@ TEST(ModifyFlattenFactor, OnProductOfBosonPrimitiveOperators) {
     auto expression = ('a'_cr * 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯a◦♭b❫");
-    const auto modification_result = modify_flatten_factor_new_api(std::move(expression));
+    const auto modification_result = modify_flatten_factor(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -46,7 +46,7 @@ TEST(ModifyFlattenFactor, OnFactorExpression) {
     auto expression = (4 * 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪4♭b❫");
-    const auto modification_result = modify_flatten_factor_new_api(std::move(expression));
+    const auto modification_result = modify_flatten_factor(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -57,7 +57,7 @@ TEST(ModifyFlattenFactor, OnNestedFactorExpression) {
     auto expression = (4 * (-6 * 'b'_an));
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪4❪-6♭b❫❫");
-    const auto modification_result = modify_flatten_factor_new_api(std::move(expression));
+    const auto modification_result = modify_flatten_factor(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;

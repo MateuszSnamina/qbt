@@ -52,8 +52,8 @@ class ModificationResult {
 
 namespace boson_algebra {
 
-using UnsafeTransformFunctionT = std::function<ModificationResult(ExpressionHandler&&)>;
-bool modify_in_place(ExpressionHandler& expression, UnsafeTransformFunctionT fun);
+using ModyficationFunctionT = std::function<ModificationResult(ExpressionHandler&&)>;
+bool modify_in_place(ExpressionHandler& expression, ModyficationFunctionT fun);
 
 }  // namespace boson_algebra
 
@@ -69,9 +69,9 @@ enum class GreedinessLevel {
     DoDfsForReplacedExpressions,
 };
 
-unsigned safe_dfs_transform_new_api(
+unsigned dfs_transform(
     ExpressionHandler& expression,
-    const UnsafeTransformFunctionT& fun,
+    const ModyficationFunctionT& fun,
     GreedinessLevel greediness = GreedinessLevel::DoNotTouchReplacedExpressions);
 
 }  // namespace boson_algebra

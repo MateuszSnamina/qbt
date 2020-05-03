@@ -12,7 +12,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnBosonPrimitiveOperator) {
     auto expression = 'd'_cr;
     ASSERT_EQ(expression.str(), "♯d");
     //std::cout << expression.str() << std::endl;
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -23,7 +23,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnEmptySum) {
     auto expression = ba::SumExpression::make();
     ASSERT_EQ(expression.str(), "𝟘");
     //std::cout << expression.str() << std::endl;
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -34,7 +34,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnEmptyProduct) {
     auto expression = ba::ProductExpression::make();
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "𝕀");
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -45,7 +45,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     auto expression = ('a'_cr * 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯a◦♭b❫");
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -56,7 +56,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     auto expression = ('b'_cr * 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯b◦♭b❫");
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -67,7 +67,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     auto expression = ('b'_an * 'b'_cr);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♭b◦♯b❫");
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -78,7 +78,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     auto expression = ba::ProductExpression::make('b'_cr, 'b'_cr, 'b'_an, 'b'_cr, 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯b◦♯b◦♭b◦♯b◦♭b❫");
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -89,7 +89,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     auto expression = ba::ProductExpression::make('b'_cr, 'b'_an, 'b'_cr, 'b'_an, 'b'_an);
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯b◦♭b◦♯b◦♭b◦♭b❫");
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_FALSE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -101,7 +101,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯b◦♭b◦♭b◦♯b◦♭b❫");
     // desierd state: "❪♯b◦♭b◦♯b◦♭b◦♭b❫", first difference on posiotion idx2, transposition idx2<=>idx3.
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -113,7 +113,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯b◦♭b◦♭b◦♭b◦♯b❫");
     // desierd state: "❪♯b◦♭b◦♯b◦♭b◦♭b❫", first difference on posiotion idx2, transposition idx3<=>idx4.
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -125,7 +125,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯b◦♯b◦♭b◦♭b◦♭b❫");
     // desierd state: "❪♯b◦♭b◦♯b◦♭b◦♭b❫", first difference on posiotion idx1, transposition idx1<=>idx2.
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -137,7 +137,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♯b◦♭b◦♭b◦♯b◦♯b❫");
     // desierd state: "❪♯b◦♯b◦♭b◦♯b◦♭b❫", first difference on posiotion idx1, transposition idx2<=>idx3.
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;
@@ -149,7 +149,7 @@ TEST(ModifySortProductOfBosonPrimitiveOperators2, OnProductOfBosonPrimitiveOpera
     //std::cout << expression.str() << std::endl;
     ASSERT_EQ(expression.str(), "❪♭b◦♭b◦♯b◦♯b◦♯b❫");
     // desierd state: "❪♯b◦♯b◦♭b◦♯b◦♭b❫", first difference on posiotion idx0, transposition idx1<=>idx2.
-    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2_new_api(std::move(expression));
+    const auto modification_result = modify_sort_product_of_boson_primitive_operators_2(std::move(expression));
     ASSERT_TRUE(modification_result);
     const auto& modified_expression = *modification_result;
     //std::cout << modified_expression.str() << std::endl;

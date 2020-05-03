@@ -11,7 +11,7 @@ namespace boson_algebra {
  * Transformation example: ❪5❪3a❫❫ => ❪15a❫
  */
 
-ModificationResult modify_flatten_factor_new_api(ExpressionHandler&&);
+ModificationResult modify_flatten_factor(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

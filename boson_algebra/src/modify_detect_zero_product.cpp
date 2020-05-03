@@ -7,7 +7,7 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_detect_zero_product_new_api(ExpressionHandler&& expression) {
+ModificationResult modify_detect_zero_product(ExpressionHandler&& expression) {
     if (!expression.is_of_type<ProductExpression>()) {
         return ModificationResult::make_passed_through_result(std::move(expression));
     }

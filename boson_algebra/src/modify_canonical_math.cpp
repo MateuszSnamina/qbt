@@ -17,43 +17,43 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_canonical_math_new_api(ExpressionHandler&& expression) {
-    if (modify_in_place(expression, modify_remove_bridge_product_new_api)) {
+ModificationResult modify_canonical_math(ExpressionHandler&& expression) {
+    if (modify_in_place(expression, modify_remove_bridge_product)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
-    if (modify_in_place(expression, modify_remove_bridge_sum_new_api)) {
-        return ModificationResult::make_generated_result(std::move(expression));
-    }
-
-
-    if (modify_in_place(expression, modify_detect_one_factor_new_api)) {
-        return ModificationResult::make_generated_result(std::move(expression));
-    }
-    if (modify_in_place(expression, modify_detect_zero_factor_new_api)) {
-        return ModificationResult::make_generated_result(std::move(expression));
-    }
-    if (modify_in_place(expression, modify_detect_zero_product_new_api)) {
+    if (modify_in_place(expression, modify_remove_bridge_sum)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
 
 
-    if (modify_in_place(expression, modify_flatten_product_new_api)) {
+    if (modify_in_place(expression, modify_detect_one_factor)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
-    if (modify_in_place(expression, modify_flatten_sum_new_api)) {
+    if (modify_in_place(expression, modify_detect_zero_factor)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
-    if (modify_in_place(expression, modify_flatten_factor_new_api)) {
+    if (modify_in_place(expression, modify_detect_zero_product)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
 
-    if (modify_in_place(expression, modify_rebuild_prod_factors_into_factor_prod_new_api)) {
+
+    if (modify_in_place(expression, modify_flatten_product)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
-    if (modify_in_place(expression, modify_rebuild_prod_sum_into_sum_prod_new_api)) {
+    if (modify_in_place(expression, modify_flatten_sum)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
-    if (modify_in_place(expression, modify_rebuild_factor_sum_into_sum_factors_new_api)) {
+    if (modify_in_place(expression, modify_flatten_factor)) {
+        return ModificationResult::make_generated_result(std::move(expression));
+    }
+
+    if (modify_in_place(expression, modify_rebuild_prod_factors_into_factor_prod)) {
+        return ModificationResult::make_generated_result(std::move(expression));
+    }
+    if (modify_in_place(expression, modify_rebuild_prod_sum_into_sum_prod)) {
+        return ModificationResult::make_generated_result(std::move(expression));
+    }
+    if (modify_in_place(expression, modify_rebuild_factor_sum_into_sum_factors)) {
         return ModificationResult::make_generated_result(std::move(expression));
     }
 

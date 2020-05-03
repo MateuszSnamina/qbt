@@ -10,7 +10,7 @@ namespace boson_algebra {
  * Transformation goal: Standard Rebuild_prod_sum_into_sum_prod
  * Transformation example: ❪a◦❪b+c❫◦d❫ => ❪❪a◦b◦d❫+❪a◦c◦d❫❫
  */
-ModificationResult modify_rebuild_prod_sum_into_sum_prod_new_api(ExpressionHandler&&);
+ModificationResult modify_rebuild_prod_sum_into_sum_prod(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

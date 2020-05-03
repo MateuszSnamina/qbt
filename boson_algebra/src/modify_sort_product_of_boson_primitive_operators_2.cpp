@@ -99,7 +99,7 @@ CrAn DesiredStateCalculator::operator()(std::size_t idx) const {
 
 namespace boson_algebra {
 
-ModificationResult modify_sort_product_of_boson_primitive_operators_2_new_api(ExpressionHandler&& expression) {
+ModificationResult modify_sort_product_of_boson_primitive_operators_2(ExpressionHandler&& expression) {
     const auto& range = expression.crange();
     // ***************************************************************
     // *** the transformation applies only to product expressions   **

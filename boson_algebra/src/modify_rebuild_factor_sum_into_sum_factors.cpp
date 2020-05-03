@@ -9,7 +9,7 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_rebuild_factor_sum_into_sum_factors_new_api(ExpressionHandler&& expression) {
+ModificationResult modify_rebuild_factor_sum_into_sum_factors(ExpressionHandler&& expression) {
     // ***************************************************************
     // *** the transformation applies only to                       **
     // *** IntegerFactoredExpression expressions                    **

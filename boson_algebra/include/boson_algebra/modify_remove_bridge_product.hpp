@@ -11,7 +11,7 @@ namespace boson_algebra {
  * Transformation example: ❪a❫ => a
  */
 
-ModificationResult modify_remove_bridge_product_new_api(ExpressionHandler&&);
+ModificationResult modify_remove_bridge_product(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

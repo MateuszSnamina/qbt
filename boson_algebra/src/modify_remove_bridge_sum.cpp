@@ -6,8 +6,8 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_remove_bridge_sum_new_api(ExpressionHandler&& expression) {
-    return modify_remove_bridge_numerous_expression_new_api<SumExpression>(std::move(expression));
+ModificationResult modify_remove_bridge_sum(ExpressionHandler&& expression) {
+    return modify_remove_bridge_numerous_expression<SumExpression>(std::move(expression));
 }
 
 }  // namespace boson_algebra

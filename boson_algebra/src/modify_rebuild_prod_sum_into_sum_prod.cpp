@@ -8,7 +8,7 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_rebuild_prod_sum_into_sum_prod_new_api(ExpressionHandler&& expression) {
+ModificationResult modify_rebuild_prod_sum_into_sum_prod(ExpressionHandler&& expression) {
     // ***************************************************************
     // *** the transformation applies only to product expressions   **
     // ***************************************************************

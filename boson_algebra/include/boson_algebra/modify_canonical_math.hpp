@@ -7,7 +7,7 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_canonical_math_new_api(ExpressionHandler&& expression);
+ModificationResult modify_canonical_math(ExpressionHandler&& expression);
 
 }  // namespace boson_algebra
 

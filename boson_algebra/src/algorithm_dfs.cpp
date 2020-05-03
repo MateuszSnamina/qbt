@@ -60,7 +60,7 @@ ExpressionHandler ModificationResult::operator*() {
 
 namespace boson_algebra {
 
-bool modify_in_place(ExpressionHandler& expression, UnsafeTransformFunctionT fun) {
+bool modify_in_place(ExpressionHandler& expression, ModyficationFunctionT fun) {
     auto result = fun(std::move(expression));
     expression = std::move(*result);
     return result.is_generated_result();
@@ -74,14 +74,14 @@ bool modify_in_place(ExpressionHandler& expression, UnsafeTransformFunctionT fun
 
 namespace boson_algebra {
 
-unsigned safe_dfs_transform_new_api(
+unsigned dfs_transform(
     ExpressionHandler& expression,
-    const UnsafeTransformFunctionT& fun,
+    const ModyficationFunctionT& fun,
     GreedinessLevel greediness) {
     assert(!expression.is_shallow_drained());
     unsigned replacement_counter = 0;
     for (auto& subexpression : expression.range()) {
-        replacement_counter += safe_dfs_transform_new_api(subexpression, fun, greediness);
+        replacement_counter += dfs_transform(subexpression, fun, greediness);
     }
     switch (greediness) {
         case GreedinessLevel::DoNotTouchReplacedExpressions:
@@ -97,7 +97,7 @@ unsigned safe_dfs_transform_new_api(
         case GreedinessLevel::DoDfsForReplacedExpressions:
             if (modify_in_place(expression, fun)) {
                 replacement_counter++;
-                replacement_counter += safe_dfs_transform_new_api(expression, fun, greediness);
+                replacement_counter += dfs_transform(expression, fun, greediness);
             }
             break;
         default:

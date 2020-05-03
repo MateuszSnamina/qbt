@@ -10,7 +10,7 @@
 namespace boson_algebra {
 
 template <class VectorNumerousExpressionDerrivedClass>
-ModificationResult modify_remove_bridge_numerous_expression_new_api(ExpressionHandler&& expression) {
+ModificationResult modify_remove_bridge_numerous_expression(ExpressionHandler&& expression) {
     static_assert(std::is_base_of_v<VectorNumerousExpression, VectorNumerousExpressionDerrivedClass>);
     if (!expression.is_of_type<VectorNumerousExpressionDerrivedClass>()) {
         return ModificationResult::make_passed_through_result(std::move(expression));

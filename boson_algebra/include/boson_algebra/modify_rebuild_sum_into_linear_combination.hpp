@@ -11,7 +11,7 @@ namespace boson_algebra {
  * Transformation example: ❪a+❪3a❫+b+c❫ => ❪❪1a❫+❪3a❫+❪1b❫+(1c❫❫
  */
 
-ModificationResult modify_rebuild_sum_into_linear_combination_new_api(ExpressionHandler&&);
+ModificationResult modify_rebuild_sum_into_linear_combination(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

@@ -12,7 +12,7 @@ namespace boson_algebra {
  * Transformation example: ❪5𝟘❫ => 𝟘
  */
 
-ModificationResult modify_detect_zero_factor_new_api(ExpressionHandler&&);
+ModificationResult modify_detect_zero_factor(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 

@@ -9,7 +9,7 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_rebuild_sum_into_linear_combination_new_api(ExpressionHandler&& expression) {
+ModificationResult modify_rebuild_sum_into_linear_combination(ExpressionHandler&& expression) {
     // ***************************************************************
     // *** the transformation applies only to sum expressions       **
     // ***************************************************************

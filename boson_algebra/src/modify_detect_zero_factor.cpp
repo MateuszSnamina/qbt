@@ -5,7 +5,7 @@
 
 namespace boson_algebra {
 
-ModificationResult modify_detect_zero_factor_new_api(ExpressionHandler&& expression) {
+ModificationResult modify_detect_zero_factor(ExpressionHandler&& expression) {
     if (!expression.is_of_type<IntegerFactoredExpression>()) {
         return ModificationResult::make_passed_through_result(std::move(expression));;
     }
