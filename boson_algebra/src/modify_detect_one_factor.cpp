@@ -23,7 +23,7 @@ ModificationResult modify_detect_one_factor_new_api(ExpressionHandler&& expressi
         return ModificationResult::make_passed_through_result(std::move(expression));
     }
     const auto expression_factor = expression.casted_target<IntegerFactoredExpression>().unwrap().get().factor();
-    auto subexpression = std::move(expression.subexpression(0));
+    auto& subexpression = expression.subexpression(0);
     const auto is_expression_factor_one = (expression_factor == 1);
     if (!is_expression_factor_one) {
         return ModificationResult::make_passed_through_result(std::move(expression));

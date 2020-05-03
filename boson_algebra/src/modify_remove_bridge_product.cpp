@@ -10,4 +10,8 @@ ExpressionHandlerOptional modify_remove_bridge_product(const ExpressionHandler& 
     return modify_remove_bridge_numerous_expression<ProductExpression>(expression);
 }
 
+ModificationResult modify_remove_bridge_product_new_api(ExpressionHandler&& expression) {
+    return modify_remove_bridge_numerous_expression_new_api<ProductExpression>(std::move(expression));
+}
+
 }  // namespace boson_algebra
