@@ -2,7 +2,7 @@
 #include <boson_algebra/algorithm_dfs.hpp>
 
 //*************************************************************************
-//*** ModificationResult                                                ***
+//***  ModificationResult                                               ***
 //*************************************************************************
 
 namespace boson_algebra {
@@ -55,7 +55,7 @@ ExpressionHandler ModificationResult::operator*() {
 }  // namespace boson_algebra
 
 //*************************************************************************
-//*** modify_in_place                                                   ***
+//***  modify_in_place                                                  ***
 //*************************************************************************
 
 namespace boson_algebra {
@@ -69,7 +69,7 @@ bool modify_in_place(ExpressionHandler& expression, ModyficationFunctionT fun) {
 }  // namespace boson_algebra
 
 //*************************************************************************
-//*** dfs_transform                                                     ***
+//***  dfs_transform                                                    ***
 //*************************************************************************
 
 namespace boson_algebra {

@@ -8,7 +8,7 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Perform simplification due to sum associativity.
- * Transformation example: ❪a+b+❪c+d❫+e+❪f+g❫❫ => ❪a+b+c+d+e+f+g❫
+ * Transformation example: ❴a+b+❴c+d❵+e+❴f+g❵❵ => ❴a+b+c+d+e+f+g❵
  */
 
 ModificationResult modify_flatten_sum(ExpressionHandler&&);

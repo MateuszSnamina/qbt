@@ -8,7 +8,7 @@ namespace boson_algebra {
 
 /*
  * Transformation goal: Detect sum of one ingredient and ommit the not needed structural block
- * Transformation example: ❪a❫ => a
+ * Transformation example: ❴a❵ => a
  */
 
 ModificationResult modify_remove_bridge_sum(ExpressionHandler&&);

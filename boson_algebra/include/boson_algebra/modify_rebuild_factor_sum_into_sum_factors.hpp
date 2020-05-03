@@ -7,7 +7,7 @@
 namespace boson_algebra {
 
 /*
- * Transformation goal: rebuild_prod_sum_into_sum_prod factor of sum
+ * Transformation goal: standard expand
  * Transformation example: 4❴a+b+c❵ => ❴❪4a❫+❪4b❫+❪4a❫❵
  * 
  */

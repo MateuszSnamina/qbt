@@ -5,7 +5,7 @@
 #include <boson_algebra/expression_abstract.hpp>
 
 //*************************************************************************
-//*** ModificationMode, ModificationResult                              ***
+//***  ModificationMode, ModificationResult                             ***
 //*************************************************************************
 
 namespace boson_algebra {
@@ -30,7 +30,7 @@ class ModificationResult {
     ModificationMode mode() const;
     bool is_passed_through_result() const;
     bool is_generated_result() const;
-    operator bool() const;  // returns true is is_generated_result.
+    operator bool() const;  // returns true if is_generated_result().
     // move the result:
     const ExpressionHandler& result() const;
     ExpressionHandler result();
@@ -47,7 +47,7 @@ class ModificationResult {
 }  // namespace boson_algebra
 
 //*************************************************************************
-//*** ModyficationFunctionT, modify_in_place                            ***
+//***  ModyficationFunctionT, modify_in_place                           ***
 //*************************************************************************
 
 namespace boson_algebra {
@@ -58,7 +58,7 @@ bool modify_in_place(ExpressionHandler& expression, ModyficationFunctionT fun);
 }  // namespace boson_algebra
 
 //*************************************************************************
-//*** GreedinessLevel, dfs_transform                                    ***
+//***  GreedinessLevel, dfs_transform                                   ***
 //*************************************************************************
 
 namespace boson_algebra {

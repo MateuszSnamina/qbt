@@ -4,7 +4,7 @@
 #include <boson_algebra/expression_all.hpp>
 // GTEST:
 #include <gtest/gtest.h>
-// BOOST
+// BOOST:
 #include <boost/range/algorithm/count.hpp>
 
 namespace ba = boson_algebra;

@@ -7,7 +7,7 @@
 namespace boson_algebra {
 
 /*
- * Transformation goal: Take out the accumulated factor of factors
+ * Transformation goal: Take out the accumulated factor of the product factors
  * Transformation example: ❪❪3a❫◦❪1b❫◦❪2a❫❫ => ❪6❪a◦b◦a❫❫
  * 
  */
