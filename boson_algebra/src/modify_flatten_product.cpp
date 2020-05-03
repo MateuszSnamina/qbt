@@ -6,10 +6,6 @@
 
 namespace boson_algebra {
 
-ExpressionHandlerOptional modify_flatten_product(const ExpressionHandler& expression) {
-    return modify_flatten_numerous_expression<ProductExpression>(expression);
-}
-
 ModificationResult modify_flatten_product_new_api(ExpressionHandler&& expression){
     return modify_flatten_numerous_expression_new_api<ProductExpression>(std::move(expression));
 }

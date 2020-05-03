@@ -43,7 +43,6 @@ namespace boson_algebra {
  * The transformation introduces a new term to keep the transformed expression algebraically equivalent.
  */
 
-ExpressionHandlerOptional modify_sort_product_of_boson_primitive_operators_2(const ExpressionHandler& expression);
 ModificationResult modify_sort_product_of_boson_primitive_operators_2_new_api(ExpressionHandler&& expression);
 
 }  // namespace boson_algebra

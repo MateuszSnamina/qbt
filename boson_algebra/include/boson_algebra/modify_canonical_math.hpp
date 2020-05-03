@@ -7,7 +7,6 @@
 
 namespace boson_algebra {
 
-ExpressionHandlerOptional modify_canonical_math(const ExpressionHandler& expression);
 ModificationResult modify_canonical_math_new_api(ExpressionHandler&& expression);
 
 }  // namespace boson_algebra

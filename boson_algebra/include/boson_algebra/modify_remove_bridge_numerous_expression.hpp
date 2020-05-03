@@ -10,20 +10,6 @@
 namespace boson_algebra {
 
 template <class VectorNumerousExpressionDerrivedClass>
-ExpressionHandlerOptional modify_remove_bridge_numerous_expression(const ExpressionHandler& expression) {
-    static_assert(std::is_base_of_v<VectorNumerousExpression, VectorNumerousExpressionDerrivedClass>);
-    if (!expression.is_of_type<VectorNumerousExpressionDerrivedClass>()) {
-        return std::nullopt;
-    }
-    const auto is_bridge = (expression.n_subexpressions() == 1);
-    if (!is_bridge) {
-        return std::nullopt;
-    }
-    const auto& subexpression = expression.subexpression(0);
-    return subexpression.clone();
-}
-
-template <class VectorNumerousExpressionDerrivedClass>
 ModificationResult modify_remove_bridge_numerous_expression_new_api(ExpressionHandler&& expression) {
     static_assert(std::is_base_of_v<VectorNumerousExpression, VectorNumerousExpressionDerrivedClass>);
     if (!expression.is_of_type<VectorNumerousExpressionDerrivedClass>()) {

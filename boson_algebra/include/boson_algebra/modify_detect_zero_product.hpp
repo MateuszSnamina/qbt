@@ -11,7 +11,6 @@ namespace boson_algebra {
  * Transformation example: ❪a◦b◦𝟘◦c◦d❫ => 𝟘
  */
 
-ExpressionHandlerOptional modify_detect_zero_product(const ExpressionHandler&);
 ModificationResult modify_detect_zero_product_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra

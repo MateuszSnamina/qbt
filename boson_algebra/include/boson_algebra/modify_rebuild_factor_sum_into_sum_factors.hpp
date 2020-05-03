@@ -12,7 +12,6 @@ namespace boson_algebra {
  * 
  */
 
-ExpressionHandlerOptional modify_rebuild_factor_sum_into_sum_factors(const ExpressionHandler&);
 ModificationResult modify_rebuild_factor_sum_into_sum_factors_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra

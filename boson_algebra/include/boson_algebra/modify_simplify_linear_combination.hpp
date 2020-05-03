@@ -11,7 +11,6 @@ namespace boson_algebra {
  * Transformation example: ❪❪3*a❫+❪1*b❫+❪2*a❫❫ => ❪❪5*a❫+❪1*b❫❫
  */
 
-ExpressionHandlerOptional modify_simplify_linear_combination(const ExpressionHandler&);
 ModificationResult modify_simplify_linear_combination_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra

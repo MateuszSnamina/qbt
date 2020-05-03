@@ -11,7 +11,6 @@ namespace boson_algebra {
  * Transformation example: ❪1a❫ => a
  */
 
-ExpressionHandlerOptional modify_detect_one_factor(const ExpressionHandler&);
 ModificationResult modify_detect_one_factor_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra

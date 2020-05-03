@@ -11,7 +11,6 @@ namespace boson_algebra {
  * Transformation example: ❪a+b+❪c+d❫+e+❪f+g❫❫ => ❪a+b+c+d+e+f+g❫
  */
 
-ExpressionHandlerOptional modify_flatten_sum(const ExpressionHandler&);
 ModificationResult modify_flatten_sum_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra

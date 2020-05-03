@@ -5,20 +5,6 @@
 
 namespace boson_algebra {
 
-ExpressionHandlerOptional modify_flatten_factor(const ExpressionHandler& expression) {
-    if (!expression.is_of_type<IntegerFactoredExpression>()) {
-        return std::nullopt;
-    }
-    const auto& subexpression = expression.subexpression(0);
-    if (!subexpression.is_of_type<IntegerFactoredExpression>()) {
-        return std::nullopt;
-    }
-    const auto& subsubexpression = subexpression.subexpression(0);
-    const auto expression_factor = expression.casted_target<IntegerFactoredExpression>().unwrap().get().factor();
-    const auto subexpression_factor =  subexpression.casted_target<IntegerFactoredExpression>().unwrap().get().factor();
-    return IntegerFactoredExpression::make(expression_factor*subexpression_factor, subsubexpression.clone());
-}
-
 ModificationResult modify_flatten_factor_new_api(ExpressionHandler&& expression) {
     if (!expression.is_of_type<IntegerFactoredExpression>()) {
         return ModificationResult::make_passed_through_result(std::move(expression));
