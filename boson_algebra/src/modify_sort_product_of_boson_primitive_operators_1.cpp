@@ -103,4 +103,8 @@ ExpressionHandlerOptional modify_sort_product_of_boson_primitive_operators_1(con
     return ProductExpression::make_from_buffer(std::move(new_subexpressions));
 }
 
+ModificationResult modify_sort_product_of_boson_primitive_operators_1_new_api(ExpressionHandler&& expression){
+
+}
+
 }  // namespace boson_algebra

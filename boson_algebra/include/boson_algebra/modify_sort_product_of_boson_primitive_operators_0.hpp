@@ -11,8 +11,8 @@ namespace boson_algebra {
  * Transformation example: ❪♭a◦♯b◦ℕa◦♭a◦ℕc◦♯a◦♭b❫ => ❪♭a◦ℕa◦♭a◦♯a◦♯b◦♭b◦ℕc❫
  */
 
-ExpressionHandlerOptional modify_sort_product_of_boson_primitive_operators_0(const ExpressionHandler& expression_hdl);
-ModificationResult modify_sort_product_of_boson_primitive_operators_0_new_api(ExpressionHandler&& expression_hdl);
+ExpressionHandlerOptional modify_sort_product_of_boson_primitive_operators_0(const ExpressionHandler&);
+ModificationResult modify_sort_product_of_boson_primitive_operators_0_new_api(ExpressionHandler&&);
 
 }  // namespace boson_algebra
 
