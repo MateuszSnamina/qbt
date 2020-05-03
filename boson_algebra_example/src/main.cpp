@@ -193,61 +193,60 @@ int main() {
     // **********************************************************
     // ***  Dfs transform                                     ***
     // **********************************************************
-    {
-        const auto fun = [](const ExpressionHandler& expr_hdl) -> ExpressionHandlerOptional {
-            std::cout << "Dfs: " << expr_hdl.str() << std::endl;
-            return std::nullopt;
-        };
-        ExpressionHandler expr1 = expression_1(a, b, c, d);
-        ExpressionHandler expr1_clone = expr1.clone();
-        std::cout << "Start Dfs." << std::endl;
-        safe_dfs_transform(expr1, fun);
-        std::cout << "End Dfs." << std::endl;
-        std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
-        std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
-    }
-    {
-        // Transfomration goal: Rebuild_prod_sum_into_sum_prod boson number operator when possible.
-        // Transfomration example: 2*n(boson)=>2*(cr(boson)*an(boson))
-        const auto fun = [](const ExpressionHandler& expr_hdl) -> ExpressionHandlerOptional {
-            if (!expr_hdl.is_of_type<BosonNumberOperator>()) {
-                return std::nullopt;
-            }
-            const auto& casted_other = expr_hdl.casted_target<BosonNumberOperator>().unwrap().get();
-            const auto boson = casted_other.boson();
-            ExpressionHandler cr = BosonCreationOperator::make(boson);
-            ExpressionHandler an = BosonAnnihilationOperator::make(boson);
-            return ProductExpression::make(std::move(cr), std::move(an));
-        };
-        ExpressionHandler expr1 = expression_1(a, b, c, d);
-        ExpressionHandler expr1_clone = expr1.clone();
-        std::cout << "Start Dfs." << std::endl;
-        safe_dfs_transform(expr1, fun);
-        std::cout << "End Dfs." << std::endl;
-        std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
-        std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
-    }
-    {
-        // Transfomration goal: Perform simplification due to product associativity.
-        // Transfomration example: a*b*(c*d)*e => a*b*c*d*e
-        ExpressionHandler expr1 = expression_1(a, b, c, d);
-        ExpressionHandler expr1_clone = expr1.clone();
-        std::cout << "Start Dfs." << std::endl;
-        safe_dfs_transform(expr1, modify_flatten_product);
-        std::cout << "End Dfs." << std::endl;
-        std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
-        std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
-    }
-
-    {
-        // When writing code you may utilize expression pragma.
-        // Expression pragma literals:
-        std::cout << ('u'_b)->repr() << std::endl;
-        std::cout << ('u'_cr).str() << std::endl;
-        std::cout << ('u'_an).str() << std::endl;
-        std::cout << ('u'_no).str() << std::endl;
-        // Expression pragma operators:
-        std::cout << ((3 * 'a'_cr) + 'u'_no).str() << std::endl;
-        std::cout << ('a'_cr * 'b'_cr * 'c'_cr).str() << std::endl;
-    }
+    // {
+    //     const auto fun = [](const ExpressionHandler& expression) -> ExpressionHandlerOptional {
+    //         std::cout << "Dfs: " << expression.str() << std::endl;
+    //         return std::nullopt;
+    //     };
+    //     ExpressionHandler expr1 = expression_1(a, b, c, d);
+    //     ExpressionHandler expr1_clone = expr1.clone();
+    //     std::cout << "Start Dfs." << std::endl;
+    //     safe_dfs_transform(expr1, fun);
+    //     std::cout << "End Dfs." << std::endl;
+    //     std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
+    //     std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
+    // }
+    // {
+    //     Transfomration goal: Rebuild_prod_sum_into_sum_prod boson number operator when possible.
+    //     Transfomration example: 2*n(boson)=>2*(cr(boson)*an(boson))
+    //     const auto fun = [](const ExpressionHandler& expression) -> ExpressionHandlerOptional {
+    //         if (!expression.is_of_type<BosonNumberOperator>()) {
+    //             return std::nullopt;
+    //         }
+    //         const auto& casted_other = expression.casted_target<BosonNumberOperator>().unwrap().get();
+    //         const auto boson = casted_other.boson();
+    //         ExpressionHandler cr = BosonCreationOperator::make(boson);
+    //         ExpressionHandler an = BosonAnnihilationOperator::make(boson);
+    //         return ProductExpression::make(std::move(cr), std::move(an));
+    //     };
+    //     ExpressionHandler expr1 = expression_1(a, b, c, d);
+    //     ExpressionHandler expr1_clone = expr1.clone();
+    //     std::cout << "Start Dfs." << std::endl;
+    //     safe_dfs_transform(expr1, fun);
+    //     std::cout << "End Dfs." << std::endl;
+    //     std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
+    //     std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
+    // }
+    // {
+    //     Transfomration goal: Perform simplification due to product associativity.
+    //     Transfomration example: a*b*(c*d)*e => a*b*c*d*e
+    //     ExpressionHandler expr1 = expression_1(a, b, c, d);
+    //     ExpressionHandler expr1_clone = expr1.clone();
+    //     std::cout << "Start Dfs." << std::endl;
+    //     safe_dfs_transform(expr1, modify_flatten_product);
+    //     std::cout << "End Dfs." << std::endl;
+    //     std::cout << "Before transforming DFS: " << expr1_clone.str() << std::endl;
+    //     std::cout << "After transforming DFS:  " << expr1.str() << std::endl;
+    // }
+    // {
+    //     When writing code you may utilize expression pragma.
+    //     Expression pragma literals:
+    //     std::cout << ('u'_b)->repr() << std::endl;
+    //     std::cout << ('u'_cr).str() << std::endl;
+    //     std::cout << ('u'_an).str() << std::endl;
+    //     std::cout << ('u'_no).str() << std::endl;
+    //     Expression pragma operators:
+    //     std::cout << ((3 * 'a'_cr) + 'u'_no).str() << std::endl;
+    //     std::cout << ('a'_cr * 'b'_cr * 'c'_cr).str() << std::endl;
+    // }
 }

@@ -163,9 +163,6 @@ using ConstExpressionHandlerSinglePassRange = boost::any_range<const ExpressionH
 using ConstExpressionHandlerForwardRange = boost::any_range<const ExpressionHandler, boost::forward_traversal_tag>;
 using ConstExpressionHandlerBidirectionalRange = boost::any_range<const ExpressionHandler, boost::bidirectional_traversal_tag>;
 using ConstExpressionHandlerRandomAccessRange = boost::any_range<const ExpressionHandler, boost::random_access_traversal_tag>;
-// typedefs for algorithms:
-using SafeTransformFunctionT = std::function<ExpressionHandlerOptional(const ExpressionHandler&)>;
-using UnsafeTransformFunctionT = std::function<ExpressionHandler(ExpressionHandler&&)>;
 
 }  // namespace boson_algebra
 
