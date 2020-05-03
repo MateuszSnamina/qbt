@@ -17,9 +17,9 @@ TEST(TransformFlattenProduct, OnBosonPrimitiveOperator) {
     //std::cout << expression.str() << std::endl;
     const auto modification_result = modify_flatten_product_new_api(std::move(expression));
     ASSERT_FALSE(modification_result);
-    const auto& transformed_expression = *modification_result;
-    //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "♯d");
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "♯d");
 }
 
 TEST(TransformFlattenProduct, OnEmptyProduct) {
@@ -28,9 +28,9 @@ TEST(TransformFlattenProduct, OnEmptyProduct) {
     ASSERT_EQ(expression.str(), "𝕀");
     const auto modification_result = modify_flatten_product_new_api(std::move(expression));
     ASSERT_FALSE(modification_result);
-    const auto& transformed_expression = *modification_result;
-    //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "𝕀");
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "𝕀");
 }
 
 TEST(TransformFlattenProduct, OnProductOfBosonPrimitiveOperators) {
@@ -39,9 +39,9 @@ TEST(TransformFlattenProduct, OnProductOfBosonPrimitiveOperators) {
     ASSERT_EQ(expression.str(), "❪♯a◦♭b❫");
     const auto modification_result = modify_flatten_product_new_api(std::move(expression));
     ASSERT_FALSE(modification_result);
-    const auto& transformed_expression = *modification_result;
-    //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪♯a◦♭b❫");
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "❪♯a◦♭b❫");
 }
 
 TEST(TransformFlattenProduct, MinimalExample1) {
@@ -50,9 +50,9 @@ TEST(TransformFlattenProduct, MinimalExample1) {
     ASSERT_EQ(expression.str(), "❪♭c◦❪♯a◦♯b❫❫");
     const auto modification_result = modify_flatten_product_new_api(std::move(expression));
     ASSERT_TRUE(modification_result);
-    const auto& transformed_expression = *modification_result;
-    //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪♭c◦♯a◦♯b❫");
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "❪♭c◦♯a◦♯b❫");
 }
 
 TEST(TransformFlattenProduct, MinimalExample2) {
@@ -61,9 +61,9 @@ TEST(TransformFlattenProduct, MinimalExample2) {
     ASSERT_EQ(expression.str(), "❪♭c◦❪♯a◦♯b❫◦❪♭d◦♯a❫❫");
     const auto modification_result = modify_flatten_product_new_api(std::move(expression));
     ASSERT_TRUE(modification_result);
-    const auto& transformed_expression = *modification_result;
-    //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪♭c◦♯a◦♯b◦♭d◦♯a❫");
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "❪♭c◦♯a◦♯b◦♭d◦♯a❫");
 }
 
 TEST(TransformFlattenProduct, BigTest1) {
@@ -72,9 +72,9 @@ TEST(TransformFlattenProduct, BigTest1) {
     ASSERT_EQ(expression.str(), "❪❪♯a◦♭b◦❪2♯c❫❫◦❴♯c+♯c❵◦❪♭d◦ℕd❫◦❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❫");
     const auto modification_result = modify_flatten_product_new_api(std::move(expression));
     ASSERT_TRUE(modification_result);
-    const auto& transformed_expression = *modification_result;
-    //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❪♯a◦♭b◦❪2♯c❫◦❴♯c+♯c❵◦♭d◦ℕd◦❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❫");
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "❪♯a◦♭b◦❪2♯c❫◦❴♯c+♯c❵◦♭d◦ℕd◦❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❫");
 }
 
 TEST(TransformFlattenProduct, BigTest2) {
@@ -83,7 +83,7 @@ TEST(TransformFlattenProduct, BigTest2) {
     ASSERT_EQ(expression.str(), "❴❪♯a◦♭b◦❪2♯c❫❫+❴♯c+♯c❵+❪♭d◦ℕd❫+❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❵");
     const auto modification_result = modify_flatten_product_new_api(std::move(expression));
     ASSERT_FALSE(modification_result);
-    const auto& transformed_expression = *modification_result;
-    //std::cout << transformed_expression.str() << std::endl;
-    ASSERT_EQ(transformed_expression.str(), "❴❪♯a◦♭b◦❪2♯c❫❫+❴♯c+♯c❵+❪♭d◦ℕd❫+❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❵");
+    const auto& modified_expression = *modification_result;
+    //std::cout << modified_expression.str() << std::endl;
+    ASSERT_EQ(modified_expression.str(), "❴❪♯a◦♭b◦❪2♯c❫❫+❴♯c+♯c❵+❪♭d◦ℕd❫+❴❴♭a+ℕb❵+❴♭c+ℕd❵❵❵");
 }
