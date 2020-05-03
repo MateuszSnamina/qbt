@@ -67,7 +67,9 @@ class ModificationResult {
     bool is_generated_result() const;
     operator bool() const; // returns true is is_generated_result.
     // move the result:
+    const ExpressionHandler& result() const;
     ExpressionHandler result();
+    const ExpressionHandler& operator*() const;
     ExpressionHandler operator*();
    private:
     ModificationResult(bool is_passed_through, ExpressionHandler&&) noexcept;
@@ -100,8 +102,16 @@ inline ModificationResult::operator bool() const {
     return is_generated_result();
 }
 
+inline const ExpressionHandler& ModificationResult::result() const {
+    return _result;
+}
+
 inline ExpressionHandler ModificationResult::result() {
     return std::move(_result);
+}
+
+inline const ExpressionHandler& ModificationResult::operator*() const {
+    return result();
 }
 
 inline ExpressionHandler ModificationResult::operator*() {
