@@ -27,14 +27,16 @@ unsigned do_simplification(ba::ExpressionHandler& expression) {
 }
 
 int main() {
-    ba::ExpressionHandler expression = 'a'_an * 'c'_cr * 'a'_cr * 'b'_cr;
+    //ba::ExpressionHandler expression = 'a'_an * 'c'_cr * 'a'_cr * 'b'_cr;
     //ba::ExpressionHandler expression = 'a'_an * 'a'_cr * 'a'_an * 'a'_cr;
     //ba::ExpressionHandler expression = 'a'_cr * 'a'_cr * 'a'_an * 'a'_an * 'b'_an * 'b'_cr;
-    //ba::ExpressionHandler expression = 'a'_an * 'a'_an * 'a'_cr * 'a'_cr * 'b'_an * 'b'_cr;
+    ba::ExpressionHandler expression = 'a'_an * 'a'_an * 'a'_cr * 'a'_cr * 'b'_an * 'b'_cr;
 
     ba::dfs_transform(expression, ba::modify_flatten_product);
-    std::cout << "INPUT:    " << expression.str() << std::endl;
+    std::cout << "INPUT   :    " << expression.str() << std::endl;
     while (do_simplification(expression) != 0) {
     };
-    std::cout << "OUTPUT:   " << expression.str() << std::endl;
+    std::cout << "OUTPUT1 :   " << expression.str() << std::endl;
+    ba::dfs_transform(expression, ba::modify_substitute_cr_an_with_no);
+    std::cout << "OUTPUT2 :   " << expression.str() << std::endl;
 }
