@@ -23,8 +23,11 @@ class BosonPrimitiveOperators : public LeafExpression {
    protected:
     // ctor:
     BosonPrimitiveOperators(std::shared_ptr<Boson>) noexcept;
+    // copy semantic:
+    BosonPrimitiveOperators(const BosonPrimitiveOperators&) = delete;
+    BosonPrimitiveOperators& operator=(const BosonPrimitiveOperators&) = delete;
     // move semantic:
-    BosonPrimitiveOperators(BosonPrimitiveOperators&&) = default;
+    BosonPrimitiveOperators(BosonPrimitiveOperators&&) = delete;
     BosonPrimitiveOperators& operator=(BosonPrimitiveOperators&&) = default;
 
    private:
@@ -52,8 +55,11 @@ class BosonCreationAnnihilationBase : public BosonPrimitiveOperators {
    protected:
     // ctor:
     BosonCreationAnnihilationBase(std::shared_ptr<Boson>) noexcept;
+    // copy semantic:
+    BosonCreationAnnihilationBase(const BosonCreationAnnihilationBase&) = delete;
+    BosonCreationAnnihilationBase& operator=(const BosonCreationAnnihilationBase&) = delete;
     // move semantic:
-    BosonCreationAnnihilationBase(BosonCreationAnnihilationBase&&) = default;
+    BosonCreationAnnihilationBase(BosonCreationAnnihilationBase&&) = delete;
     BosonCreationAnnihilationBase& operator=(BosonCreationAnnihilationBase&&) = default;
 };
 
@@ -71,7 +77,15 @@ namespace boson_algebra {
 
 class BosonCreationOperator final : public BosonCreationAnnihilationBase {
    public:
+    // copy semantic:
+    BosonCreationOperator(const BosonCreationOperator&) = delete;
+    BosonCreationOperator& operator=(const BosonCreationOperator&) = delete;
+    // move semantic:
+    BosonCreationOperator(BosonCreationOperator&&) = delete;
+    BosonCreationOperator& operator=(BosonCreationOperator&&) = default;
+    // creation model:
     static ExpressionHandler make(std::shared_ptr<Boson> boson);
+    // other member functions:
     ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
@@ -123,7 +137,15 @@ namespace boson_algebra {
 
 class BosonAnnihilationOperator final : public BosonCreationAnnihilationBase {
    public:
+    // copy semantic:
+    BosonAnnihilationOperator(const BosonAnnihilationOperator&) = delete;
+    BosonAnnihilationOperator& operator=(const BosonAnnihilationOperator&) = delete;
+    // move semantic:
+    BosonAnnihilationOperator(BosonAnnihilationOperator&&) = delete;
+    BosonAnnihilationOperator& operator=(BosonAnnihilationOperator&&) = default;
+    // creation model:
     static ExpressionHandler make(std::shared_ptr<Boson> boson);
+    // other member functions:
     ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
@@ -175,7 +197,15 @@ namespace boson_algebra {
 
 class BosonNumberOperator final : public BosonPrimitiveOperators {
    public:
+    // copy semantic:
+    BosonNumberOperator(const BosonNumberOperator&) = delete;
+    BosonNumberOperator& operator=(const BosonNumberOperator&) = delete;
+    // move semantic:
+    BosonNumberOperator(BosonNumberOperator&&) = delete;
+    BosonNumberOperator& operator=(BosonNumberOperator&&) = default;
+    // creation model:
     static ExpressionHandler make(std::shared_ptr<Boson> boson);
+    // other member functions:
     ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;

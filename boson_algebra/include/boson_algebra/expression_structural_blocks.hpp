@@ -19,7 +19,15 @@ namespace boson_algebra {
 
 class IntegerFactoredExpression final : public BridgeExpression {
    public:
+    // copy semantic:
+    IntegerFactoredExpression(const IntegerFactoredExpression&) = delete;
+    IntegerFactoredExpression& operator=(const IntegerFactoredExpression&) = delete;
+    // move semantic:
+    IntegerFactoredExpression(IntegerFactoredExpression&&) = delete;
+    IntegerFactoredExpression& operator=(IntegerFactoredExpression&&) = default;
+    // creation model:
     static ExpressionHandler make(long factor, ExpressionHandler&& expr_hdl);
+    // other member functions:
     ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
@@ -98,15 +106,23 @@ namespace boson_algebra {
 
 class ProductExpression final : public VectorNumerousExpression {
    public:
+    // copy semantic:
+    ProductExpression(const ProductExpression&) = delete;
+    ProductExpression& operator=(const ProductExpression&) = delete;
+    // move semantic:
+    ProductExpression(ProductExpression&&) = delete;
+    ProductExpression& operator=(ProductExpression&&) = default;
+    // creation model:
     static ExpressionHandler make_from_buffer(ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
     static ExpressionHandler make(Args&&... expr_hdls);
     static ExpressionHandler make_identity();
+    // other member functions:
     ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
-    bool is_identity() const;  // it is identity if it is empty.
+    bool is_identity() const;  // an instance represents the identity operator if it is a product with no factors.
 
    private:
     ProductExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls) noexcept;
@@ -179,15 +195,23 @@ inline bool ProductExpression::is_identity() const {
 namespace boson_algebra {
 class SumExpression final : public VectorNumerousExpression {
    public:
+    // copy semantic:
+    SumExpression(const SumExpression&) = delete;
+    SumExpression& operator=(const SumExpression&) = delete;
+    // move semantic:
+    SumExpression(SumExpression&&) = delete;
+    SumExpression& operator=(SumExpression&&) = default;
+    // creation model:
     static ExpressionHandler make_from_buffer(ExpressionHandlerVector&& expr_hdls);
     template <class... Args>
     static ExpressionHandler make(Args&&... expr_hdls);
     static ExpressionHandler make_zero();
+    // other member functions:
     ExpressionHandler clone() const override;
     bool equals(const Expression&) const override;
     std::string str() const override;
     std::string repr() const override;
-    bool is_zero() const;  // it is zero if it is empy.
+    bool is_zero() const;  //  an instance represents the zero operator if it is a sum of no elements.
    private:
     SumExpression(FromBufferTag, ExpressionHandlerVector&& expr_hdls) noexcept;
     template <class... Args>
